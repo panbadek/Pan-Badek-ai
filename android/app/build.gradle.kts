@@ -20,7 +20,9 @@ android {
         versionCode = glowna * 10000 + poboczna * 100 + poprawka
         versionName = wersja
         ndk {
-            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
+            // Mniejsze APK tylko dla nowych telefonów: ./gradlew assembleRelease -Pabi=arm64-v8a
+            val abi = project.findProperty("abi") as String?
+            abiFilters += abi?.split(",") ?: listOf("arm64-v8a", "armeabi-v7a", "x86_64")
         }
     }
 
