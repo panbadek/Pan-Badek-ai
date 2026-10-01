@@ -31,21 +31,67 @@ function zapiszUstawienia() {
 
 // --- wiadomości w czacie ----------------------------------------------------------
 
-function bezpieczny(tekst) {
+// Bezpieczny Markdown: najpierw cały tekst jest escapowany, potem dokładamy tylko
+// znaczniki, które tworzymy sami (pogrubienie, kursywa, kod, listy, nagłówki, linki).
+function escapuj(tekst) {
   const d = document.createElement("div");
   d.textContent = tekst;
-  return d.innerHTML
+  return d.innerHTML;
+}
+
+function wLinii(tekst) {
+  return tekst
+    .replace(/`([^`\n]+)`/g, "<code>$1</code>")
     .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s.,;:!?)]|$)/g, "$1<i>$2</i>")
     .replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)\]])/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
 }
 
+function markdown(tekst) {
+  const czesci = escapuj(tekst).split(/```(?:[a-zA-Z0-9+-]*)\n?([\s\S]*?)(?:```|$)/);
+  let html = "";
+  czesci.forEach((czesc, i) => {
+    if (i % 2) { html += `<pre><code>${czesc.replace(/\n$/, "")}</code></pre>`; return; }
+    let lista = null;
+    const zamknij = () => { if (lista) { html += `</${lista}>`; lista = null; } };
+    for (const linia of czesc.split("\n")) {
+      const punkt = linia.match(/^\s*(?:[-*•]|(\d+)[.)])\s+(.*)$/);
+      const naglowek = linia.match(/^(#{1,4})\s+(.*)$/);
+      if (punkt) {
+        const typ = punkt[1] ? "ol" : "ul";
+        if (lista !== typ) { zamknij(); html += `<${typ}>`; lista = typ; }
+        html += `<li>${wLinii(punkt[2])}</li>`;
+      } else if (naglowek) {
+        zamknij();
+        html += `<h4>${wLinii(naglowek[2])}</h4>`;
+      } else {
+        zamknij();
+        html += linia.trim() ? `<p>${wLinii(linia)}</p>` : "";
+      }
+    }
+    zamknij();
+  });
+  return html;
+}
+
+function przewin() {
+  czat.scrollTop = czat.scrollHeight;
+}
+
 function dodaj(tekst, kto, podpis) {
+  $("powitanie")?.remove();
   const d = document.createElement("div");
   d.className = "msg " + kto;
-  d.innerHTML = bezpieczny(tekst);
+  if (kto.startsWith("ty")) {
+    d.textContent = tekst;
+  } else {
+    d.innerHTML = '<div class="tresc"></div><div class="akcje"></div>';
+    aktualizuj(d, tekst);
+    dodajKopiowanie(d);
+  }
   if (podpis) ustawPodpis(d, podpis);
   czat.appendChild(d);
-  czat.scrollTop = czat.scrollHeight;
+  przewin();
   return d;
 }
 
@@ -53,12 +99,38 @@ function ustawPodpis(dymek, podpis) {
   const p = document.createElement("span");
   p.className = "podpis" + (podpis.startsWith("🧠") ? " ai" : "");
   p.textContent = podpis;
-  dymek.appendChild(p);
+  (dymek.querySelector(".akcje") || dymek).appendChild(p);
 }
 
 function aktualizuj(dymek, tekst) {
-  dymek.innerHTML = bezpieczny(tekst);
-  czat.scrollTop = czat.scrollHeight;
+  dymek.dataset.tekst = tekst;
+  const tresc = dymek.querySelector(".tresc") || dymek;
+  tresc.innerHTML = tekst ? markdown(tekst) : '<span class="kropki"><i></i><i></i><i></i></span>';
+  przewin();
+}
+
+function dodajKopiowanie(dymek) {
+  const przycisk = document.createElement("button");
+  przycisk.type = "button"; przycisk.className = "akcja"; przycisk.textContent = "📋";
+  przycisk.title = "Kopiuj odpowiedź"; przycisk.setAttribute("aria-label", "Kopiuj odpowiedź");
+  przycisk.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(dymek.dataset.tekst || ""); przycisk.textContent = "✓"; }
+    catch { przycisk.textContent = "✗"; }
+    setTimeout(() => { przycisk.textContent = "📋"; }, 1500);
+  });
+  dymek.querySelector(".akcje").appendChild(przycisk);
+}
+
+// Rozwijany "tok rozumowania" przy trudnych problemach.
+function pokazMysli(dymek, mysli) {
+  let d = dymek.querySelector("details.mysli");
+  if (!d) {
+    d = document.createElement("details");
+    d.className = "mysli";
+    d.innerHTML = "<summary>💭 Tok rozumowania</summary><div></div>";
+    dymek.insertBefore(d, dymek.firstChild);
+  }
+  d.querySelector("div").innerHTML = markdown(mysli);
 }
 
 // --- Pan Badek (Python w Web Workerze) --------------------------------------------
@@ -95,13 +167,23 @@ function historiaDlaModelu() {
   return h;
 }
 function instrukcja() {
-  return "Jesteś Pan Badek - przyjazny, pomocny asystent AI w aplikacji na telefonie. " +
-    "Odpowiadasz po polsku, zwięźle i konkretnie (zwykle 1-4 zdania), chyba że ktoś prosi o więcej. " +
-    "Nie zmyślaj faktów; jeśli czegoś nie wiesz, powiedz to. " +
-    (imie ? `Rozmówca ma na imię ${imie}. ` : "") +
-    "Aplikacja ma też wbudowane polecenia, które możesz podpowiadać: 'pogoda w <mieście>', " +
-    "'kurs <waluta>', 'co to jest <hasło>' (Wikipedia), kalkulator ('ile to 12*7'), " +
-    "analiza zdjęć (przycisk 📷), 'naucz się: pytanie => odpowiedź'.";
+  return [
+    "Jesteś Pan Badek - pomocny, szczery i życzliwy asystent AI w aplikacji na telefonie.",
+    imie ? `Rozmówca ma na imię ${imie}.` : "",
+    "Zasady:",
+    "- Odpowiadaj po polsku. Najpierw konkretna odpowiedź, potem krótkie wyjaśnienie, jeśli pomaga.",
+    "- Zwykle 1-5 zdań; dłużej tylko przy złożonych problemach albo gdy ktoś prosi o szczegóły.",
+    "- Przy trudnych problemach (matematyka, logika, kod, planowanie) rozumuj krok po kroku i pokaż kluczowe kroki.",
+    "- Gdy pytanie jest niejasne, zadaj jedno krótkie pytanie doprecyzowujące zamiast zgadywać.",
+    "- Nie zmyślaj. Jeśli czegoś nie wiesz albo nie masz pewności, powiedz to wprost.",
+    "- Formatuj Markdownem (pogrubienia, listy, bloki kodu), gdy to zwiększa czytelność.",
+    "- Bądź ciepły, ale bez przesadnych zachwytów i bez schlebiania.",
+    "- W sprawach zdrowia, prawa i pieniędzy podawaj rzetelne informacje i zachęcaj do konsultacji ze specjalistą.",
+    "- Jeśli ktoś jest w kryzysie, okaż troskę i podaj numery 116 123, 800 70 2222 albo 112.",
+    "Aplikacja ma też własne polecenia, które możesz podpowiadać: 'pogoda w <mieście>', 'kurs <waluta>',",
+    "'co to jest <hasło>', 'rozwiąż <równanie>', 'pochodna <funkcja>', analiza zdjęć (📷),",
+    "'naucz się: pytanie => odpowiedź'.",
+  ].filter(Boolean).join("\n");
 }
 
 // --- Claude (najmocniejszy mózg) --------------------------------------------------
@@ -121,23 +203,29 @@ function opisBleduClaude(e) {
   return "Claude zgłosił błąd: " + (e?.message || e);
 }
 
-async function claudeStrumien(wiadomosci, naTekst) {
+async function claudeStrumien(wiadomosci, naTekst, glebokie, naMysli) {
   const klient = await klientClaude();
   const strumien = klient.beta.messages.stream({
     model: MODEL_CLAUDE,
-    max_tokens: 16000,
+    max_tokens: glebokie ? 32000 : 16000,
     // Gdy filtr bezpieczeństwa odmówi, API samo powtórzy zapytanie na zalecanym modelu zapasowym.
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
-    output_config: { effort: "low" }, // rozmowa na telefonie: szybko i tanio
+    // Zwykła rozmowa: szybko i tanio. Trudny problem: dłuższe myślenie z widocznym streszczeniem.
+    output_config: { effort: glebokie ? "high" : "low" },
+    ...(glebokie ? { thinking: { type: "adaptive", display: "summarized" } } : {}),
     system: instrukcja(),
     messages: wiadomosci,
   });
-  let tekst = "";
+  let tekst = "", mysli = "";
   for await (const zdarzenie of strumien) {
-    if (zdarzenie.type === "content_block_delta" && zdarzenie.delta.type === "text_delta") {
+    if (zdarzenie.type !== "content_block_delta") continue;
+    if (zdarzenie.delta.type === "text_delta") {
       tekst += zdarzenie.delta.text;
       naTekst(tekst);
+    } else if (zdarzenie.delta.type === "thinking_delta" && naMysli) {
+      mysli += zdarzenie.delta.thinking;
+      naMysli(mysli);
     }
   }
   const koniec = await strumien.finalMessage();
@@ -181,16 +269,19 @@ function wlaczSilnik(id, naPostep) {
   return ladowanieSilnika;
 }
 
-async function lokalnyStrumien(wiadomosci, naTekst) {
+async function lokalnyStrumien(wiadomosci, naTekst, glebokie, naMysli) {
   const odpowiedz = await silnik.chat.completions.create({
     messages: [{ role: "system", content: instrukcja() }, ...wiadomosci],
     stream: true,
-    temperature: 0.7,
-    extra_body: { enable_thinking: false }, // Qwen bez "myślenia na głos" - szybciej na telefonie
+    temperature: glebokie ? 0.6 : 0.7,
+    // Qwen "myśli na głos" tylko przy trudnych problemach - zwykła rozmowa ma być szybka.
+    extra_body: { enable_thinking: !!glebokie },
   });
   let tekst = "";
   for await (const kawalek of odpowiedz) {
     tekst += kawalek.choices[0]?.delta?.content || "";
+    const mysli = tekst.match(/<think>([\s\S]*?)(<\/think>|$)/);
+    if (mysli && naMysli) naMysli(mysli[1].trim());
     naTekst(tekst.replace(/<think>[\s\S]*?(<\/think>|$)/g, "").trimStart());
   }
   return tekst.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
@@ -215,22 +306,50 @@ function odswiezStatus() {
   status.textContent = czesci.join(" · ");
 }
 
-async function odpowiedzAI(rodzaj, wiadomosci, zapasowa) {
-  const podpis = rodzaj === "claude" ? "🧠 Claude" : `🧠 ${nazwaModeluLokalnego()} (w telefonie)`;
-  const dymek = dodaj("", "badek pisze");
+async function odpowiedzAI(rodzaj, wiadomosci, zapasowa, glebokie = false, dymek = null) {
+  const nazwa = rodzaj === "claude" ? "Claude" : nazwaModeluLokalnego();
+  const podpis = `🧠 ${nazwa}${rodzaj === "claude" ? "" : " (w telefonie)"}${glebokie ? " · głębokie myślenie" : ""}`;
+  dymek = dymek || dodaj("", "badek pisze");
+  dymek.classList.add("pisze");
+  aktualizuj(dymek, "");
+  if (glebokie) pokazMysli(dymek, "_Myślę nad tym krok po kroku…_");
   try {
     const naTekst = (t) => aktualizuj(dymek, t);
-    const tekst = rodzaj === "claude" ? await claudeStrumien(wiadomosci, naTekst) : await lokalnyStrumien(wiadomosci, naTekst);
+    const naMysli = (m) => pokazMysli(dymek, m);
+    const tekst = rodzaj === "claude"
+      ? await claudeStrumien(wiadomosci, naTekst, glebokie, naMysli)
+      : await lokalnyStrumien(wiadomosci, naTekst, glebokie, naMysli);
     dymek.classList.remove("pisze");
     aktualizuj(dymek, tekst || zapasowa);
+    if (glebokie && dymek.querySelector(".mysli div").textContent.startsWith("Myślę nad tym")) {
+      dymek.querySelector(".mysli").remove(); // model nie pokazał streszczenia myśli
+    }
     ustawPodpis(dymek, podpis);
-    return { tekst, dymek, nazwa: podpis.replace("🧠 ", "").replace(" (w telefonie)", "") };
+    dodajPonow(dymek, rodzaj, wiadomosci, zapasowa, glebokie);
+    return { tekst, dymek, nazwa };
   } catch (e) {
     dymek.classList.remove("pisze");
     aktualizuj(dymek, zapasowa || "");
     ustawPodpis(dymek, rodzaj === "claude" ? opisBleduClaude(e) : "Model w telefonie zgłosił błąd: " + e.message);
     return { tekst: null, dymek };
   }
+}
+
+// 🔄 - ta sama rozmowa, nowa odpowiedź (jak "spróbuj ponownie").
+function dodajPonow(dymek, rodzaj, wiadomosci, zapasowa, glebokie) {
+  const przycisk = document.createElement("button");
+  przycisk.type = "button"; przycisk.className = "akcja"; przycisk.textContent = "🔄";
+  przycisk.title = "Odpowiedz jeszcze raz"; przycisk.setAttribute("aria-label", "Odpowiedz jeszcze raz");
+  przycisk.addEventListener("click", async () => {
+    dymek.querySelector(".akcje").innerHTML = "";
+    dymek.querySelector(".mysli")?.remove();
+    dodajKopiowanie(dymek);
+    const ai = await odpowiedzAI(rodzaj, wiadomosci, zapasowa, glebokie, dymek);
+    if (ai.tekst && historia.length && historia[historia.length - 1].role === "assistant") {
+      historia[historia.length - 1].content = ai.tekst;
+    }
+  });
+  dymek.querySelector(".akcje").appendChild(przycisk);
 }
 
 // --- oceny 👍/👎: Badek uczy się na nich ---------------------------------------------
@@ -242,7 +361,8 @@ function dodajOceny(dymek, idOdpowiedzi) {
   oceny.className = "oceny";
   for (const [znak, dobra, opis] of [["👍", true, "Dobra odpowiedź"], ["👎", false, "Zła odpowiedź"]]) {
     const przycisk = document.createElement("button");
-    przycisk.type = "button"; przycisk.textContent = znak; przycisk.title = opis; przycisk.setAttribute("aria-label", opis);
+    przycisk.type = "button"; przycisk.className = "akcja";
+    przycisk.textContent = znak; przycisk.title = opis; przycisk.setAttribute("aria-label", opis);
     przycisk.addEventListener("click", async () => {
       oceny.remove();
       const wynik = await zapytajBadka({ typ: "ocena", id_odpowiedzi: idOdpowiedzi, dobra });
@@ -250,20 +370,23 @@ function dodajOceny(dymek, idOdpowiedzi) {
     });
     oceny.appendChild(przycisk);
   }
-  dymek.appendChild(oceny);
+  dymek.querySelector(".akcje").appendChild(oceny);
 }
 
 // --- rozmowa ----------------------------------------------------------------------
 
 async function wyslijTekst(tekst) {
   dodaj(tekst, "ty");
+  const dymek = dodaj("", "badek pisze");
   const wynik = await zapytajBadka({ typ: "czat", tekst });
   imie = wynik.imie ?? imie;
   const rodzaj = aktywneAI();
   const pogawedka = ["siec_neuronowa", "biblioteka"].includes(wynik.zrodlo);
+  // Złożony problem, którego Badek sam nie rozwiązał (np. dowód, kod, plan) -> głębokie myślenie AI.
+  const glebokie = !!wynik.trudne && ["nie_wiem", "siec_neuronowa", "biblioteka", "internet"].includes(wynik.zrodlo);
   zapamietaj("user", tekst);
-  if (rodzaj && (wynik.zrodlo === "nie_wiem" || (ust.kiedy === "zawsze" && pogawedka))) {
-    const ai = await odpowiedzAI(rodzaj, historiaDlaModelu(), wynik.odpowiedz);
+  if (rodzaj && (wynik.zrodlo === "nie_wiem" || (ust.kiedy === "zawsze" && pogawedka) || glebokie)) {
+    const ai = await odpowiedzAI(rodzaj, historiaDlaModelu(), wynik.odpowiedz, glebokie, dymek);
     zapamietaj("assistant", ai.tekst || wynik.odpowiedz);
     if (ai.tekst && ust.uczSie) {
       // Badek zapamiętuje odpowiedź dużego modelu - na podobne pytanie odpowie potem sam.
@@ -272,7 +395,8 @@ async function wyslijTekst(tekst) {
       dodajOceny(ai.dymek, nauka.id_odpowiedzi);
     }
   } else {
-    const dymek = dodaj(wynik.odpowiedz, "badek");
+    dymek.classList.remove("pisze");
+    aktualizuj(dymek, wynik.odpowiedz);
     if (OCENIANE.includes(wynik.zrodlo) && wynik.id_odpowiedzi) dodajOceny(dymek, wynik.id_odpowiedzi);
     zapamietaj("assistant", wynik.odpowiedz);
     if (wynik.zrodlo === "nie_wiem" && ust.mozg === "lokalny" && !silnik && ladowanieSilnika) {
@@ -286,7 +410,38 @@ $("f").addEventListener("submit", (e) => {
   const tekst = pole.value.trim();
   if (!tekst || !badekGotowy) return;
   pole.value = "";
+  dopasujPole();
   wyslijTekst(tekst);
+});
+
+// Pole tekstowe rośnie razem z wiadomością; Enter wysyła, Shift+Enter robi nową linię.
+function dopasujPole() {
+  pole.style.height = "auto";
+  pole.style.height = Math.min(pole.scrollHeight, 160) + "px";
+}
+pole.addEventListener("input", dopasujPole);
+pole.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+    e.preventDefault();
+    $("f").requestSubmit();
+  }
+});
+
+// Podpowiedzi na start.
+for (const przycisk of document.querySelectorAll("#powitanie [data-pytanie]")) {
+  przycisk.addEventListener("click", () => {
+    if (!badekGotowy) return;
+    if (przycisk.dataset.pytanie === "📷") { $("plik").click(); return; }
+    wyslijTekst(przycisk.dataset.pytanie);
+  });
+}
+
+// Nowa rozmowa: czyści ekran i kontekst dla AI (pamięć Badka zostaje).
+$("nowa").addEventListener("click", () => {
+  historia.length = 0;
+  czat.innerHTML = "";
+  dodaj("Zaczynamy od nowa. W czym mogę pomóc?", "badek");
+  pole.focus();
 });
 
 // --- zdjęcia ----------------------------------------------------------------------
@@ -341,7 +496,8 @@ async function wyslijZdjecie(plik) {
   dymek.className = "msg ty foto";
   const img = document.createElement("img");
   img.src = adres; img.alt = "Wysłane zdjęcie";
-  dymek.appendChild(img); czat.appendChild(dymek); czat.scrollTop = czat.scrollHeight;
+  $("powitanie")?.remove();
+  dymek.appendChild(img); czat.appendChild(dymek); przewin();
   try {
     await img.decode();
   } catch {

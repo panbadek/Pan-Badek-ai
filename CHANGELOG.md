@@ -1,5 +1,37 @@
 # Historia zmian
 
+## 0.8.0
+
+### Charakter w stylu Claude
+- Nowe odpowiedzi: pomocne, szczere i ciepłe, bez przesady. Przy niepewnym dopasowaniu Badek
+  mówi, jak zrozumiał pytanie („Jeśli dobrze rozumiem, pytasz: …”).
+- „Nie wiem” podaje konkretne możliwości (Wikipedia, lekcja, mocniejsze AI) zamiast zgadywać.
+  Na niejasne wiadomości prosi o doprecyzowanie.
+- **Dopytania:** „Jaka jest stolica Francji?” → „A Niemiec?” → „A Wielkiej Brytanii?”.
+- **Troska w kryzysie:** przy sygnałach myśli samobójczych albo samookaleczenia Badek zawsze odpowiada
+  z empatią i numerami pomocy (116 123, 800 70 2222, 116 111, 112). Tej odpowiedzi nie oddaje AI.
+- Instrukcja dla modeli AI opisuje te same zasady: odpowiedź najpierw, rozumowanie krok po kroku,
+  pytanie doprecyzowujące, przyznawanie się do niewiedzy, Markdown.
+
+### Zaawansowane problemy
+- **Solver matematyczny** (`panbadek/matematyka.py`), działający offline i pokazujący kroki:
+  - równania liniowe i kwadratowe (z deltą, dokładnie na ułamkach), dowolne równania numerycznie
+    (z uwagą o okresowości), układy do 4 równań liniowych (eliminacja Gaussa);
+  - pochodne symboliczne (reguły iloczynu, ilorazu, łańcuchowa, sin/cos/tg/exp/ln/sqrt);
+  - całki: wielomianów symbolicznie, pozostałe numerycznie (Simpson);
+  - procenty, statystyka, liczby pierwsze, rozkład na czynniki, NWD (algorytm Euklidesa z krokami),
+    NWW, silnia, Fibonacci, systemy liczbowe (także rzymski), jednostki i temperatury.
+- **Głębokie myślenie:** trudne problemy (dowody, kod, analiza, planowanie, długie zadania) idą do
+  Claude z wysokim wysiłkiem i streszczeniem toku rozumowania, a do modelu w telefonie z włączonym
+  myśleniem. Zwykła rozmowa zostaje szybka i tania.
+
+### Interfejs
+- Odpowiedzi bez dymków, z awatarem i formatowaniem (pogrubienia, listy, nagłówki, bloki kodu).
+- Akcje pod odpowiedzią: 📋 kopiuj, 🔄 odpowiedz jeszcze raz (AI), 👍/👎.
+- Animowany wskaźnik „myśli…” i rozwijany „💭 Tok rozumowania”.
+- Ekran powitalny z podpowiedziami, rosnące pole tekstowe (Enter wysyła, Shift+Enter dodaje nową linię),
+  przycisk ✏️ „Nowa rozmowa” i informacja, że AI może się mylić.
+
 ## 0.7.0
 
 ### Samodzielna nauka

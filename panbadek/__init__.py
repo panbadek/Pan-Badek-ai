@@ -1,6 +1,6 @@
 """Pan Badek - mała sztuczna inteligencja napisana od zera w czystym Pythonie."""
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 from .brain import PanBadek  # noqa: E402
 

@@ -122,6 +122,30 @@ panbadek --web
 
 🌐 wymaga internetu. Wszystkie usługi są darmowe i nie potrzebują kluczy API.
 
+### Zadania i trudne problemy 🧮
+
+Badek rozwiązuje zadania sam, bez internetu, i pokazuje kroki:
+
+| Przykład | Wynik |
+|---|---|
+| `rozwiąż x^2 - 5x + 6 = 0` | Δ = 1, x₁ = 2, x₂ = 3 |
+| `rozwiąż układ: x + y = 5, x - y = 1` | x = 3, y = 2 |
+| `pochodna x*ln(x)` | f'(x) = ln(x) + 1 |
+| `całka z x^2 od 0 do 3` | 9 |
+| `o ile procent wzrosła cena z 80 do 100` | 25% (wzrost) |
+| `nwd 48 i 18`, `rozłóż 360 na czynniki` | algorytm Euklidesa, 2³·3²·5 |
+| `100 km na mile`, `30 C na F`, `zamień 2026 na rzymskie` | 62,14 mile, 86 °F, MMXXVI |
+
+Trudne problemy, takie jak dowody, kod, analiza czy planowanie, Badek rozpoznaje i przekazuje
+mocniejszemu AI w **trybie głębokiego myślenia** (Claude z wysokim wysiłkiem i widocznym tokiem
+rozumowania albo model w telefonie z włączonym myśleniem).
+
+### Charakter
+
+Badek jest pomocny i szczery. Przy niepewnym dopasowaniu mówi, jak zrozumiał pytanie. Gdy czegoś
+nie wie, nie zgaduje, tylko proponuje, co dalej. Rozumie dopytania („stolica Francji?” → „a Niemiec?”).
+W trudnych chwilach zawsze odpowiada z troską i podaje numery pomocy (116 123, 800 70 2222, 112).
+
 ### Samodzielna nauka 🧠
 
 Pan Badek uczy się z każdej rozmowy:

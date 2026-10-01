@@ -23,7 +23,8 @@ def start(katalog_pamieci):
 def czat(tekst):
     odpowiedz = _badek.odpowiedz(tekst)
     return json.dumps({"odpowiedz": odpowiedz, "zrodlo": _badek.zrodlo, "imie": _badek.imie,
-                       "id_odpowiedzi": _badek.id_odpowiedzi}, ensure_ascii=False)
+                       "id_odpowiedzi": _badek.id_odpowiedzi, "trudne": _badek.ocen_trudnosc(tekst)},
+                      ensure_ascii=False)
 
 
 def naucz_od_ai(pytanie, odpowiedz, zrodlo):

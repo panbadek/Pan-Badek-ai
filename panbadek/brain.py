@@ -7,7 +7,7 @@ import re
 import time
 from zlib import error as zlib_error
 
-from . import exif, internet, obrazy, skills, wtyczki
+from . import exif, internet, matematyka, obrazy, skills, wtyczki
 from .biblioteki import NIEISTOTNE, Biblioteki
 from .network import SiecNeuronowa
 from .text import Slownik, cechy, normalizuj, rdzen
@@ -116,11 +116,40 @@ _MIANOWNIK = [("owie", "ów"), ("awie", "awa"), ("dzi", "dź"), ("niu", "ń"), (
               ("cku", "ck"), ("iu", ""), ("ach", "e"), ("ynie", "yn"), ("inie", "in"),
               ("ie", ""), ("em", "e"), ("u", ""), ("i", "ia")]
 
-NIE_WIEM = [
-    "Hmm, tego jeszcze nie wiem. Naucz mnie: 'naucz się: {pytanie} => odpowiedź' "
-    "albo zapytaj 'co to jest ...', a sprawdzę w internecie.",
-    "Nie jestem pewien, o co chodzi. Możesz to powiedzieć inaczej?",
-]
+NIE_WIEM = ("Nie znam odpowiedzi na to pytanie i wolę nie zgadywać. Mogę za to:\n"
+            "- poszukać w Wikipedii - napisz „co to jest …” albo „kim był …”\n"
+            "- nauczyć się od ciebie - „naucz się: {pytanie} => odpowiedź”\n"
+            "- oddać pytanie mocniejszemu AI (w aplikacji: ⚙️ → model w telefonie albo Claude)")
+TRUDNY_PROBLEM = ("To złożony problem, który wymaga rozumowania krok po kroku - z takim sam sobie "
+                  "rzetelnie nie poradzę i nie chcę udawać, że jest inaczej. Włącz mocniejszy mózg "
+                  "(w aplikacji: ⚙️ → Claude albo model w telefonie), a przekażę mu to zadanie "
+                  "w trybie głębokiego myślenia. Zadania matematyczne - równania, pochodne, całki, "
+                  "procenty - mogę za to policzyć sam.")
+NIE_ROZUMIEM = "Nie jestem pewien, o co pytasz. Możesz to ująć inaczej albo dodać trochę szczegółów?"
+
+# Sygnały kryzysu - na nie Badek zawsze odpowiada z troską i numerami pomocy, nigdy przypadkowo.
+_KRYZYS = re.compile(
+    r"(chc[eę]\s+(?:si[eę]\s+)?(?:zabi[cć]|umrze[cć])|nie\s+chc[eę]\s+(?:ju[zż]\s+)?[zż]y[cć]"
+    r"|samob[oó]j|odebra[cć]\s+sobie\s+[zż]ycie|sko[nń]czy[cć]\s+ze\s+sob[aą]|zrobi[cć]\s+sobie\s+krzywd"
+    r"|skrzywdzi[cć]\s+(?:si[eę]|siebie)|tn[eę]\s+si[eę]|nie\s+ma\s+sensu\s+[zż]y[cć]"
+    r"|my[sś]l[eę]\s+o\s+[sś]mierci|lepiej\s+(?:by\s+)?by[lł]o\s+(?:by\s+)?beze\s+mnie)", re.I)
+WSPARCIE = ("Bardzo mi przykro, że tak się czujesz. To, co przeżywasz, jest ważne - i nie musisz radzić "
+            "sobie z tym w pojedynkę. Porozmawiaj, proszę, z kimś, kto może pomóc od razu:\n"
+            "- **116 123** - Kryzysowy Telefon Zaufania dla dorosłych\n"
+            "- **800 70 2222** - Centrum Wsparcia, całą dobę i bezpłatnie\n"
+            "- **116 111** - Telefon Zaufania dla Dzieci i Młodzieży\n"
+            "- **112** - jeśli jesteś w bezpośrednim niebezpieczeństwie\n"
+            "Jeśli chcesz, napisz mi, co się dzieje. Jestem tutaj i wysłucham.")
+
+# Dopytania w stylu "a Niemiec?", "a w Gdańsku?" - odnoszą się do poprzedniego pytania.
+_DOPYTANIE = re.compile(r"^\s*a\s+(?:co\s+z\s+|jak\s+z\s+)?(.{1,40}?)\s*\??\s*$", re.I)
+_PRZYIMKI = {"w", "we", "dla", "na", "do", "z", "ze", "od", "o"}
+# Złożone problemy - warto je oddać dużemu modelowi z "głębokim myśleniem".
+_TRUDNE = re.compile(
+    r"(udowodnij|dowód|dowod|uzasadnij|wyjaśnij\s+(?:dlaczego|jak|krok)|krok\s+po\s+kroku|porównaj"
+    r"|przeanalizuj|zaplanuj|zaprojektuj|napisz\s+(?:program|kod|funkcj|skrypt|algorytm|esej)|algorytm"
+    r"|zoptymalizuj|zdebuguj|b[lł][aą]d\s+w\s+kodzie|prawdopodobie[nń]stw|granic[aęy]\s+funkcji"
+    r"|zadani[ea]|strategi|rozwa[zż]|za\s+i\s+przeciw|plusy\s+i\s+minusy|jak\s+najlepiej)", re.I)
 
 
 def odmien(liczba, jeden, kilka, wiele):
@@ -552,8 +581,16 @@ class PanBadek:
         self._poprzednia_odpowiedz = self.id_odpowiedzi
         return self.id_odpowiedzi
 
-    def _mysl(self, tekst, poprzednia):
+    def ocen_trudnosc(self, tekst):
+        """Czy to złożony problem, który warto oddać dużemu modelowi z głębokim myśleniem?"""
+        return (len(tekst.split()) >= 25 or "```" in tekst or tekst.count("\n") >= 3
+                or bool(_TRUDNE.search(tekst)))
+
+    def _mysl(self, tekst, poprzednia, glebokosc=0):
         self.zrodlo = "nie_wiem"
+        if _KRYZYS.search(tekst):
+            self.zrodlo = "kryzys"
+            return WSPARCIE
         zdjecie, self.ostatnie_zdjecie = self.ostatnie_zdjecie, None
         podpis = _TO_JEST.match(tekst)
         if zdjecie and podpis:
@@ -566,17 +603,56 @@ class PanBadek:
                 return self.ocen(poprzednia, dobra)
         for obsluga in (self._polecenia_uczenia, self._polecenia_zdjec, self._polecenia_pamieci,
                         self._polecenia_bibliotek, self._polecenia_wtyczek, self._wtyczki,
-                        self._internet, self._kalkulator, self._wiedza_lub_siec):
+                        self._internet, self._matematyka, self._kalkulator, self._wiedza_lub_siec):
             self._zrodlo_szczegol = None
             wynik = obsluga(tekst)
             if wynik:
                 self.zrodlo = self._zrodlo_szczegol or obsluga.__name__.lstrip("_")
+                if self.zrodlo not in ("siec_neuronowa", "ocena") and not obsluga.__name__.startswith("_polecenia"):
+                    self._temat = tekst  # do dopytań "a ...?"
                 return wynik
         z_biblioteki = self._z_biblioteki(tekst)
         if z_biblioteki:
             self.zrodlo = "biblioteka"
             return z_biblioteki
-        return self.los.choice(NIE_WIEM).format(pytanie=tekst)
+        dopytanie = self._dopytanie(tekst, poprzednia, glebokosc)
+        if dopytanie:
+            return dopytanie
+        self.zrodlo = "nie_wiem"
+        if len(istotne_slowa(tekst)) <= 1 and len(tekst.split()) <= 2:
+            return NIE_ROZUMIEM
+        if self.ocen_trudnosc(tekst):
+            return TRUDNY_PROBLEM
+        return NIE_WIEM.format(pytanie=tekst)
+
+    def _dopytanie(self, tekst, poprzednia, glebokosc):
+        """ "Jaka jest stolica Francji?" -> "A Niemiec?" = "Jaka jest stolica Niemiec?"."""
+        temat = getattr(self, "_temat", None)
+        m = _DOPYTANIE.match(tekst)
+        if not m or not temat or glebokosc:
+            return None
+        nowe = m.group(1).strip(" ?")
+        slowa_tematu = temat.rstrip(" ?!.").split()
+        istotne = set(istotne_slowa(temat))
+        indeks = next((i for i in range(len(slowa_tematu) - 1, -1, -1)
+                       if istotne_slowa(slowa_tematu[i]) and istotne_slowa(slowa_tematu[i])[0] in istotne), None)
+        if indeks is None:
+            return None
+        poczatek = indeks
+        # "pogoda w Krakowie" + "a w Gdańsku" -> zamieniamy też przyimek.
+        if nowe.split()[0].lower() in _PRZYIMKI and indeks > 0 and slowa_tematu[indeks - 1].lower() in _PRZYIMKI:
+            poczatek = indeks - 1
+        kandydat = " ".join(slowa_tematu[:poczatek] + [nowe]) + "?"
+        zapamietany_temat = temat
+        wynik = self._mysl(kandydat, poprzednia, glebokosc=1)
+        if self.zrodlo in ("nie_wiem", "siec_neuronowa"):
+            self._temat = zapamietany_temat
+            return None
+        self._temat = kandydat
+        return wynik
+
+    def _matematyka(self, tekst):
+        return matematyka.rozwiaz(tekst)
 
     def _polecenia_uczenia(self, tekst):
         notatka = _ZAPAMIETAJ_ZE.match(tekst)
@@ -826,12 +902,7 @@ class PanBadek:
         # Najpierw własna wiedza (działa offline i nie zużywa internetu).
         wpis, podobienstwo = self.wiedza.szukaj(pytanie or haslo)
         if wpis and podobienstwo >= PROG_WIEDZY:
-            self.wiedza.uzyto(wpis)
-            self._wpis_wiedzy = wpis["id"]
-            self._zrodlo_szczegol = "wiedza"
-            if wpis["zrodlo"] in ("wbudowana", "ty"):
-                return wpis["odpowiedz"]
-            return f"{wpis['odpowiedz']}\n(zapamiętałem od: {wpis['zrodlo']})"
+            return self._odpowiedz_z_wiedzy(wpis, podobienstwo)
         z_biblioteki = self.biblioteki.szukaj(haslo)
         if z_biblioteki and z_biblioteki[0][0] >= PROG_BIBLIOTEKI_PEWNY:
             _, nazwa, wpis = z_biblioteki[0]
@@ -876,6 +947,18 @@ class PanBadek:
     def _kalkulator(self, tekst):
         return skills.kalkulator(tekst)
 
+    def _odpowiedz_z_wiedzy(self, wpis, podobienstwo):
+        """Odpowiedź z bazy wiedzy - przy niepewnym dopasowaniu mówi, jak zrozumiał pytanie."""
+        self.wiedza.uzyto(wpis)
+        self._wpis_wiedzy = wpis["id"]
+        self._zrodlo_szczegol = "wiedza"
+        odpowiedz = wpis["odpowiedz"]
+        if podobienstwo < 0.7:
+            odpowiedz = f"Jeśli dobrze rozumiem, pytasz: „{wpis['pytanie'].rstrip('?')}?”\n\n{odpowiedz}"
+        if wpis["zrodlo"] not in ("wbudowana", "ty"):
+            odpowiedz += f"\n(zapamiętałem od: {wpis['zrodlo']})"
+        return odpowiedz
+
     def _zna_wszystkie_slowa(self, tekst):
         """Czy sieć widziała przy treningu każde istotne słowo pytania?"""
         return self._nieznane_slowa(tekst) == 0
@@ -905,12 +988,7 @@ class PanBadek:
         siec_pewna = nazwa not in (None, "inne") and zna_slowa
         prog = PROG_WIEDZY if not siec_pewna or (wpis and wpis["zrodlo"] == "ty") else PROG_WIEDZY_PEWNY
         if wpis and podobienstwo >= prog:
-            self.wiedza.uzyto(wpis)
-            self._wpis_wiedzy = wpis["id"]
-            self._zrodlo_szczegol = "wiedza"
-            if wpis["zrodlo"] in ("wbudowana", "ty"):
-                return wpis["odpowiedz"]
-            return f"{wpis['odpowiedz']}\n(zapamiętałem od: {wpis['zrodlo']})"
+            return self._odpowiedz_z_wiedzy(wpis, podobienstwo)
         if nazwa in (None, "inne"):
             return None
         self._zrodlo_szczegol = "siec_neuronowa"

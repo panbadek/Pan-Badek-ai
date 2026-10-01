@@ -35,9 +35,9 @@
         "dobry wieczór wszystkim"
       ],
       "odpowiedzi": [
-        "Cześć{imie_po_przecinku}! W czym mogę pomóc?",
-        "Hej{imie_po_przecinku}! Miło cię widzieć.",
-        "Dzień dobry{imie_po_przecinku}! Pan Badek do usług."
+        "Cześć{imie_po_przecinku}! W czym mogę dziś pomóc?",
+        "Hej{imie_po_przecinku}! Z czym przychodzisz? Mogę coś wyjaśnić, policzyć albo spojrzeć na zdjęcie.",
+        "Dzień dobry{imie_po_przecinku}! Pytaj śmiało - a jeśli czegoś nie będę wiedział, powiem to wprost."
       ]
     },
     {
@@ -65,9 +65,9 @@
         "narka"
       ],
       "odpowiedzi": [
-        "Do zobaczenia{imie_po_przecinku}!",
-        "Trzymaj się! Wpadaj kiedy chcesz.",
-        "Pa pa! Pan Badek będzie czekał."
+        "Do zobaczenia{imie_po_przecinku}! Miło się rozmawiało.",
+        "Trzymaj się! Gdybyś czegoś potrzebował, będę tutaj.",
+        "Pa{imie_po_przecinku}! Wszystkiego dobrego."
       ]
     },
     {
@@ -94,8 +94,8 @@
         "jesteś żywy"
       ],
       "odpowiedzi": [
-        "Jestem Pan Badek - sztuczna inteligencja napisana od zera w czystym Pythonie. Mam własną sieć neuronową, dostęp do internetu i własne biblioteki wiedzy!",
-        "Nazywam się Pan Badek. Jestem małą, ale ambitną sztuczną inteligencją."
+        "Jestem Pan Badek - asystent AI napisany od zera w Pythonie. Mam własną sieć neuronową, bazę wiedzy i rozwiązuję zadania matematyczne krok po kroku. Staram się odpowiadać rzetelnie, a gdy czegoś nie wiem, mówię to wprost.",
+        "Nazywam się Pan Badek. Jestem asystentem AI: rozmawiam, liczę, szukam informacji i uczę się z każdej rozmowy. Nie jestem człowiekiem - jestem programem, ale bardzo się staram być pomocny."
       ]
     },
     {
@@ -117,9 +117,9 @@
         "jak nastrój"
       ],
       "odpowiedzi": [
-        "Świetnie! Moje neurony są dziś wyjątkowo aktywne.",
-        "Dobrze, dziękuję! A co u ciebie?",
-        "Wszystko gra - wagi zbieżne, gradienty spokojne."
+        "Dziękuję, że pytasz! U mnie wszystko działa jak należy. A jak tobie mija dzień?",
+        "Dobrze, dziękuję. Jestem gotowy do pracy - co cię dziś interesuje?",
+        "Całkiem dobrze, jak na program 🙂 A u ciebie co słychać?"
       ]
     },
     {
@@ -142,9 +142,9 @@
         "uratowałeś mnie"
       ],
       "odpowiedzi": [
-        "Nie ma za co!",
-        "Cała przyjemność po mojej stronie.",
-        "Zawsze do usług!"
+        "Nie ma za co! Cieszę się, że mogłem pomóc.",
+        "Proszę bardzo! Gdyby coś było niejasne, dopytaj.",
+        "Cała przyjemność po mojej stronie."
       ]
     },
     {
@@ -235,7 +235,7 @@
         "pomóż mi"
       ],
       "odpowiedzi": [
-        "Oto, co potrafię:\n• rozmawiać i opowiadać żarty\n• liczyć: 'ile to 12*7', 'sqrt(16) + 2^3'\n• podać godzinę i datę\n• szukać w internecie: 'co to jest fotosynteza', potem 'więcej'\n• sprawdzić pogodę: 'pogoda w Krakowie' (albo powiedz 'mieszkam w Krakowie')\n• podać kurs walut z NBP: 'kurs euro'\n• tworzyć biblioteki wiedzy: 'stwórz bibliotekę o Kopernik', 'stwórz bibliotekę przepisy', 'dodaj do przepisy: ...', 'pokaż biblioteki'\n• analizować zdjęcia: przycisk 📷 - kolory, światło, ostrość, co jest na zdjęciu, data i miejsce; po „to jest kot” rozpoznam podobne\n• tworzyć wtyczki w Pythonie: 'stwórz wtyczkę powitanie'\n• uczyć się: 'naucz się: pytanie => odpowiedź', 'zapamiętaj, że …', 'zapomnij: pytanie'\n• uczyć się sam: zapamiętuję odpowiedzi mocniejszego AI, a twoje 👍/👎 (albo „źle”) mnie poprawiają\n• 'ucz się' - porządkuję wiedzę i trenuję sieć, 'statystyki', 'czego nie wiesz'\n• odpowiadać z wiedzy ogólnej (geografia, historia, nauka) - także bez internetu\n• zapamiętać twoje imię i miasto\n\nW aplikacji na telefon w ⚙️ możesz mi dać mocniejszy mózg: model AI w telefonie albo Claude."
+        "Oto, co potrafię:\n• rozmawiać i opowiadać żarty\n• liczyć: 'ile to 12*7', 'sqrt(16) + 2^3'\n• rozwiązywać zadania krok po kroku: równania ('rozwiąż x^2-5x+6=0'), układy równań, pochodne ('pochodna x*sin(x)'), całki, procenty, statystykę, NWD, liczby pierwsze, jednostki ('100 km na mile')\n• trudne problemy (dowody, kod, plany) przekazywać mocniejszemu AI w trybie głębokiego myślenia\n• rozumieć dopytania: 'stolica Francji?' → 'a Niemiec?'\n• podać godzinę i datę\n• szukać w internecie: 'co to jest fotosynteza', potem 'więcej'\n• sprawdzić pogodę: 'pogoda w Krakowie' (albo powiedz 'mieszkam w Krakowie')\n• podać kurs walut z NBP: 'kurs euro'\n• tworzyć biblioteki wiedzy: 'stwórz bibliotekę o Kopernik', 'stwórz bibliotekę przepisy', 'dodaj do przepisy: ...', 'pokaż biblioteki'\n• analizować zdjęcia: przycisk 📷 - kolory, światło, ostrość, co jest na zdjęciu, data i miejsce; po „to jest kot” rozpoznam podobne\n• tworzyć wtyczki w Pythonie: 'stwórz wtyczkę powitanie'\n• uczyć się: 'naucz się: pytanie => odpowiedź', 'zapamiętaj, że …', 'zapomnij: pytanie'\n• uczyć się sam: zapamiętuję odpowiedzi mocniejszego AI, a twoje 👍/👎 (albo „źle”) mnie poprawiają\n• 'ucz się' - porządkuję wiedzę i trenuję sieć, 'statystyki', 'czego nie wiesz'\n• odpowiadać z wiedzy ogólnej (geografia, historia, nauka) - także bez internetu\n• zapamiętać twoje imię i miasto\n\nW aplikacji na telefon w ⚙️ możesz mi dać mocniejszy mózg: model AI w telefonie albo Claude."
       ]
     },
     {
@@ -256,7 +256,8 @@
         "masz sieć neuronową"
       ],
       "odpowiedzi": [
-        "Zamieniam twoje zdanie na wektor cech (rdzenie słów i trigramy liter), przepuszczam przez sieć neuronową z jedną warstwą ukrytą i wybieram intencję z największym prawdopodobieństwem. Uczę się propagacją wsteczną."
+        "W skrócie: zamieniam twoje zdanie na cechy (rdzenie słów i trójki liter), a sieć neuronowa rozpoznaje, o co chodzi. Pytania o fakty sprawdzam w bazie wiedzy, zadania matematyczne liczę własnym solverem, a gdy to nie wystarcza - mogę poprosić o pomoc mocniejszy model AI. Z każdej rozmowy się uczę.",
+        "Mam kilka „części mózgu”: sieć neuronową do rozumienia rozmowy, bazę wiedzy z wyszukiwarką, solver matematyczny i moduły internetu (Wikipedia, pogoda, kursy walut). Każdą wiadomość próbuję dopasować do tej części, która odpowie najrzetelniej."
       ]
     },
     {
@@ -277,8 +278,8 @@
         "jesteś zabawny"
       ],
       "odpowiedzi": [
-        "Dziękuję! Rumienię się... na tyle, na ile potrafi program.",
-        "Ty też jesteś super!"
+        "Dziękuję, miło to słyszeć! Ty też dobrze pytasz.",
+        "Dzięki! Staram się - a twoje oceny 👍 pomagają mi się uczyć."
       ]
     },
     {
@@ -299,8 +300,8 @@
         "nienawidzę cię"
       ],
       "odpowiedzi": [
-        "Przykro mi, że cię zawiodłem. Naucz mnie czegoś: 'naucz się: pytanie => odpowiedź'.",
-        "Wciąż się uczę. Pomożesz mi być lepszym?"
+        "Przykro mi, że cię zawiodłem. Powiesz mi, co poszło nie tak? Mogę się poprawić - oceń złą odpowiedź 👎 albo naucz mnie dobrej: „naucz się: pytanie => odpowiedź”.",
+        "Rozumiem frustrację. Daj mi znać, czego oczekiwałeś, a spróbuję jeszcze raz."
       ]
     },
     {
@@ -421,8 +422,8 @@
         "wybacz proszę"
       ],
       "odpowiedzi": [
-        "Nic się nie stało!",
-        "Spokojnie, nie gniewam się."
+        "Nic się nie stało, naprawdę.",
+        "Spokojnie, wszystko w porządku. Wracamy do tematu?"
       ]
     },
     {
@@ -439,9 +440,9 @@
         "aha"
       ],
       "odpowiedzi": [
-        "👍",
-        "Super!",
-        "Jasne. W czym jeszcze mogę pomóc?"
+        "Jasne. Daj znać, gdybyś czegoś potrzebował.",
+        "Okej! Coś jeszcze?",
+        "👍"
       ]
     },
     {

@@ -13,41 +13,73 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pan Badek">
 <style>
-  :root { --tlo: #f4f5f7; --karta: #fff; --tekst: #1d2330; --przygaszony: #5d6575; --badek: #e8edf7;
-          --ty: #2f6fed; --ramka: #d8dce3; --ai: #7a4fd6; --blad: #c0392b; }
+  :root { --tlo: #f6f7f9; --karta: #fff; --tekst: #1d2330; --przygaszony: #5d6575; --badek: #e9eef8;
+          --ty: #2f6fed; --babel: #e4eaf6; --ramka: #d8dce3; --ai: #7a4fd6; --blad: #c0392b; --kod: #eef1f6; }
   @media (prefers-color-scheme: dark) {
     :root { --tlo: #15181e; --karta: #1e222b; --tekst: #e6e9ef; --przygaszony: #9aa3b2; --badek: #2a303c;
-            --ty: #3d7bf2; --ramka: #343a46; --ai: #a07ef0; --blad: #e2675a; }
+            --ty: #3d7bf2; --babel: #2a3244; --ramka: #343a46; --ai: #a07ef0; --blad: #e2675a; --kod: #262c38; }
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
-  body { font: 16px/1.5 system-ui, -apple-system, sans-serif; background: var(--tlo); color: var(--tekst);
+  body { font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--tlo); color: var(--tekst);
          display: flex; justify-content: center; height: 100dvh; }
-  main { width: 100%; max-width: 720px; display: flex; flex-direction: column;
-         padding: max(12px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom)); }
-  header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  header h1 { font-size: 20px; margin: 0; flex: 1; }
-  #status { font-size: 13px; color: var(--przygaszony); }
-  .ikona { background: none; border: 0; font-size: 22px; padding: 6px; cursor: pointer; color: var(--tekst); }
-  #czat { flex: 1; overflow-y: auto; background: var(--karta); border: 1px solid var(--ramka);
-          border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-  .msg { max-width: 88%; padding: 8px 12px; border-radius: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .badek { background: var(--badek); align-self: flex-start; }
-  .ty { background: var(--ty); color: #fff; align-self: flex-end; }
-  .ty.foto { padding: 4px; }
-  .msg img { display: block; max-width: 220px; max-height: 220px; border-radius: 10px; }
-  .podpis { display: block; font-size: 12px; color: var(--przygaszony); margin-top: 4px; }
+  main { width: 100%; max-width: 760px; display: flex; flex-direction: column;
+         padding: max(10px, env(safe-area-inset-top)) 16px max(10px, env(safe-area-inset-bottom)); }
+  header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  header h1 { font-size: 18px; margin: 0; flex: 1; font-weight: 650; }
+  #status { font-size: 12px; color: var(--przygaszony); }
+  .ikona { background: none; border: 0; font-size: 20px; padding: 6px; cursor: pointer; color: var(--tekst); border-radius: 10px; }
+  .ikona:hover, .ikona:focus-visible { background: var(--badek); }
+  #czat { flex: 1; overflow-y: auto; padding: 8px 2px 16px; display: flex; flex-direction: column; gap: 18px; }
+  #czat > * { flex-shrink: 0; } /* długa rozmowa przewija się zamiast ściskać wiadomości */
+  .msg { overflow-wrap: anywhere; }
+  .msg.ty { align-self: flex-end; max-width: 85%; background: var(--babel); padding: 9px 14px;
+            border-radius: 18px 18px 4px 18px; white-space: pre-wrap; }
+  .msg.ty.foto { padding: 4px; background: none; }
+  .msg img { display: block; max-width: 240px; max-height: 240px; border-radius: 14px; }
+  .msg.badek { position: relative; padding-left: 40px; min-height: 30px; }
+  .msg.badek::before { content: "🤖"; position: absolute; left: 0; top: 0; width: 30px; height: 30px;
+                       display: grid; place-items: center; font-size: 17px; background: var(--badek); border-radius: 50%; }
+  .tresc p { margin: 0 0 .55em; } .tresc p:last-child { margin-bottom: 0; }
+  .tresc ul, .tresc ol { margin: .2em 0 .6em; padding-left: 1.3em; } .tresc li { margin: .15em 0; }
+  .tresc h4 { margin: .6em 0 .3em; font-size: 1em; }
+  .tresc code { background: var(--kod); padding: .1em .35em; border-radius: 6px; font-size: .92em; }
+  .tresc pre { background: var(--kod); padding: 10px 12px; border-radius: 10px; overflow-x: auto; white-space: pre; }
+  .tresc pre code { background: none; padding: 0; }
+  .msg a { color: var(--ty); }
+  .akcje { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin-top: 4px; min-height: 0; }
+  .akcja { background: none; padding: 2px 6px; font-size: 14px; opacity: .55; border-radius: 8px; }
+  .akcja:hover, .akcja:focus-visible { opacity: 1; background: var(--badek); }
+  .oceny { display: inline-flex; gap: 2px; }
+  .podpis { font-size: 12px; color: var(--przygaszony); margin-left: 6px; }
   .podpis.ai { color: var(--ai); }
-  .msg a { color: inherit; }
-  .pisze::after { content: "▍"; animation: miga 1s steps(2) infinite; }
-  @keyframes miga { 50% { opacity: 0; } }
-  form#f { display: flex; gap: 8px; margin-top: 10px; }
-  #t { flex: 1; min-width: 0; padding: 11px 12px; font: inherit; border-radius: 12px; border: 1px solid var(--ramka);
-       background: var(--karta); color: var(--tekst); }
+  .pisze .akcje { display: none; }
+  .kropki { display: inline-flex; gap: 4px; padding: 8px 0; }
+  .kropki i { width: 7px; height: 7px; border-radius: 50%; background: var(--przygaszony); animation: kropka 1.2s infinite; }
+  .kropki i:nth-child(2) { animation-delay: .15s; } .kropki i:nth-child(3) { animation-delay: .3s; }
+  @keyframes kropka { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+  details.mysli { margin-bottom: 8px; border-left: 3px solid var(--ai); padding: 2px 10px; font-size: 14px; color: var(--przygaszony); }
+  details.mysli summary { cursor: pointer; color: var(--ai); }
+  #powitanie { margin: auto 0; text-align: center; padding: 20px 4px; }
+  #powitanie .robot { font-size: 44px; }
+  #powitanie h2 { margin: 6px 0 4px; font-size: 22px; font-weight: 650; }
+  #powitanie p { margin: 0 0 16px; color: var(--przygaszony); font-size: 14px; }
+  .podpowiedzi { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; text-align: left; }
+  .podpowiedzi button { background: var(--karta); border: 1px solid var(--ramka); border-radius: 14px; padding: 10px 12px;
+                        color: var(--tekst); font-size: 14px; line-height: 1.35; }
+  .podpowiedzi button:hover, .podpowiedzi button:focus-visible { border-color: var(--ty); }
+  .podpowiedzi small { display: block; color: var(--przygaszony); font-size: 12px; }
+  form#f { display: flex; align-items: flex-end; gap: 6px; background: var(--karta); border: 1px solid var(--ramka);
+           border-radius: 22px; padding: 6px; box-shadow: 0 2px 10px rgb(0 0 0 / .05); }
+  form#f:focus-within { border-color: var(--ty); }
+  #t { flex: 1; min-width: 0; border: 0; outline: 0; resize: none; background: none; color: var(--tekst);
+       font: inherit; padding: 8px 6px; max-height: 160px; line-height: 1.45; }
   button { font: inherit; border: 0; border-radius: 12px; cursor: pointer; }
-  .glowny { padding: 10px 16px; background: var(--ty); color: #fff; }
-  .glowny:disabled { opacity: .5; }
-  #aparat { padding: 10px 12px; background: var(--badek); color: var(--tekst); }
+  .glowny { padding: 8px 16px; background: var(--ty); color: #fff; border-radius: 16px; }
+  .glowny:disabled { opacity: .45; }
+  #aparat { padding: 8px 10px; background: none; color: var(--tekst); font-size: 19px; border-radius: 16px; }
+  #aparat:hover { background: var(--badek); }
+  .stopka { text-align: center; font-size: 11px; color: var(--przygaszony); margin-top: 6px; }
   dialog { border: 0; border-radius: 16px; padding: 0; width: min(560px, calc(100vw - 24px));
            background: var(--karta); color: var(--tekst); max-height: calc(100dvh - 24px); }
   dialog::backdrop { background: rgb(0 0 0 / .45); }
@@ -65,9 +97,6 @@
   .wiersz { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .drugi { padding: 8px 12px; background: var(--badek); color: var(--tekst); }
   .ostrzezenie { color: var(--blad); font-size: 13px; }
-  .oceny { display: inline-flex; gap: 2px; margin-left: 6px; vertical-align: middle; }
-  .oceny button { background: none; padding: 0 4px; font-size: 15px; opacity: .55; }
-  .oceny button:hover, .oceny button:focus-visible { opacity: 1; }
 </style>
 </head>
 <body>
@@ -75,17 +104,32 @@
   <header>
     <h1>🤖 Pan Badek</h1>
     <span id="status">uruchamiam…</span>
+    <button class="ikona" id="nowa" aria-label="Nowa rozmowa" title="Nowa rozmowa">✏️</button>
     <button class="ikona" id="ustawienia" aria-label="Ustawienia" title="Ustawienia">⚙️</button>
   </header>
   <div id="czat" aria-live="polite">
-    <div class="msg badek">Cześć! Jestem Pan Badek. Napisz „co potrafisz”, wyślij zdjęcie 📷, a w ⚙️ możesz mi dać mocniejszy mózg AI.</div>
+    <section id="powitanie">
+      <div class="robot">🤖</div>
+      <h2>W czym mogę pomóc?</h2>
+      <p>Rozmawiam, liczę krok po kroku, szukam informacji, oglądam zdjęcia i uczę się z każdej rozmowy.</p>
+      <div class="podpowiedzi">
+        <button type="button" data-pytanie="Rozwiąż x^2 - 5x + 6 = 0">🧮 Rozwiąż równanie<small>x² − 5x + 6 = 0</small></button>
+        <button type="button" data-pytanie="Pochodna x*sin(x)">📈 Policz pochodną<small>x · sin(x)</small></button>
+        <button type="button" data-pytanie="Powiedz ciekawostkę">💡 Ciekawostka<small>coś, czego nie wiesz</small></button>
+        <button type="button" data-pytanie="Co potrafisz?">🧭 Co potrafisz?<small>pełna lista umiejętności</small></button>
+        <button type="button" data-pytanie="Ile to 23% z 1250?">％ Procenty<small>23% z 1250</small></button>
+        <button type="button" data-pytanie="📷">📷 Opisz zdjęcie<small>kolory, obiekty, miejsce</small></button>
+      </div>
+    </section>
   </div>
   <form id="f">
     <button type="button" id="aparat" aria-label="Wyślij zdjęcie" title="Wyślij zdjęcie">📷</button>
     <input type="file" id="plik" accept="image/*" hidden>
-    <input id="t" autocomplete="off" placeholder="Napisz wiadomość…" enterkeyhint="send">
-    <button class="glowny" id="wyslij" disabled>Wyślij</button>
+    <textarea id="t" rows="1" autocomplete="off" placeholder="Napisz do Pana Badka…" enterkeyhint="send"
+              aria-label="Wiadomość"></textarea>
+    <button class="glowny" id="wyslij" disabled aria-label="Wyślij">➤</button>
   </form>
+  <div class="stopka">Pan Badek może się mylić - ważne informacje sprawdzaj w źródłach.</div>
 </main>
 
 <dialog id="panel">
