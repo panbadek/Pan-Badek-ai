@@ -140,6 +140,29 @@ Trudne problemy, takie jak dowody, kod, analiza czy planowanie, Badek rozpoznaje
 mocniejszemu AI w **trybie głębokiego myślenia** (Claude z wysokim wysiłkiem i widocznym tokiem
 rozumowania albo model w telefonie z włączonym myśleniem).
 
+### Programowanie w C++ 💻
+
+Badek pisze programy w C++ także bez internetu: 29 gotowych wzorów, z których każdy kompiluje się
+bez ostrzeżeń (`g++ -std=c++17 -Wall -Wextra`, sprawdza to test). Odpowiedź ma krótkie wyjaśnienie,
+kod z komentarzami po polsku (z przyciskiem **📋 Kopiuj** w aplikacji) i komendę kompilacji.
+
+| Przykład | Co dostaniesz |
+|---|---|
+| `napisz w C++ sortowanie` | sortowanie bąbelkowe i `std::sort` |
+| `liczby pierwsze do 500 w c++` | sito Eratostenesa dla n = 500 |
+| `jak w c++ zrobić klasę`, `dziedziczenie w c++` | klasa z enkapsulacją, polimorfizm |
+| `co to jest wskaźnik w c++` | wyjaśnienie, a pod nim przykład |
+| `napisz w c++ grę w zgadywanie liczby` | gra z `<random>` |
+
+Są też: wczytywanie danych, kalkulator, pętle, rekurencja, Fibonacci, wyszukiwanie binarne, NWD,
+wektory, napisy, `std::map`, struktury, pliki, wskaźniki i inteligentne wskaźniki, stos i kolejka,
+lista, szablony, wyjątki, BFS na grafie, macierze, lambdy i wątki. Do tego baza wiedzy o C++
+(`czym się różni c od c++`, `co to jest RAII`, `jak zacząć naukę c++`).
+
+Gdy w aplikacji jest włączony Claude, kod pisze Claude w trybie głębokiego myślenia, dokładnie pod
+twoją prośbę (np. `napisz w c++ program do zarządzania biblioteką`), a wzór Badka zostaje odpowiedzią
+zapasową.
+
 ### Charakter
 
 Badek jest pomocny i szczery. Przy niepewnym dopasowaniu mówi, jak zrozumiał pytanie. Gdy czegoś
@@ -162,7 +185,7 @@ Pan Badek uczy się z każdej rozmowy:
   albo komputerze (`python3 -m panbadek --eksport pamiec.json` / `--import pamiec.json`).
   Wiedza się łączy, nic nie ginie.
 
-Na start zna 143 odpowiedzi z wiedzy ogólnej (geografia, historia Polski, nauka, przyroda, kosmos).
+Na start zna 161 odpowiedzi z wiedzy ogólnej (geografia, historia Polski, nauka, przyroda, kosmos, C++).
 Jakość sieci mierzy `python3 narzedzia/ocen_siec.py` na zdaniach, których nie widziała przy
 treningu: obecnie ok. 97%.
 
@@ -223,7 +246,8 @@ zgłosi błąd. **Uwaga:** wtyczki to zwykły kod Pythona, więc wrzucaj tam tyl
 2. **Sieć neuronowa** (`network.py`): wejście → 32 neurony ReLU → softmax; uczenie spadkiem
    gradientu z entropią krzyżową. Gradienty są liczone ręcznie.
 3. **Mózg** (`brain.py`) przepuszcza wiadomość przez kolejne etapy: polecenia pamięci →
-   biblioteki → wtyczki → internet → kalkulator → sieć neuronowa → przeszukanie bibliotek.
+   biblioteki → wtyczki → programowanie (C++) → internet → matematyka i kalkulator → wiedza →
+   sieć neuronowa → przeszukanie bibliotek.
    Sieć odpowiada tylko wtedy, gdy jest pewna (≥ 45%) i rozpoznaje słowa ze zdania,
    dzięki czemu nie „strzela” na zupełnie obcych pytaniach.
 4. **Internet** (`internet.py`): Wikipedia, Open-Meteo i NBP przez `urllib`, z limitem czasu

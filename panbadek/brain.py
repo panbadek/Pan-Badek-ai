@@ -7,7 +7,7 @@ import re
 import time
 from zlib import error as zlib_error
 
-from . import exif, internet, matematyka, obrazy, skills, wtyczki
+from . import exif, internet, matematyka, obrazy, programowanie, skills, wtyczki
 from .biblioteki import NIEISTOTNE, Biblioteki
 from .network import SiecNeuronowa
 from .text import Slownik, cechy, normalizuj, rdzen
@@ -144,6 +144,8 @@ WSPARCIE = ("Bardzo mi przykro, że tak się czujesz. To, co przeżywasz, jest w
 # Dopytania w stylu "a Niemiec?", "a w Gdańsku?" - odnoszą się do poprzedniego pytania.
 _DOPYTANIE = re.compile(r"^\s*a\s+(?:co\s+z\s+|jak\s+z\s+)?(.{1,40}?)\s*\??\s*$", re.I)
 _PRZYIMKI = {"w", "we", "dla", "na", "do", "z", "ze", "od", "o"}
+# Pytanie o pojęcie ("co to jest klasa w c++") - najpierw definicja, potem kod.
+_POJECIE = re.compile(r"^\s*(co\s+to\s+(?:jest|s[aą])|czym\s+(?:jest|s[aą]|si[eę]\s+r[oó][zż]ni)|co\s+oznacza|jak\s+dzia[lł]a)", re.I)
 # Złożone problemy - warto je oddać dużemu modelowi z "głębokim myśleniem".
 _TRUDNE = re.compile(
     r"(udowodnij|dowód|dowod|uzasadnij|wyjaśnij\s+(?:dlaczego|jak|krok)|krok\s+po\s+kroku|porównaj"
@@ -584,7 +586,7 @@ class PanBadek:
     def ocen_trudnosc(self, tekst):
         """Czy to złożony problem, który warto oddać dużemu modelowi z głębokim myśleniem?"""
         return (len(tekst.split()) >= 25 or "```" in tekst or tekst.count("\n") >= 3
-                or bool(_TRUDNE.search(tekst)))
+                or bool(_TRUDNE.search(tekst)) or programowanie.prosi_o_kod(tekst))
 
     def _mysl(self, tekst, poprzednia, glebokosc=0):
         self.zrodlo = "nie_wiem"
@@ -603,7 +605,7 @@ class PanBadek:
                 return self.ocen(poprzednia, dobra)
         for obsluga in (self._polecenia_uczenia, self._polecenia_zdjec, self._polecenia_pamieci,
                         self._polecenia_bibliotek, self._polecenia_wtyczek, self._wtyczki,
-                        self._internet, self._matematyka, self._kalkulator, self._wiedza_lub_siec):
+                        self._programowanie, self._internet, self._matematyka, self._kalkulator, self._wiedza_lub_siec):
             self._zrodlo_szczegol = None
             wynik = obsluga(tekst)
             if wynik:
@@ -621,6 +623,8 @@ class PanBadek:
         self.zrodlo = "nie_wiem"
         if len(istotne_slowa(tekst)) <= 1 and len(tekst.split()) <= 2:
             return NIE_ROZUMIEM
+        if programowanie.prosi_o_kod(tekst):
+            return programowanie.brak_wzoru()
         if self.ocen_trudnosc(tekst):
             return TRUDNY_PROBLEM
         return NIE_WIEM.format(pytanie=tekst)
@@ -650,6 +654,15 @@ class PanBadek:
             return None
         self._temat = kandydat
         return wynik
+
+    def _programowanie(self, tekst):
+        kod = programowanie.napisz(tekst)
+        if kod and _POJECIE.match(tekst):
+            # "co to jest wskaźnik w c++" - najpierw wyjaśnienie z bazy wiedzy, potem przykład.
+            wpis, podobienstwo = self.wiedza.szukaj(tekst)
+            if wpis and podobienstwo >= PROG_WIEDZY:
+                return self._odpowiedz_z_wiedzy(wpis, podobienstwo) + "\n\n" + kod.replace("#### ", "#### Przykład: ", 1)
+        return kod
 
     def _matematyka(self, tekst):
         return matematyka.rozwiaz(tekst)

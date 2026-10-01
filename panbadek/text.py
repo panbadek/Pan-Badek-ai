@@ -5,6 +5,8 @@ import unicodedata
 
 _POLSKIE = str.maketrans("ąćęłńóśźż", "acelnoszz")
 _SLOWO = re.compile(r"[a-z0-9]+")
+# Nazwy języków ze znakami, które inaczej by zniknęły: "c++" -> "cpp", "c#" -> "csharp".
+_JEZYKI = re.compile(r"(?<![a-z0-9])c\s?(\+\+|#)")
 
 # Długość "rdzenia" słowa. Polski mocno się odmienia ("kot", "kota", "kotem"),
 # więc obcinamy końcówki zamiast budować pełny stemmer.
@@ -18,6 +20,11 @@ def normalizuj(tekst):
     return "".join(z for z in tekst if not unicodedata.combining(z))
 
 
+def _wyrazy(tekst):
+    tekst = _JEZYKI.sub(lambda m: " cpp" if m.group(1) == "++" else " csharp", normalizuj(tekst))
+    return _SLOWO.findall(tekst)
+
+
 def rdzen(slowo):
     """Prosty rdzeń: odcinamy końcówkę (ostatnią literę) i przycinamy do 5 liter,
     więc "żyją"/"żyje" -> "zyj", "koty"/"kot" -> "kot", "polski"/"polska" -> "polsk"."""
@@ -28,12 +35,12 @@ def rdzen(slowo):
 
 def slowa(tekst):
     """Słowa tekstu: małe litery, bez polskich znaków i bez interpunkcji."""
-    return _SLOWO.findall(normalizuj(tekst))
+    return _wyrazy(tekst)
 
 
 def tokenizuj(tekst):
     """Zwraca listę rdzeni słów z tekstu."""
-    return [rdzen(slowo) for slowo in _SLOWO.findall(normalizuj(tekst))]
+    return [rdzen(slowo) for slowo in _wyrazy(tekst)]
 
 
 def cechy(tekst):
@@ -42,7 +49,7 @@ def cechy(tekst):
     Trigramy pomagają rozpoznać słowa z literówkami albo w innej odmianie.
     """
     wynik = set()
-    for slowo in _SLOWO.findall(normalizuj(tekst)):
+    for slowo in _wyrazy(tekst):
         wynik.add("w:" + rdzen(slowo))
         obramowane = f"#{slowo}#"
         for i in range(len(obramowane) - 2):

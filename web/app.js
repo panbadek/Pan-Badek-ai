@@ -48,10 +48,19 @@ function wLinii(tekst) {
 }
 
 function markdown(tekst) {
-  const czesci = escapuj(tekst).split(/```(?:[a-zA-Z0-9+-]*)\n?([\s\S]*?)(?:```|$)/);
+  // split z dwiema grupami: [tekst, język, kod, tekst, język, kod, ...]
+  const czesci = escapuj(tekst).split(/```([a-zA-Z0-9+#-]*)\n?([\s\S]*?)(?:```|$)/);
   let html = "";
   czesci.forEach((czesc, i) => {
-    if (i % 2) { html += `<pre><code>${czesc.replace(/\n$/, "")}</code></pre>`; return; }
+    if (i % 3 === 1) return;
+    if (i % 3 === 2) {
+      const jezyk = { cpp: "C++", "c++": "C++", cc: "C++", py: "Python", js: "JavaScript" }[czesci[i - 1].toLowerCase()]
+        || czesci[i - 1] || "kod";
+      html += `<div class="kod"><div class="kod-pasek"><span>${jezyk}</span>`
+        + `<button type="button" class="kopiuj-kod">📋 Kopiuj</button></div>`
+        + `<pre><code>${czesc.replace(/\n$/, "")}</code></pre></div>`;
+      return;
+    }
     let lista = null;
     const zamknij = () => { if (lista) { html += `</${lista}>`; lista = null; } };
     for (const linia of czesc.split("\n")) {
@@ -73,6 +82,16 @@ function markdown(tekst) {
   });
   return html;
 }
+
+// Przycisk "Kopiuj" nad każdym blokiem kodu (jeden nasłuchiwacz dla całego czatu).
+czat.addEventListener("click", async (e) => {
+  const przycisk = e.target.closest(".kopiuj-kod");
+  if (!przycisk) return;
+  const kod = przycisk.closest(".kod").querySelector("code").textContent;
+  try { await navigator.clipboard.writeText(kod); przycisk.textContent = "✓ Skopiowano"; }
+  catch { przycisk.textContent = "✗ Nie udało się"; }
+  setTimeout(() => { przycisk.textContent = "📋 Kopiuj"; }, 1500);
+});
 
 function przewin() {
   czat.scrollTop = czat.scrollHeight;
@@ -180,8 +199,13 @@ function instrukcja() {
     "- Bądź ciepły, ale bez przesadnych zachwytów i bez schlebiania.",
     "- W sprawach zdrowia, prawa i pieniędzy podawaj rzetelne informacje i zachęcaj do konsultacji ze specjalistą.",
     "- Jeśli ktoś jest w kryzysie, okaż troskę i podaj numery 116 123, 800 70 2222 albo 112.",
+    "- Programowanie (szczególnie C++): pisz kompletny, kompilujący się kod w nowoczesnym C++17/20 w bloku ```cpp,",
+    "  z potrzebnymi #include, std:: zamiast 'using namespace std', kontenerami STL, RAII i inteligentnymi",
+    "  wskaźnikami zamiast new/delete, sprawdzaniem danych wejściowych i krótkimi komentarzami po polsku.",
+    "  Po kodzie: jak skompilować (g++ -std=c++17 -Wall plik.cpp -o program) i 1-3 zdania o kluczowych decyzjach.",
+    "  Przy szukaniu błędów najpierw wskaż przyczynę, potem poprawiony fragment.",
     "Aplikacja ma też własne polecenia, które możesz podpowiadać: 'pogoda w <mieście>', 'kurs <waluta>',",
-    "'co to jest <hasło>', 'rozwiąż <równanie>', 'pochodna <funkcja>', analiza zdjęć (📷),",
+    "'co to jest <hasło>', 'rozwiąż <równanie>', 'pochodna <funkcja>', 'napisz w C++ <temat>', analiza zdjęć (📷),",
     "'naucz się: pytanie => odpowiedź'.",
   ].filter(Boolean).join("\n");
 }
@@ -312,7 +336,7 @@ async function odpowiedzAI(rodzaj, wiadomosci, zapasowa, glebokie = false, dymek
   dymek = dymek || dodaj("", "badek pisze");
   dymek.classList.add("pisze");
   aktualizuj(dymek, "");
-  if (glebokie) pokazMysli(dymek, "_Myślę nad tym krok po kroku…_");
+  if (glebokie) pokazMysli(dymek, "*Myślę nad tym krok po kroku…*");
   try {
     const naTekst = (t) => aktualizuj(dymek, t);
     const naMysli = (m) => pokazMysli(dymek, m);
@@ -382,10 +406,14 @@ async function wyslijTekst(tekst) {
   imie = wynik.imie ?? imie;
   const rodzaj = aktywneAI();
   const pogawedka = ["siec_neuronowa", "biblioteka"].includes(wynik.zrodlo);
+  // Kod z gotowego wzoru Badka: Claude napisze go dokładnie pod prośbę (wzór zostaje zapasową odpowiedzią).
+  // Mały model w telefonie pisze gorszy kod niż sprawdzone wzory, więc wtedy zostaje wzór.
+  const kodAI = wynik.zrodlo === "programowanie" && rodzaj === "claude" && ust.kiedy === "zawsze";
   // Złożony problem, którego Badek sam nie rozwiązał (np. dowód, kod, plan) -> głębokie myślenie AI.
-  const glebokie = !!wynik.trudne && ["nie_wiem", "siec_neuronowa", "biblioteka", "internet"].includes(wynik.zrodlo);
+  const glebokie = !!wynik.trudne
+    && (["nie_wiem", "siec_neuronowa", "biblioteka", "internet"].includes(wynik.zrodlo) || kodAI);
   zapamietaj("user", tekst);
-  if (rodzaj && (wynik.zrodlo === "nie_wiem" || (ust.kiedy === "zawsze" && pogawedka) || glebokie)) {
+  if (rodzaj && (wynik.zrodlo === "nie_wiem" || (ust.kiedy === "zawsze" && pogawedka) || kodAI || glebokie)) {
     const ai = await odpowiedzAI(rodzaj, historiaDlaModelu(), wynik.odpowiedz, glebokie, dymek);
     zapamietaj("assistant", ai.tekst || wynik.odpowiedz);
     if (ai.tekst && ust.uczSie) {

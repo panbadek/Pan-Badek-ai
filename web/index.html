@@ -46,6 +46,12 @@
   .tresc code { background: var(--kod); padding: .1em .35em; border-radius: 6px; font-size: .92em; }
   .tresc pre { background: var(--kod); padding: 10px 12px; border-radius: 10px; overflow-x: auto; white-space: pre; }
   .tresc pre code { background: none; padding: 0; }
+  .tresc .kod { margin: .4em 0 .7em; border-radius: 10px; overflow: hidden; background: var(--kod); }
+  .tresc .kod pre { margin: 0; border-radius: 0; font-size: 13px; line-height: 1.45; }
+  .kod-pasek { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 4px 12px;
+               font-size: 12px; opacity: .8; border-bottom: 1px solid rgba(127,127,127,.25); }
+  .kopiuj-kod { background: none; padding: 2px 8px; font-size: 12px; border-radius: 6px; color: inherit; }
+  .kopiuj-kod:hover, .kopiuj-kod:focus-visible { background: var(--badek); }
   .msg a { color: var(--ty); }
   .akcje { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin-top: 4px; min-height: 0; }
   .akcja { background: none; padding: 2px 6px; font-size: 14px; opacity: .55; border-radius: 8px; }
@@ -117,7 +123,7 @@
         <button type="button" data-pytanie="Pochodna x*sin(x)">📈 Policz pochodną<small>x · sin(x)</small></button>
         <button type="button" data-pytanie="Powiedz ciekawostkę">💡 Ciekawostka<small>coś, czego nie wiesz</small></button>
         <button type="button" data-pytanie="Co potrafisz?">🧭 Co potrafisz?<small>pełna lista umiejętności</small></button>
-        <button type="button" data-pytanie="Ile to 23% z 1250?">％ Procenty<small>23% z 1250</small></button>
+        <button type="button" data-pytanie="Napisz w C++ sortowanie">💻 Napisz kod w C++<small>sortowanie, klasy, gry…</small></button>
         <button type="button" data-pytanie="📷">📷 Opisz zdjęcie<small>kolory, obiekty, miejsce</small></button>
       </div>
     </section>

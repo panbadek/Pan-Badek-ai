@@ -1,5 +1,24 @@
 # Historia zmian
 
+## 0.9.0
+
+### Programowanie w C++
+- **Badek pisze w C++** (`panbadek/programowanie.py`), także offline: 29 wzorów kompletnych programów
+  (od „hello world” przez sortowanie, klasy, dziedziczenie, wskaźniki, STL, pliki i wyjątki po BFS,
+  macierze i wątki). Każdy kompiluje się bez ostrzeżeń w C++17, co sprawdza test z `g++`.
+- Liczba z pytania trafia do programu: „liczby pierwsze do 500 w c++”, „tabliczka mnożenia do 12”.
+- Odpowiedź: krótkie wyjaśnienie, kod w bloku ```cpp i komenda kompilacji. Pytanie o pojęcie
+  („co to jest wskaźnik w c++”) daje najpierw definicję, potem przykład.
+- 18 nowych wpisów w bazie wiedzy o C++ (różnice C/C++, kompilacja, STL, referencje, RAII, UB, const…).
+- „c++” i „c#” są teraz rozpoznawane jako słowa (wcześniej znikały razem z interpunkcją).
+- Z Claude kod pisany jest pod konkretną prośbę w trybie głębokiego myślenia, z zasadami nowoczesnego
+  C++ w instrukcji (STL, RAII, inteligentne wskaźniki, kompletne `#include`). Nietypowe zamówienia
+  bez AI dostają uczciwą odpowiedź z listą tego, co Badek umie offline.
+
+### Interfejs
+- Bloki kodu mają nagłówek z nazwą języka i przycisk **📋 Kopiuj** (kopiuje sam kod).
+- Nowa podpowiedź na ekranie startowym: „💻 Napisz kod w C++”.
+
 ## 0.8.0
 
 ### Charakter w stylu Claude

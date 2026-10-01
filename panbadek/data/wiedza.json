@@ -571,6 +571,78 @@
   {
    "pytanie": "Jak ugotować makaron?",
    "odpowiedz": "Zagotuj dużo osolonej wody, wsyp makaron i gotuj tyle minut, ile podano na opakowaniu (al dente to zwykle o minutę krócej), potem odcedź."
+  },
+  {
+   "pytanie": "Co to jest C++?",
+   "odpowiedz": "C++ to kompilowany język programowania stworzony przez Bjarne'a Stroustrupa (pierwsza wersja 1985). Łączy szybkość C z programowaniem obiektowym i szablonami. Używa się go w grach, przeglądarkach, systemach operacyjnych, sterownikach i wszędzie tam, gdzie liczy się wydajność. Aktualne standardy to m.in. C++17, C++20 i C++23."
+  },
+  {
+   "pytanie": "Czym różni się C od C++?",
+   "odpowiedz": "C++ powstało jako rozszerzenie C. Dodaje klasy i programowanie obiektowe, szablony, przeciążanie funkcji, referencje, wyjątki, przestrzenie nazw i bibliotekę standardową (STL: vector, string, map). Większość kodu w C da się skompilować jako C++, ale nie odwrotnie."
+  },
+  {
+   "pytanie": "Jak skompilować program w C++?",
+   "odpowiedz": "Najprościej kompilatorem g++ (GCC) albo clang++: `g++ -std=c++17 -Wall program.cpp -o program`, a potem uruchomić `./program`. Flaga `-Wall` włącza ostrzeżenia, a `-O2` optymalizację. Na Windows popularne są Visual Studio i MinGW, a na telefonie aplikacja Cxxdroid."
+  },
+  {
+   "pytanie": "Jaki kompilator i środowisko do C++ wybrać?",
+   "odpowiedz": "Na start: Visual Studio Community (Windows), VS Code z g++ lub clang++ (każdy system), CLion (płatny, wygodny) albo Code::Blocks. Bez instalacji można pisać w przeglądarce na godbolt.org albo onlinegdb.com, a na Androidzie w Cxxdroid."
+  },
+  {
+   "pytanie": "Co to jest STL w C++?",
+   "odpowiedz": "STL (Standard Template Library) to część biblioteki standardowej C++: kontenery (vector, list, map, unordered_map, set, stack, queue), algorytmy (sort, find, binary_search, accumulate) i iteratory, które je łączą. Zanim napiszesz własną strukturę danych, sprawdź, czy STL już jej nie ma."
+  },
+  {
+   "pytanie": "Co to jest wskaźnik w C++?",
+   "odpowiedz": "Wskaźnik to zmienna przechowująca adres innej zmiennej: `int* p = &x;`, a `*p` daje wartość pod tym adresem. Może być pusty (`nullptr`). W nowoczesnym C++ zamiast ręcznego `new`/`delete` używa się inteligentnych wskaźników: `std::unique_ptr` i `std::shared_ptr`."
+  },
+  {
+   "pytanie": "Czym różni się wskaźnik od referencji w C++?",
+   "odpowiedz": "Referencja (`int& r = x;`) to druga nazwa istniejącej zmiennej: musi być od razu zainicjowana, nie może być pusta ani wskazywać potem na coś innego. Wskaźnik (`int* p = &x;`) przechowuje adres, może być `nullptr` i można go przestawić. Do przekazywania argumentów zwykle wystarczy referencja, często stała: `const T&`."
+  },
+  {
+   "pytanie": "Co to jest klasa w C++?",
+   "odpowiedz": "Klasa to własny typ, który łączy dane (pola) z funkcjami (metodami). Pola zwykle są prywatne (`private`), a dostęp do nich dają publiczne metody - to enkapsulacja. Obiekt tworzy się jak zmienną, np. `Konto k(\"Ania\", 100);`, a konstruktor ustawia jego stan początkowy."
+  },
+  {
+   "pytanie": "Czym różni się struct od class w C++?",
+   "odpowiedz": "Jedyna różnica techniczna: w `struct` elementy i dziedziczenie są domyślnie publiczne, a w `class` prywatne. Zwyczajowo `struct` stosuje się do prostych zestawów danych, a `class` do typów z logiką i ukrytym stanem."
+  },
+  {
+   "pytanie": "Co to jest vector w C++?",
+   "odpowiedz": "`std::vector` to tablica dynamiczna z biblioteki standardowej: sama rośnie (`push_back`), zna swój rozmiar (`size()`), daje szybki dostęp po indeksie (`v[i]`) i sama zwalnia pamięć. To domyślny wybór kontenera w C++ (`#include <vector>`)."
+  },
+  {
+   "pytanie": "Dlaczego nie używać using namespace std?",
+   "odpowiedz": "`using namespace std;` wciąga do kodu wszystkie nazwy z biblioteki standardowej, co może dawać konflikty (np. z własną funkcją `count` czy `distance`). W małym programie to nic groźnego, ale nigdy nie umieszcza się tego w plikach nagłówkowych. Bezpieczniej pisać `std::` albo `using std::cout;`."
+  },
+  {
+   "pytanie": "Co to jest plik nagłówkowy w C++?",
+   "odpowiedz": "Plik nagłówkowy (`.h` lub `.hpp`) zawiera deklaracje: klasy, prototypy funkcji, szablony. Kod źródłowy (`.cpp`) dołącza go przez `#include` i zawiera definicje. Nagłówek chroni się przed podwójnym dołączeniem przez `#pragma once` albo include guard (`#ifndef ... #define ... #endif`)."
+  },
+  {
+   "pytanie": "Co to jest niezdefiniowane zachowanie w C++?",
+   "odpowiedz": "Niezdefiniowane zachowanie (undefined behavior, UB) to sytuacja, w której standard nie mówi, co się stanie: np. wyjście poza tablicę, użycie niezainicjowanej zmiennej, przepełnienie liczby ze znakiem, użycie usuniętego wskaźnika. Program może wtedy działać, zawiesić się albo dawać dziwne wyniki. Pomagają ostrzeżenia (`-Wall -Wextra`) i sanitizery (`-fsanitize=address,undefined`)."
+  },
+  {
+   "pytanie": "Co to jest RAII w C++?",
+   "odpowiedz": "RAII (Resource Acquisition Is Initialization) to zasada, że obiekt przejmuje zasób (pamięć, plik, blokadę) w konstruktorze i zwalnia go w destruktorze. Dzięki temu zasób zwalnia się sam, gdy obiekt wychodzi z zakresu, nawet przy wyjątku. Tak działają `std::vector`, `std::unique_ptr`, `std::fstream` i `std::lock_guard`."
+  },
+  {
+   "pytanie": "Co to jest szablon w C++?",
+   "odpowiedz": "Szablon (`template <typename T>`) to przepis na funkcję albo klasę dla dowolnego typu. Kompilator tworzy z niego osobną wersję dla każdego użytego typu, np. `std::vector<int>` i `std::vector<std::string>`. Na szablonach zbudowana jest cała biblioteka standardowa."
+  },
+  {
+   "pytanie": "Jak zacząć naukę C++?",
+   "odpowiedz": "Dobra kolejność: zmienne i typy, wejście-wyjście (`cin`, `cout`), warunki i pętle, funkcje, `std::vector` i `std::string`, struktury i klasy, referencje i wskaźniki, STL (map, sort), a potem szablony i inteligentne wskaźniki. Polecane źródła: learncpp.com, cppreference.com, książka „Opus magnum C++” Grębosza. Najwięcej daje pisanie małych programów - mogę podać przykłady, np. „napisz w C++ sortowanie”."
+  },
+  {
+   "pytanie": "Co to jest const w C++?",
+   "odpowiedz": "`const` oznacza, że czegoś nie wolno zmienić: stała (`const int n = 10;`), parametr przekazany bez kopiowania i bez zmian (`const std::string& s`) albo metoda, która nie zmienia obiektu (`int rozmiar() const;`). `constexpr` idzie dalej - wartość liczona jest już podczas kompilacji."
+  },
+  {
+   "pytanie": "Co oznacza auto w C++?",
+   "odpowiedz": "`auto` każe kompilatorowi samemu wywnioskować typ zmiennej z wartości, np. `auto x = 3.5;` to `double`, a `auto it = v.begin();` to iterator. Skraca to kod przy długich nazwach typów, ale typ jest nadal sprawdzany podczas kompilacji."
   }
  ]
 }
