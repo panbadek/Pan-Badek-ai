@@ -18,9 +18,22 @@ def normalizuj(tekst):
     return "".join(z for z in tekst if not unicodedata.combining(z))
 
 
+def rdzen(slowo):
+    """Prosty rdzeń: odcinamy końcówkę (ostatnią literę) i przycinamy do 5 liter,
+    więc "żyją"/"żyje" -> "zyj", "koty"/"kot" -> "kot", "polski"/"polska" -> "polsk"."""
+    if len(slowo) <= 3:
+        return slowo
+    return slowo[:min(DLUGOSC_RDZENIA, max(3, len(slowo) - 1))]
+
+
+def slowa(tekst):
+    """Słowa tekstu: małe litery, bez polskich znaków i bez interpunkcji."""
+    return _SLOWO.findall(normalizuj(tekst))
+
+
 def tokenizuj(tekst):
     """Zwraca listę rdzeni słów z tekstu."""
-    return [slowo[:DLUGOSC_RDZENIA] for slowo in _SLOWO.findall(normalizuj(tekst))]
+    return [rdzen(slowo) for slowo in _SLOWO.findall(normalizuj(tekst))]
 
 
 def cechy(tekst):
@@ -30,7 +43,7 @@ def cechy(tekst):
     """
     wynik = set()
     for slowo in _SLOWO.findall(normalizuj(tekst)):
-        wynik.add("w:" + slowo[:DLUGOSC_RDZENIA])
+        wynik.add("w:" + rdzen(slowo))
         obramowane = f"#{slowo}#"
         for i in range(len(obramowane) - 2):
             wynik.add("t:" + obramowane[i:i + 3])
@@ -55,6 +68,15 @@ class Slownik:
 
     def lista(self):
         return sorted(self.indeksy, key=self.indeksy.get)
+
+    def rozszerz(self, teksty):
+        """Dopisuje nowe cechy na końcu (stare indeksy się nie zmieniają). Zwraca ich liczbę."""
+        przed = len(self.indeksy)
+        for tekst in teksty:
+            for c in sorted(cechy(tekst)):
+                if c not in self.indeksy:
+                    self.indeksy[c] = len(self.indeksy)
+        return len(self.indeksy) - przed
 
     def wektor(self, tekst):
         """Rzadki wektor: lista indeksów aktywnych cech (wartość 1)."""

@@ -1,0 +1,408 @@
+{
+ "testy": [
+  {
+   "tekst": "czesc badek",
+   "oczekiwana": "powitanie"
+  },
+  {
+   "tekst": "dzien dobry wszystkim",
+   "oczekiwana": "powitanie"
+  },
+  {
+   "tekst": "hejo",
+   "oczekiwana": "powitanie"
+  },
+  {
+   "tekst": "witam pana",
+   "oczekiwana": "powitanie"
+  },
+  {
+   "tekst": "siemanko",
+   "oczekiwana": "powitanie"
+  },
+  {
+   "tekst": "no to pa",
+   "oczekiwana": "pozegnanie"
+  },
+  {
+   "tekst": "do zobaczenia jutro",
+   "oczekiwana": "pozegnanie"
+  },
+  {
+   "tekst": "dobranoc badku",
+   "oczekiwana": "pozegnanie"
+  },
+  {
+   "tekst": "musze isc",
+   "oczekiwana": "pozegnanie"
+  },
+  {
+   "tekst": "na razie pa",
+   "oczekiwana": "pozegnanie"
+  },
+  {
+   "tekst": "kim ty wlasciwie jestes",
+   "oczekiwana": "kim_jestes"
+  },
+  {
+   "tekst": "jestes robotem?",
+   "oczekiwana": "kim_jestes"
+  },
+  {
+   "tekst": "przedstaw sie prosze",
+   "oczekiwana": "kim_jestes"
+  },
+  {
+   "tekst": "co to za bot",
+   "oczekiwana": "kim_jestes"
+  },
+  {
+   "tekst": "jak sie dzis masz",
+   "oczekiwana": "samopoczucie"
+  },
+  {
+   "tekst": "co slychac u ciebie",
+   "oczekiwana": "samopoczucie"
+  },
+  {
+   "tekst": "jak tam leci",
+   "oczekiwana": "samopoczucie"
+  },
+  {
+   "tekst": "wszystko w porzadku u ciebie?",
+   "oczekiwana": "samopoczucie"
+  },
+  {
+   "tekst": "dziekuje ci bardzo",
+   "oczekiwana": "podziekowanie"
+  },
+  {
+   "tekst": "wielkie dzieki",
+   "oczekiwana": "podziekowanie"
+  },
+  {
+   "tekst": "dzieki ziom",
+   "oczekiwana": "podziekowanie"
+  },
+  {
+   "tekst": "dziękuję za odpowiedź",
+   "oczekiwana": "podziekowanie"
+  },
+  {
+   "tekst": "opowiedz mi kawal",
+   "oczekiwana": "zart"
+  },
+  {
+   "tekst": "znasz jakis dowcip?",
+   "oczekiwana": "zart"
+  },
+  {
+   "tekst": "rozsmiesz mnie prosze",
+   "oczekiwana": "zart"
+  },
+  {
+   "tekst": "powiedz suchara",
+   "oczekiwana": "zart"
+  },
+  {
+   "tekst": "ktora godzina teraz",
+   "oczekiwana": "godzina"
+  },
+  {
+   "tekst": "podaj godzine",
+   "oczekiwana": "godzina"
+  },
+  {
+   "tekst": "ile jest teraz godzin",
+   "oczekiwana": "godzina"
+  },
+  {
+   "tekst": "jaka mamy godzine",
+   "oczekiwana": "godzina"
+  },
+  {
+   "tekst": "jaka dzis data",
+   "oczekiwana": "data"
+  },
+  {
+   "tekst": "ktory dzis jest",
+   "oczekiwana": "data"
+  },
+  {
+   "tekst": "jaki jest dzien tygodnia",
+   "oczekiwana": "data"
+  },
+  {
+   "tekst": "jaki dzisiaj mamy dzien",
+   "oczekiwana": "data"
+  },
+  {
+   "tekst": "co umiesz robic",
+   "oczekiwana": "umiejetnosci"
+  },
+  {
+   "tekst": "w czym mi pomozesz",
+   "oczekiwana": "umiejetnosci"
+  },
+  {
+   "tekst": "jakie masz funkcje?",
+   "oczekiwana": "umiejetnosci"
+  },
+  {
+   "tekst": "pokaz co potrafisz",
+   "oczekiwana": "umiejetnosci"
+  },
+  {
+   "tekst": "jak ty dzialasz",
+   "oczekiwana": "jak_dzialasz"
+  },
+  {
+   "tekst": "jak zostales zbudowany",
+   "oczekiwana": "jak_dzialasz"
+  },
+  {
+   "tekst": "w jakim jezyku jestes napisany",
+   "oczekiwana": "jak_dzialasz"
+  },
+  {
+   "tekst": "jestes super bocie",
+   "oczekiwana": "komplement"
+  },
+  {
+   "tekst": "ale jestes madry",
+   "oczekiwana": "komplement"
+  },
+  {
+   "tekst": "swietna robota",
+   "oczekiwana": "komplement"
+  },
+  {
+   "tekst": "lubie cie badku",
+   "oczekiwana": "komplement"
+  },
+  {
+   "tekst": "jestes glupi",
+   "oczekiwana": "obraza"
+  },
+  {
+   "tekst": "beznadziejny bot",
+   "oczekiwana": "obraza"
+  },
+  {
+   "tekst": "nic nie umiesz",
+   "oczekiwana": "obraza"
+  },
+  {
+   "tekst": "ile ty masz lat",
+   "oczekiwana": "wiek"
+  },
+  {
+   "tekst": "kiedy sie urodziles",
+   "oczekiwana": "wiek"
+  },
+  {
+   "tekst": "jak dlugo juz istniejesz",
+   "oczekiwana": "wiek"
+  },
+  {
+   "tekst": "kto cie zrobil",
+   "oczekiwana": "tworca"
+  },
+  {
+   "tekst": "kto jest twoim tworca",
+   "oczekiwana": "tworca"
+  },
+  {
+   "tekst": "kto cie zaprogramowal",
+   "oczekiwana": "tworca"
+  },
+  {
+   "tekst": "strasznie mi sie nudzi",
+   "oczekiwana": "nuda"
+  },
+  {
+   "tekst": "nie wiem co robic",
+   "oczekiwana": "nuda"
+  },
+  {
+   "tekst": "zaproponuj mi cos",
+   "oczekiwana": "nuda"
+  },
+  {
+   "tekst": "smutno mi",
+   "oczekiwana": "smutek"
+  },
+  {
+   "tekst": "mam beznadziejny dzien",
+   "oczekiwana": "smutek"
+  },
+  {
+   "tekst": "czuje sie samotna",
+   "oczekiwana": "smutek"
+  },
+  {
+   "tekst": "jestem bardzo zmeczony",
+   "oczekiwana": "zmeczenie"
+  },
+  {
+   "tekst": "nie mam juz sily",
+   "oczekiwana": "zmeczenie"
+  },
+  {
+   "tekst": "spac mi sie chce",
+   "oczekiwana": "zmeczenie"
+  },
+  {
+   "tekst": "jestem dzis szczesliwy",
+   "oczekiwana": "radosc"
+  },
+  {
+   "tekst": "udalo sie!",
+   "oczekiwana": "radosc"
+  },
+  {
+   "tekst": "mam swietny humor",
+   "oczekiwana": "radosc"
+  },
+  {
+   "tekst": "przepraszam bardzo",
+   "oczekiwana": "przeprosiny"
+  },
+  {
+   "tekst": "sorki za to",
+   "oczekiwana": "przeprosiny"
+  },
+  {
+   "tekst": "wybacz mi",
+   "oczekiwana": "przeprosiny"
+  },
+  {
+   "tekst": "okej",
+   "oczekiwana": "potwierdzenie"
+  },
+  {
+   "tekst": "spoko spoko",
+   "oczekiwana": "potwierdzenie"
+  },
+  {
+   "tekst": "dobrze rozumiem",
+   "oczekiwana": "potwierdzenie"
+  },
+  {
+   "tekst": "powiedz jakas ciekawostke",
+   "oczekiwana": "ciekawostka"
+  },
+  {
+   "tekst": "opowiedz cos ciekawego",
+   "oczekiwana": "ciekawostka"
+  },
+  {
+   "tekst": "naucz mnie czegos nowego",
+   "oczekiwana": "ciekawostka"
+  },
+  {
+   "tekst": "zmotywuj mnie do nauki",
+   "oczekiwana": "motywacja"
+  },
+  {
+   "tekst": "nie chce mi sie nic",
+   "oczekiwana": "motywacja"
+  },
+  {
+   "tekst": "potrzebuje motywacji",
+   "oczekiwana": "motywacja"
+  },
+  {
+   "tekst": "co mam zjesc na obiad",
+   "oczekiwana": "jedzenie"
+  },
+  {
+   "tekst": "jestem glodny jak wilk",
+   "oczekiwana": "jedzenie"
+  },
+  {
+   "tekst": "co dzis ugotowac",
+   "oczekiwana": "jedzenie"
+  },
+  {
+   "tekst": "ile lat zyje kot",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "ile godzin spia psy",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "jak dziala lodowka",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "kto wynalazl telefon",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "jaka jest stolica wloch",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "dlaczego trawa jest zielona",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "jak zrobic nalesniki",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "napisz opowiadanie o smoku",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "co to jest grawitacja",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "kiedy polska weszla do unii",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "jak sie liczy procenty",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "ile metrow ma kilometr",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "jaki jest najwyzszy szczyt swiata",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "czy delfiny to ssaki",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "jak wyleczyc katar",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "ile kosztuje bilet do kina",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "kto namalowal mona lise",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "jak dziala sztuczna inteligencja",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "co jedza zyrafy",
+   "oczekiwana": "inne"
+  },
+  {
+   "tekst": "jak dlugo leci sie na ksiezyc",
+   "oczekiwana": "inne"
+  }
+ ]
+}

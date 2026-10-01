@@ -4,16 +4,29 @@ import json
 import os
 import random
 import re
+import time
 from zlib import error as zlib_error
 
 from . import exif, internet, obrazy, skills, wtyczki
 from .biblioteki import NIEISTOTNE, Biblioteki
 from .network import SiecNeuronowa
-from .text import Slownik, cechy, normalizuj
+from .text import Slownik, cechy, normalizuj, rdzen
+from .wiedza import BazaWiedzy, istotne_slowa
 
 KATALOG = os.path.dirname(os.path.abspath(__file__))
 DOMYSLNE_INTENCJE = os.path.join(KATALOG, "data", "intencje.json")
 DOMYSLNA_PAMIEC = os.path.join(os.path.expanduser("~"), ".panbadek")
+WBUDOWANA_WIEDZA = os.path.join(KATALOG, "data", "wiedza.json")
+TESTY_INTENCJI = os.path.join(KATALOG, "data", "test_intencje.json")
+
+NEURONY_UKRYTE = 48
+# Baza wiedzy odpowiada, gdy pytanie jest wystarczająco podobne do zapamiętanego.
+PROG_WIEDZY = 0.45
+PROG_WIEDZY_PEWNY = 0.8
+LIMIT_DZIENNIKA = 3000
+NOTATKI = "Moje notatki"
+# Wytrenowane sieci w tym procesie (te same dane -> ten sam model, bez ponownego treningu).
+_GOTOWE_MODELE = {}
 
 PROG_PEWNOSCI = 0.45
 # Minimalne podobieństwo, żeby odpowiedzieć faktem z biblioteki.
@@ -62,6 +75,28 @@ _WIECEJ = re.compile(
     r"(?:\s+o\s+tym)?" + _KONIEC + r"|^\s*kontynuuj" + _KONIEC, _I)
 
 _O_SOBIE = {"sobie", "tobie", "ciebie", "ty"}
+
+# Samodzielna nauka i oceny.
+_ZAPAMIETAJ_ZE = re.compile(r"^\s*zapami[eę]taj\s*,?\s*(?:że|ze)\s+(.+?)\s*[.!]*\s*$", _I)
+_UCZ_SIE = re.compile(r"^\s*(?:ucz\s+si[eę]|trenuj(?:\s+si[eę])?|ulepsz\s+si[eę]|popraw\s+si[eę]"
+                      r"|przetw[oó]rz\s+(?:wiedz[eę]|rozmowy))" + _KONIEC, _I)
+_STATYSTYKI = re.compile(r"^\s*(?:statystyki|ile\s+wiesz|ile\s+umiesz|czego\s+si[eę]\s+nauczy[lł]e[sś]"
+                         r"|co\s+ju[zż]\s+wiesz)" + _KONIEC, _I)
+_CZEGO_NIE_WIESZ = re.compile(r"^\s*(?:czego\s+(?:jeszcze\s+)?nie\s+wiesz|czego\s+nie\s+umiesz"
+                              r"|o\s+co\s+ci[eę]\s+pytaj[aą])" + _KONIEC, _I)
+_OCENA_DOBRA = re.compile(r"^\s*(?:dobra\s+odpowied[zź]|dobrze\s+odpowiedzia[lł]e[sś]|zgadza\s+si[eę]"
+                          r"|poprawnie|dok[lł]adnie\s+tak|👍)" + _KONIEC, _I)
+_OCENA_ZLA = re.compile(r"^\s*(?:[zź]le|[zź]le\s+odpowiedzia[lł]e[sś]|z[lł]a\s+odpowied[zź]|to\s+nieprawda"
+                        r"|nieprawda|mylisz\s+si[eę]|to\s+b[lł][aą]d|bzdura|👎)" + _KONIEC, _I)
+# Pytania zależne od kontekstu rozmowy albo prośby o twórczość nie nadają się do zapamiętania.
+_KONTEKSTOWE = re.compile(r"\b(to|tego|tym|ten|ta|tamto|on|ona|ono|oni|jego|jej|ich|wcze[sś]niej|"
+                          r"powy[zż]ej|wy[zż]ej|poprzedni\w*|m[oó]j|moja|moje|moich|moim|mojego|mojej)\b", re.I)
+_TWORCZE = re.compile(r"^\s*(napisz|wymy[sś]l|u[lł][oó][zż]|stw[oó]rz|przet[lł]umacz|popraw|stre[sś][cć]"
+                      r"|zredaguj|narysuj|opowiedz\s+(?:mi\s+)?(?:bajk|histori))", re.I)
+# Zamiana pierwszej osoby na drugą w notatkach: "mój pies" -> "twój pies".
+_NA_TY = {"mój": "twój", "moja": "twoja", "moje": "twoje", "mojego": "twojego", "mojej": "twojej",
+          "moim": "twoim", "moich": "twoich", "mam": "masz", "jestem": "jesteś", "mnie": "ciebie",
+          "mi": "ci", "lubię": "lubisz", "mieszkam": "mieszkasz", "pracuję": "pracujesz"}
 
 _TO_JEST = re.compile(
     r"^\s*(?:to\s+(?:jest|s[aą])|zapami[eę]taj\s+(?:to\s+)?(?:zdj[eę]cie\s+)?jako"
@@ -139,7 +174,17 @@ class PanBadek:
 
         with open(plik_intencji, encoding="utf-8") as f:
             self.intencje = json.load(f)["intencje"]
-        self.intencje += self._wczytaj_nauczone()
+        # Przykłady dopisane z ocen 👍/👎 - sieć douczana jest na nich bez trenowania od zera.
+        self.dodatkowe_przyklady = {}
+        self.wiedza = BazaWiedzy(sciezka("wiedza.json"), WBUDOWANA_WIEDZA)
+        self._przenies_stare_lekcje(self._wczytaj_nauczone())
+        self.plik_dziennika = sciezka("dziennik.jsonl")
+        self.dziennik = self._wczytaj_dziennik()
+        # Ostatnie odpowiedzi (do ocen 👍/👎): numer -> co odpowiedziało i na co.
+        self.odpowiedzi = {}
+        self.id_odpowiedzi = None
+        self._kolejna_odpowiedz = 0
+        self._zrodlo_szczegol = None
         self.biblioteki = Biblioteki(sciezka("biblioteki"))
         self.wtyczki, self.bledy_wtyczek = wtyczki.wczytaj(self.katalog_wtyczek)
 
@@ -154,21 +199,56 @@ class PanBadek:
                 dane = json.load(f)
             self.imie = dane.get("imie")
             self.miasto = dane.get("miasto")
+            self.dodatkowe_przyklady = dane.get("dodatkowe_przyklady", {})
             return dane.get("intencje", [])
         return []
+
+    def _przenies_stare_lekcje(self, stare):
+        """Lekcje z wersji <0.7 były osobnymi klasami sieci - teraz trafiają do bazy wiedzy."""
+        for lekcja in stare:
+            if lekcja.get("przyklady") and lekcja.get("odpowiedzi"):
+                self.wiedza.dodaj(lekcja["przyklady"][0], lekcja["odpowiedzi"][0], "ty")
+        if stare:
+            self._zapisz_nauczone()
+
+    def _wczytaj_dziennik(self):
+        if not self.plik_dziennika or not os.path.exists(self.plik_dziennika):
+            return []
+        wpisy = []
+        with open(self.plik_dziennika, encoding="utf-8") as f:
+            for linia in f:
+                try:
+                    wpisy.append(json.loads(linia))
+                except ValueError:
+                    continue
+        return wpisy[-LIMIT_DZIENNIKA:]
+
+    def _zapisz_w_dzienniku(self, tekst, zrodlo):
+        wpis = {"czas": int(time.time()), "tekst": tekst[:500], "zrodlo": zrodlo}
+        self.dziennik.append(wpis)
+        if not self.plik_dziennika:
+            return
+        os.makedirs(self.katalog_pamieci, exist_ok=True)
+        if len(self.dziennik) > LIMIT_DZIENNIKA * 1.5:
+            self.dziennik = self.dziennik[-LIMIT_DZIENNIKA:]
+            with open(self.plik_dziennika, "w", encoding="utf-8") as f:
+                f.writelines(json.dumps(w, ensure_ascii=False) + "\n" for w in self.dziennik)
+        else:
+            with open(self.plik_dziennika, "a", encoding="utf-8") as f:
+                f.write(json.dumps(wpis, ensure_ascii=False) + "\n")
 
     def _zapisz_nauczone(self):
         if not self.plik_nauki:
             return
         os.makedirs(self.katalog_pamieci, exist_ok=True)
-        nauczone = [i for i in self.intencje if i.get("nauczona")]
         with open(self.plik_nauki, "w", encoding="utf-8") as f:
-            json.dump({"imie": self.imie, "miasto": self.miasto, "intencje": nauczone},
+            json.dump({"imie": self.imie, "miasto": self.miasto,
+                       "dodatkowe_przyklady": self.dodatkowe_przyklady},
                       f, ensure_ascii=False, indent=2)
 
     def _odcisk_danych(self):
-        """Pozwala wykryć, że intencje się zmieniły i model trzeba wytrenować od nowa."""
-        return json.dumps([[i["nazwa"], i["przyklady"]] for i in self.intencje], ensure_ascii=False)
+        """Pozwala wykryć, że dane treningowe się zmieniły i model trzeba wytrenować od nowa."""
+        return json.dumps(sorted(self.przyklady_treningowe().items()), ensure_ascii=False)
 
     def _wczytaj_model(self):
         if not self.plik_modelu or not os.path.exists(self.plik_modelu):
@@ -194,38 +274,214 @@ class PanBadek:
 
     # --- uczenie ------------------------------------------------------------
 
+    def przyklady_treningowe(self):
+        """Nazwa intencji -> zdania treningowe (wbudowane i dopisane z ocen)."""
+        return {i["nazwa"]: i["przyklady"] + self.dodatkowe_przyklady.get(i["nazwa"], [])
+                for i in self.intencje}
+
+    def _dane_treningowe(self):
+        przyklady = self.przyklady_treningowe()
+        return [(p, k) for k, i in enumerate(self.intencje) for p in przyklady[i["nazwa"]]]
+
     def trenuj(self):
-        przyklady = [(p, k) for k, i in enumerate(self.intencje) for p in i["przyklady"]]
+        """Trenuje sieć od zera na wszystkich przykładach. Zwraca końcową stratę."""
+        klucz = (self._odcisk_danych(), self.ziarno)
+        if klucz in _GOTOWE_MODELE:
+            cechy_slownika, siec, strata = _GOTOWE_MODELE[klucz]
+            self.slownik = Slownik(cechy_slownika)
+            self.siec = SiecNeuronowa.ze_slownika(json.loads(siec))
+            self._zapisz_model()
+            return strata
+        przyklady = self._dane_treningowe()
         self.slownik = Slownik.zbuduj(p for p, _ in przyklady)
-        self.siec = SiecNeuronowa(len(self.slownik), 32, len(self.intencje), ziarno=self.ziarno)
+        self.siec = SiecNeuronowa(len(self.slownik), NEURONY_UKRYTE, len(self.intencje), ziarno=self.ziarno)
         dane = [(self.slownik.wektor(p), k) for p, k in przyklady]
         strata = self.siec.trenuj(dane, ziarno=self.ziarno)
+        if self.ziarno is not None:
+            _GOTOWE_MODELE[klucz] = (self.slownik.lista(), json.dumps(self.siec.do_slownika()), strata)
         self._zapisz_model()
         return strata
 
-    def naucz(self, pytanie, odpowiedz):
-        """Dodaje nową wiedzę i trenuje sieć od nowa."""
-        for intencja in self.intencje:
-            if intencja.get("nauczona") and pytanie in intencja["przyklady"]:
-                intencja["odpowiedzi"] = [odpowiedz]
-                break
-        else:
-            self.intencje.append({"nazwa": f"nauczona_{len(self.intencje)}", "nauczona": True,
-                                  "przyklady": [pytanie], "odpowiedzi": [odpowiedz]})
+    def dotrenuj(self, nowe=(), epoki=30):
+        """Douczanie po nowych przykładach: sieć zachowuje wiedzę, dostaje nowe słowa
+        i kilka epok treningu - zamiast trenowania od zera. Świeże przykłady liczą się
+        kilka razy mocniej, żeby jedna ocena wystarczyła do poprawy."""
+        przyklady = self._dane_treningowe()
+        nowe_cechy = self.slownik.rozszerz(p for p, _ in przyklady)
+        if nowe_cechy:
+            self.siec.dodaj_wejscia(nowe_cechy, ziarno=self.ziarno)
+        nazwy = [i["nazwa"] for i in self.intencje]
+        dane = [(self.slownik.wektor(p), k) for p, k in przyklady]
+        dane += [(self.slownik.wektor(t), nazwy.index(n)) for t, n in nowe if n in nazwy] * 4
+        strata = self.siec.trenuj(dane, epoki=epoki, tempo=0.03, ziarno=self.ziarno)
+        self._zapisz_model()
+        return strata
+
+    def dodaj_przyklad(self, tekst, intencja):
+        """Dopisuje zdanie do przykładów intencji i douczą sieć."""
+        lista = self.dodatkowe_przyklady.setdefault(intencja, [])
+        if tekst in lista:
+            return
+        for inne in self.dodatkowe_przyklady.values():
+            if tekst in inne:
+                inne.remove(tekst)
+        lista.append(tekst)
         self._zapisz_nauczone()
-        self.trenuj()
+        self.dotrenuj(nowe=[(tekst, intencja)])
+
+    def naucz(self, pytanie, odpowiedz):
+        """Lekcja od użytkownika: trafia do bazy wiedzy (bez trenowania sieci)."""
+        return self.wiedza.dodaj(pytanie, odpowiedz, "ty")
 
     def zapomnij(self, pytanie):
-        """Usuwa nauczoną odpowiedź. Zwraca True, jeśli coś usunięto."""
-        klucz = normalizuj(pytanie)
-        przed = len(self.intencje)
-        self.intencje = [i for i in self.intencje if not (
-            i.get("nauczona") and any(normalizuj(p) == klucz for p in i["przyklady"]))]
-        if len(self.intencje) == przed:
-            return False
-        self._zapisz_nauczone()
+        """Usuwa zapamiętaną odpowiedź na pytanie. Zwraca True, jeśli coś usunięto."""
+        wpis, podobienstwo = self.wiedza.szukaj(pytanie)
+        if wpis and podobienstwo >= PROG_WIEDZY_PEWNY:
+            return self.wiedza.usun(wpis["id"])
+        return False
+
+    def naucz_od_ai(self, pytanie, odpowiedz, zrodlo):
+        """Zapamiętuje odpowiedź dużego modelu AI, żeby następnym razem odpowiedzieć samemu.
+        Zwraca numer wpisu w bazie wiedzy albo None, gdy pytanie nie nadaje się do zapamiętania."""
+        pytanie, odpowiedz = pytanie.strip(), (odpowiedz or "").strip()
+        slowa = istotne_slowa(pytanie)
+        if (len(slowa) < 2 or len(pytanie) > 300 or len(odpowiedz) < 2 or _TWORCZE.match(pytanie)
+                or _KONTEKSTOWE.search(pytanie)):
+            return None
+        return self.wiedza.dodaj(pytanie, odpowiedz, zrodlo)["id"]
+
+    def ocen(self, id_odpowiedzi, dobra):
+        """Ocena 👍/👎 odpowiedzi - Badek uczy się na niej. Zwraca komunikat."""
+        info = self.odpowiedzi.get(id_odpowiedzi)
+        if not info:
+            return "Nie pamiętam już tej odpowiedzi, ale dziękuję za ocenę!"
+        if info.get("wiedza"):
+            wynik = self.wiedza.ocen(info["wiedza"], dobra)
+            if wynik == "usunieto":
+                return "Usunąłem tę odpowiedź z pamięci. Następnym razem poszukam lepszej."
+            return "Dzięki! Zapamiętam, że to dobra odpowiedź." if dobra else \
+                "Dzięki, obniżyłem jej ocenę - jeszcze jedna zła ocena i ją usunę."
+        if info.get("intencja"):
+            if dobra:
+                self.dodaj_przyklad(info["tekst"], info["intencja"])
+                return "Dzięki! Dopisałem to zdanie do swoich przykładów treningowych."
+            self.dodaj_przyklad(info["tekst"], "inne")
+            return (f"Rozumiem - na „{info['tekst']}” nie powinienem tak odpowiadać. "
+                    "Douczyłem sieć, a następnym razem poszukam odpowiedzi gdzie indziej.")
+        return "Dzięki za ocenę!" if dobra else \
+            "Przykro mi. Naucz mnie poprawnej odpowiedzi: „naucz się: pytanie => odpowiedź”."
+
+    # --- samodoskonalenie ----------------------------------------------------
+
+    def ocen_siec(self):
+        """Dokładność sieci na zdaniach, których nie widziała przy treningu (0..1)."""
+        if not os.path.exists(TESTY_INTENCJI):
+            return None
+        with open(TESTY_INTENCJI, encoding="utf-8") as f:
+            testy = json.load(f)["testy"]
+        dobre = sum((self.rozpoznaj_intencje(t["tekst"]) or "inne") == t["oczekiwana"] for t in testy)
+        return dobre / len(testy)
+
+    def czego_nie_wiem(self, ile=5):
+        """Najczęstsze pytania z rozmów, na które wciąż nie ma odpowiedzi."""
+        licznik, przyklad = {}, {}
+        for wpis in self.dziennik:
+            if wpis.get("zrodlo") != "nie_wiem":
+                continue
+            klucz = " ".join(sorted(istotne_slowa(wpis["tekst"])))
+            if not klucz:
+                continue
+            licznik[klucz] = licznik.get(klucz, 0) + 1
+            przyklad[klucz] = wpis["tekst"]
+        wyniki = []
+        for klucz in sorted(licznik, key=lambda k: -licznik[k]):
+            if self.wiedza.szukaj(przyklad[klucz])[1] < PROG_WIEDZY:  # wciąż nie wiem
+                wyniki.append((przyklad[klucz], licznik[klucz]))
+            if len(wyniki) == ile:
+                break
+        return wyniki
+
+    def statystyki(self):
+        zrodla = self.wiedza.statystyki()
+        nazwy = {"wbudowana": "wbudowanych", "ty": "od ciebie"}
+        wiedza = ", ".join(f"{n} {nazwy.get(z, 'od ' + z)}" for z, n in sorted(zrodla.items()))
+        przyklady = sum(len(p) for p in self.przyklady_treningowe().values())
+        dopisane = sum(len(p) for p in self.dodatkowe_przyklady.values())
+        biblioteki = sum(ile for _, ile, _ in self.biblioteki.lista())
+        rozmowy = len(self.dziennik)
+        linie = [
+            "📊 Co już wiem:",
+            f"• baza wiedzy: {len(self.wiedza.wpisy)} {odmien(len(self.wiedza.wpisy), 'odpowiedź', 'odpowiedzi', 'odpowiedzi')} ({wiedza})",
+            f"• sieć neuronowa: {len(self.intencje)} {odmien(len(self.intencje), 'temat', 'tematy', 'tematów')}, "
+            f"{przyklady} {odmien(przyklady, 'przykład', 'przykłady', 'przykładów')}"
+            + (f" (w tym {dopisane} z twoich ocen)" if dopisane else ""),
+            f"• biblioteki: {len(self.biblioteki.lista())} ({biblioteki} faktów)",
+            f"• zdjęcia: {len(self.zdjecia)} zapamiętanych",
+            f"• przeczytane wiadomości: {rozmowy}",
+        ]
+        return "\n".join(linie)
+
+    def ucz_sie(self):
+        """"Sen" Badka: porządkuje wiedzę, trenuje sieć od zera i mówi, czego jeszcze nie wie."""
+        scalone = self.wiedza.porzadkuj()
+        start = time.time()
         self.trenuj()
-        return True
+        dokladnosc = self.ocen_siec()
+        linie = ["🧠 Skończyłem naukę!",
+                 f"• przetrenowałem sieć w {time.time() - start:.1f} s".replace(".", ",", 1)
+                 + (f" - rozpoznaje {dokladnosc:.0%} zdań testowych" if dokladnosc is not None else ""),
+                 f"• uporządkowałem wiedzę ({scalone} {odmien(scalone, 'duplikat scalony', 'duplikaty scalone', 'duplikatów scalonych')})"]
+        nie_wiem = self.czego_nie_wiem()
+        if nie_wiem:
+            linie.append("• najczęstsze pytania, na które jeszcze nie znam odpowiedzi:")
+            linie += [f"   - „{t}” ({n}×)" for t, n in nie_wiem]
+            linie.append("  Naucz mnie: „naucz się: pytanie => odpowiedź” albo włącz mocniejsze AI w ⚙️.")
+        return "\n".join(linie)
+
+    # --- wymiana pamięci między urządzeniami ------------------------------------
+
+    def eksport(self):
+        """Cała wyuczona pamięć jako słownik (do zapisania w pliku JSON)."""
+        return {
+            "panbadek_pamiec": 1, "imie": self.imie, "miasto": self.miasto,
+            "wiedza": self.wiedza.eksport(), "dodatkowe_przyklady": self.dodatkowe_przyklady,
+            "biblioteki": {n: self.biblioteki.dane[n] for n in self.biblioteki.dane},
+            "zdjecia": self.zdjecia,
+        }
+
+    def importuj(self, dane):
+        """Dołącza pamięć z innego urządzenia (nic nie kasuje). Zwraca podsumowanie."""
+        if not isinstance(dane, dict) or "panbadek_pamiec" not in dane:
+            raise ValueError("To nie jest plik pamięci Pana Badka.")
+        self.imie = self.imie or dane.get("imie")
+        self.miasto = self.miasto or dane.get("miasto")
+        nowa_wiedza = self.wiedza.import_(dane.get("wiedza", []))
+        nowe_przyklady = 0
+        for intencja, przyklady in dane.get("dodatkowe_przyklady", {}).items():
+            lista = self.dodatkowe_przyklady.setdefault(intencja, [])
+            for p in przyklady:
+                if p not in lista:
+                    lista.append(p)
+                    nowe_przyklady += 1
+        nowe_fakty = 0
+        for nazwa, biblioteka in dane.get("biblioteki", {}).items():
+            try:
+                nowe_fakty += self.biblioteki.dodaj(nazwa, *biblioteka.get("wpisy", []))
+            except ValueError:
+                continue
+        znane = {json.dumps(z, sort_keys=True) for z in self.zdjecia}
+        nowe_zdjecia = [z for z in dane.get("zdjecia", []) if json.dumps(z, sort_keys=True) not in znane]
+        self.zdjecia += nowe_zdjecia
+        self._zapisz_zdjecia()
+        self._zapisz_nauczone()
+        if nowe_przyklady:
+            self.dotrenuj()
+        n = len(nowe_zdjecia)
+        return ("Wczytałem pamięć: "
+                f"{nowa_wiedza} {odmien(nowa_wiedza, 'nową odpowiedź', 'nowe odpowiedzi', 'nowych odpowiedzi')}, "
+                f"{nowe_fakty} {odmien(nowe_fakty, 'fakt', 'fakty', 'faktów')} w bibliotekach, "
+                f"{nowe_przyklady} {odmien(nowe_przyklady, 'przykład', 'przykłady', 'przykładów')} treningowych, "
+                f"{n} {odmien(n, 'zdjęcie', 'zdjęcia', 'zdjęć')}.")
 
     # --- myślenie -----------------------------------------------------------
 
@@ -237,6 +493,20 @@ class PanBadek:
         prawd = self.siec.przewiduj(wektor)
         najlepsza = max(range(len(prawd)), key=prawd.__getitem__)
         return self.intencje[najlepsza], prawd[najlepsza]
+
+    def rozpoznaj_intencje(self, tekst):
+        """Nazwa intencji, którą sieć rozpoznaje z pewnością, albo None ("to nie do mnie")."""
+        intencja, pewnosc = self.klasyfikuj_ostroznie(tekst)
+        if intencja is None or pewnosc < PROG_PEWNOSCI or intencja["nazwa"] == "inne":
+            return None
+        return intencja["nazwa"]
+
+    def klasyfikuj_ostroznie(self, tekst):
+        """Jak klasyfikuj(), ale gdy ponad połowa istotnych słów jest sieci obca, nie zgaduje
+        ("jak szybko lata jaskółka" to nie pogawędka, choć zaczyna się od "jak")."""
+        if self._nieznane_slowa(tekst) > 0.5:
+            return None, 0.0
+        return self.klasyfikuj(tekst)
 
     def _zna_tekst(self, tekst):
         """Chroni przed pewnymi siebie strzałami sieci na zupełnie obcych zdaniach.
@@ -260,27 +530,72 @@ class PanBadek:
     def odpowiedz(self, tekst):
         # Która część mózgu odpowiedziała - np. aplikacja w przeglądarce oddaje rozmowę
         # dużemu modelowi językowemu, gdy było to "nie_wiem" albo zwykła pogawędka.
-        self.zrodlo = "nie_wiem"
         tekst = tekst.strip()
         if not tekst:
+            self.zrodlo = "nie_wiem"
             return "Powiedz coś - słucham!"
+        poprzednia, self._poprzednia_odpowiedz = getattr(self, "_poprzednia_odpowiedz", None), None
+        self._wpis_wiedzy = self._intencja_odpowiedzi = None
+        wynik = self._mysl(tekst, poprzednia)
+        self.zarejestruj_odpowiedz(tekst, self.zrodlo, self._wpis_wiedzy, self._intencja_odpowiedzi)
+        self._zapisz_w_dzienniku(tekst, self.zrodlo)
+        return wynik
+
+    def zarejestruj_odpowiedz(self, tekst, zrodlo, wiedza=None, intencja=None):
+        """Zapamiętuje, kto odpowiedział na wiadomość - żeby dało się tę odpowiedź ocenić."""
+        self._kolejna_odpowiedz += 1
+        self.id_odpowiedzi = self._kolejna_odpowiedz
+        self.odpowiedzi[self.id_odpowiedzi] = {"tekst": tekst, "zrodlo": zrodlo,
+                                               "wiedza": wiedza, "intencja": intencja}
+        for stary in [k for k in self.odpowiedzi if k < self.id_odpowiedzi - 50]:
+            del self.odpowiedzi[stary]
+        self._poprzednia_odpowiedz = self.id_odpowiedzi
+        return self.id_odpowiedzi
+
+    def _mysl(self, tekst, poprzednia):
+        self.zrodlo = "nie_wiem"
         zdjecie, self.ostatnie_zdjecie = self.ostatnie_zdjecie, None
         podpis = _TO_JEST.match(tekst)
         if zdjecie and podpis:
             self.zrodlo = "zdjecia"
             return self.naucz_zdjecie(zdjecie, podpis.group(1))
-        for obsluga in (self._polecenia_zdjec, self._polecenia_pamieci, self._polecenia_bibliotek,
-                        self._polecenia_wtyczek, self._wtyczki, self._internet,
-                        self._kalkulator, self._siec_neuronowa):
+        # Ocena poprzedniej odpowiedzi słowami ("źle", "dobra odpowiedź").
+        for wzor, dobra in ((_OCENA_DOBRA, True), (_OCENA_ZLA, False)):
+            if poprzednia and wzor.match(tekst):
+                self.zrodlo = "ocena"
+                return self.ocen(poprzednia, dobra)
+        for obsluga in (self._polecenia_uczenia, self._polecenia_zdjec, self._polecenia_pamieci,
+                        self._polecenia_bibliotek, self._polecenia_wtyczek, self._wtyczki,
+                        self._internet, self._kalkulator, self._wiedza_lub_siec):
+            self._zrodlo_szczegol = None
             wynik = obsluga(tekst)
             if wynik:
-                self.zrodlo = obsluga.__name__.lstrip("_")
+                self.zrodlo = self._zrodlo_szczegol or obsluga.__name__.lstrip("_")
                 return wynik
         z_biblioteki = self._z_biblioteki(tekst)
         if z_biblioteki:
             self.zrodlo = "biblioteka"
             return z_biblioteki
         return self.los.choice(NIE_WIEM).format(pytanie=tekst)
+
+    def _polecenia_uczenia(self, tekst):
+        notatka = _ZAPAMIETAJ_ZE.match(tekst)
+        if notatka:
+            fakt = " ".join(_NA_TY.get(s.lower(), s) for s in notatka.group(1).split())
+            fakt = fakt[0].upper() + fakt[1:]
+            self.biblioteki.dodaj(NOTATKI, fakt)
+            return f"Zapamiętałem: {fakt}"
+        if _UCZ_SIE.match(tekst):
+            return self.ucz_sie()
+        if _STATYSTYKI.match(tekst):
+            return self.statystyki()
+        if _CZEGO_NIE_WIESZ.match(tekst):
+            nie_wiem = self.czego_nie_wiem()
+            if not nie_wiem:
+                return "Na wszystkie dotychczasowe pytania znalazłem już odpowiedź! 🎉"
+            return "Najczęściej nie wiedziałem, co odpowiedzieć na:\n" + "\n".join(
+                f"• „{t}” ({n}×)" for t, n in nie_wiem) + "\nNaucz mnie: „naucz się: pytanie => odpowiedź”."
+        return None
 
     # --- zdjęcia --------------------------------------------------------------
 
@@ -355,7 +670,7 @@ class PanBadek:
         if nauka:
             pytanie, odpowiedz = nauka.groups()
             self.naucz(pytanie, odpowiedz)
-            return f"Zapamiętałem! Na '{pytanie}' odpowiem: '{odpowiedz}'."
+            return f"Zapamiętałem! Na „{pytanie}” (i podobne pytania) odpowiem: „{odpowiedz}”."
 
         zapomnij = _ZAPOMNIJ.match(tekst)
         if zapomnij:
@@ -477,7 +792,7 @@ class PanBadek:
 
         wiki = _WIKI.match(tekst)
         if wiki and normalizuj(wiki.group(1)) not in _O_SOBIE:
-            return self._co_to_jest(wiki.group(1))
+            return self._co_to_jest(wiki.group(1), tekst)
 
         if _POGODA.search(tekst):
             miejsca = [m for m in _MIEJSCE.findall(tekst) + _POGODA_MIASTO.findall(tekst)
@@ -507,7 +822,16 @@ class PanBadek:
                 return wynik
         return f"Nie znalazłem miejscowości „{miasto}”."
 
-    def _co_to_jest(self, haslo):
+    def _co_to_jest(self, haslo, pytanie=None):
+        # Najpierw własna wiedza (działa offline i nie zużywa internetu).
+        wpis, podobienstwo = self.wiedza.szukaj(pytanie or haslo)
+        if wpis and podobienstwo >= PROG_WIEDZY:
+            self.wiedza.uzyto(wpis)
+            self._wpis_wiedzy = wpis["id"]
+            self._zrodlo_szczegol = "wiedza"
+            if wpis["zrodlo"] in ("wbudowana", "ty"):
+                return wpis["odpowiedz"]
+            return f"{wpis['odpowiedz']}\n(zapamiętałem od: {wpis['zrodlo']})"
         z_biblioteki = self.biblioteki.szukaj(haslo)
         if z_biblioteki and z_biblioteki[0][0] >= PROG_BIBLIOTEKI_PEWNY:
             _, nazwa, wpis = z_biblioteki[0]
@@ -552,10 +876,48 @@ class PanBadek:
     def _kalkulator(self, tekst):
         return skills.kalkulator(tekst)
 
-    def _siec_neuronowa(self, tekst):
-        intencja, pewnosc = self.klasyfikuj(tekst)
-        if intencja is None or pewnosc < PROG_PEWNOSCI:
+    def _zna_wszystkie_slowa(self, tekst):
+        """Czy sieć widziała przy treningu każde istotne słowo pytania?"""
+        return self._nieznane_slowa(tekst) == 0
+
+    def _nieznane_slowa(self, tekst):
+        """Jaka część istotnych słów pytania jest sieci obca (0..1)."""
+        slowa = istotne_slowa(tekst)
+        if not slowa:
+            return 0
+        return sum("w:" + rdzen(s) not in self.slownik.indeksy for s in slowa) / len(slowa)
+
+    def _wiedza_lub_siec(self, tekst):
+        """Baza wiedzy i sieć neuronowa razem: wygrywa ta, która jest pewniejsza.
+        Sieć nie przejmuje pytań z nieznanymi jej słowami, jeśli wiedzę o nich mają
+        baza wiedzy albo biblioteki (np. "jak ma na imię mój pies" to nie pytanie o Badka)."""
+        wpis, podobienstwo = self.wiedza.szukaj(tekst)
+        intencja, pewnosc = self.klasyfikuj_ostroznie(tekst)
+        nazwa = intencja["nazwa"] if intencja and pewnosc >= PROG_PEWNOSCI else None
+        zna_slowa = self._zna_wszystkie_slowa(tekst)
+        z_biblioteki = self.biblioteki.szukaj(tekst)
+        if z_biblioteki and z_biblioteki[0][0] >= max(PROG_BIBLIOTEKI_PEWNY, podobienstwo) and (
+                not zna_slowa or nazwa in (None, "inne")):
+            return None  # twoje notatki i biblioteki pasują lepiej - odpowie biblioteka
+        # Gdy sieć rozpoznała temat rozmowy i zna wszystkie słowa, wiedza musi pasować
+        # bardzo dokładnie - inaczej "mam zły dzień" trafiałoby w "Kiedy jest Dzień Matki?".
+        # Twoje własne lekcje ("naucz się: ...") wygrywają zawsze, gdy pasują.
+        siec_pewna = nazwa not in (None, "inne") and zna_slowa
+        prog = PROG_WIEDZY if not siec_pewna or (wpis and wpis["zrodlo"] == "ty") else PROG_WIEDZY_PEWNY
+        if wpis and podobienstwo >= prog:
+            self.wiedza.uzyto(wpis)
+            self._wpis_wiedzy = wpis["id"]
+            self._zrodlo_szczegol = "wiedza"
+            if wpis["zrodlo"] in ("wbudowana", "ty"):
+                return wpis["odpowiedz"]
+            return f"{wpis['odpowiedz']}\n(zapamiętałem od: {wpis['zrodlo']})"
+        if nazwa in (None, "inne"):
             return None
+        self._zrodlo_szczegol = "siec_neuronowa"
+        self._intencja_odpowiedzi = nazwa
+        return self._odpowiedz_intencji(tekst, intencja, pewnosc)
+
+    def _odpowiedz_intencji(self, tekst, intencja, pewnosc):
         if pewnosc < 0.9:
             # Sieć się waha, a biblioteka zna wyraźnie pasujący fakt - wybieramy fakt.
             wyniki = self.biblioteki.szukaj(tekst)
@@ -566,6 +928,10 @@ class PanBadek:
             return skills.godzina()
         if akcja == "data":
             return skills.data()
+        if akcja == "ciekawostka":
+            wpisy = [w for w in self.wiedza.wpisy if w["zrodlo"] != "ty"] or self.wiedza.wpisy
+            if wpisy:
+                return "💡 Ciekawostka: " + self.los.choice(wpisy)["odpowiedz"]
         return self._wypelnij(self.los.choice(intencja["odpowiedzi"]))
 
     def _z_biblioteki(self, tekst):

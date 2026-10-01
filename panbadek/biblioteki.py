@@ -10,21 +10,62 @@ import math
 import os
 import re
 
-from .text import cechy, normalizuj
+from .text import cechy, normalizuj, slowa
 
 # Słowa, które niczego nie wnoszą do wyszukiwania.
 NIEISTOTNE = set("""
 a aby ale albo bo by byc byl byla bylo byly co czy dla do gdzie i ich ile jak jaka jaki
 jakie jest jestem jestes kim kto ktora ktore ktory ma mi mnie na nie o od po powiedz pod
 przez sie ta tak te ten to tu twoj w we z za ze zna znasz opowiedz wiesz czym
+moj moja moje mojego mojej moim twoja twoje twojego twojej twoim
 """.split())
 
 NAZWA = re.compile(r"^[\w ąćęłńóśźżĄĆĘŁŃÓŚŹŻ-]{1,60}$")
 
 
 def _cechy_istotne(tekst):
-    slowa = [s for s in normalizuj(tekst).split() if s.strip(".,!?;:\"'()") not in NIEISTOTNE]
-    return cechy(" ".join(slowa))
+    return cechy(" ".join(s for s in slowa(tekst) if s not in NIEISTOTNE))
+
+
+# Rdzeń słowa mówi o znaczeniu więcej niż trigram liter, więc waży więcej.
+WAGA_SLOWA = 1.6
+
+
+class IndeksTFIDF:
+    """Mała wyszukiwarka: teksty zamienione na cechy ważone rzadkością (IDF),
+    a trafność to podobieństwo kosinusowe zapytania do tekstu."""
+
+    def __init__(self, teksty):
+        cechy_tekstow = [_cechy_istotne(t) for t in teksty]
+        df = {}
+        for c in cechy_tekstow:
+            for cecha in c:
+                df[cecha] = df.get(cecha, 0) + 1
+        n = len(cechy_tekstow)
+        self.waga = {c: math.log((n + 1) / (d + 0.5)) * (WAGA_SLOWA if c.startswith("w:") else 1.0)
+                     for c, d in df.items()}
+        # Cecha, której nie ma w żadnym tekście, waży tyle co najrzadsza znana i liczy się
+        # do normy zapytania - żeby "stolica Niemiec" nie była identyczna ze "stolicą Francji"
+        # tylko dlatego, że słowa "Niemiec" indeks nie zna.
+        self.waga_nieznanej = max((math.log((n + 1) / (d + 0.5)) for d in df.values()), default=1.0)
+        self.teksty = [(c, math.sqrt(sum(self.waga[x] ** 2 for x in c)) or 1.0) for c in cechy_tekstow]
+
+    def szukaj(self, zapytanie, ile=1):
+        """Zwraca listę (wynik 0..1, numer tekstu) od najlepszego."""
+        z = _cechy_istotne(zapytanie)
+        norma_z = math.sqrt(sum(self._waga(x) ** 2 for x in z)) or 1.0
+        wyniki = []
+        for i, (c, norma) in enumerate(self.teksty):
+            wspolne = z & c
+            if wspolne:
+                wyniki.append((sum(self.waga[x] ** 2 for x in wspolne) / (norma * norma_z), i))
+        wyniki.sort(key=lambda w: -w[0])
+        return wyniki[:ile]
+
+    def _waga(self, cecha):
+        if cecha in self.waga:
+            return self.waga[cecha]
+        return self.waga_nieznanej * (WAGA_SLOWA if cecha.startswith("w:") else 1.0)
 
 
 def _plik(nazwa):
@@ -97,31 +138,12 @@ class Biblioteki:
         return [(n, len(b["wpisy"]), b.get("opis", "")) for n, b in sorted(self.dane.items())]
 
     def _zbuduj_indeks(self):
-        dokumenty = [(n, w, _cechy_istotne(w)) for n, b in self.dane.items() for w in b["wpisy"]]
-        df = {}
-        for _, _, c in dokumenty:
-            for cecha in c:
-                df[cecha] = df.get(cecha, 0) + 1
-        n = len(dokumenty)
-        idf = {c: math.log((n + 1) / (d + 0.5)) for c, d in df.items()}
-        indeks = []
-        for nazwa, wpis, c in dokumenty:
-            norma = math.sqrt(sum(idf[x] ** 2 for x in c)) or 1.0
-            indeks.append((nazwa, wpis, c, norma))
-        self._indeks = (indeks, idf)
+        wpisy = [(n, w) for n, b in self.dane.items() for w in b["wpisy"]]
+        self._indeks = (wpisy, IndeksTFIDF(w for _, w in wpisy))
 
     def szukaj(self, pytanie, ile=1):
         """Zwraca listę (wynik, nazwa_biblioteki, wpis) posortowaną od najlepszego."""
         if self._indeks is None:
             self._zbuduj_indeks()
-        indeks, idf = self._indeks
-        zapytanie = _cechy_istotne(pytanie)
-        norma_z = math.sqrt(sum(idf.get(x, 0.0) ** 2 for x in zapytanie)) or 1.0
-        wyniki = []
-        for nazwa, wpis, c, norma in indeks:
-            wspolne = zapytanie & c
-            if wspolne:
-                wynik = sum(idf[x] ** 2 for x in wspolne) / (norma * norma_z)
-                wyniki.append((wynik, nazwa, wpis))
-        wyniki.sort(key=lambda w: w[0], reverse=True)
-        return wyniki[:ile]
+        wpisy, indeks = self._indeks
+        return [(wynik, *wpisy[i]) for wynik, i in indeks.szukaj(pytanie, ile)]

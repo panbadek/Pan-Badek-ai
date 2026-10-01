@@ -1,5 +1,37 @@
 # Historia zmian
 
+## 0.7.0
+
+### Samodzielna nauka
+- **Baza wiedzy** (`panbadek/wiedza.py`): pary pytanie-odpowiedź wyszukiwane po podobieństwie
+  (TF-IDF). Na start dostaje 143 pytania z wiedzy ogólnej (geografia, historia Polski, nauka,
+  przyroda, kosmos, technika, kalendarz), dostępne także offline.
+- **Nauka od dużych modeli:** każda odpowiedź Claude albo modelu w telefonie trafia do bazy
+  wiedzy. Na podobne pytanie Badek odpowiada potem sam, offline i za darmo („zapamiętałem od: Claude”).
+- **Oceny 👍/👎** (przyciski w aplikacji albo słowa „źle” / „dobra odpowiedź”): zła odpowiedź
+  z bazy wiedzy jest usuwana, a ocena odpowiedzi sieci staje się nowym przykładem treningowym.
+  Sieć douczana jest od razu, bez trenowania od zera, i zachowuje dotychczasową wiedzę.
+- **„zapamiętaj, że …”** zapisuje notatki (biblioteka „Moje notatki”, z zamianą „mój” → „twój”).
+- **„ucz się”** porządkuje wiedzę, trenuje sieć od zera, mierzy dokładność i pokazuje pytania,
+  na które Badek najczęściej nie znał odpowiedzi. Do tego **„statystyki”** i **„czego nie wiesz”**.
+- **Dziennik rozmów** (ostatnie 3000 wiadomości) służy do wyszukiwania luk w wiedzy.
+- **Kopia pamięci**: eksport i import całej wyuczonej pamięci (aplikacja: ⚙️, terminal:
+  `--eksport` / `--import`), żeby łączyć wiedzę z telefonu, komputera i innych przeglądarek.
+- „naucz się: …” trafia teraz do bazy wiedzy, zamiast dokładać klasę do sieci i trenować ją od zera.
+  Lekcje ze starszych wersji są przenoszone automatycznie.
+
+### Trening i jakość
+- Dane treningowe: 24 tematy i ponad 350 przykładów (wcześniej 12 tematów, ok. 100 przykładów).
+  Doszła klasa „inne”, dzięki której sieć nie przejmuje pytań o wiedzę
+  (np. „ile godzin śpią koty” to już nie pytanie o godzinę).
+- Zestaw testowy 101 zdań, których sieć nie widzi przy treningu (`narzedzia/ocen_siec.py`):
+  **ok. 97% trafień** (średnia z 5 losowań wag). Sieć ma 48 neuronów ukrytych.
+- Lepsze rdzeniowanie słów („żyją” = „żyje”, „koty” = „kot”). Nieznane słowa obniżają trafność
+  wyszukiwania, więc „stolica Niemiec” nie myli się już ze „stolicą Francji”.
+- Twoje notatki i lekcje mają pierwszeństwo przed siecią, a „co to jest / kim był” najpierw
+  sprawdza własną wiedzę, potem dopiero Wikipedię.
+- Naprawiony błąd w aplikacji: odpowiedź mogła trafić nie do tego zapytania (kolizja pola `id`).
+
 ## 0.6.0
 
 ### Nowe

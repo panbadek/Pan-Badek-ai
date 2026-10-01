@@ -1,0 +1,576 @@
+{
+ "wiedza": [
+  {
+   "pytanie": "Jaka jest stolica Polski?",
+   "odpowiedz": "Stolicą Polski jest Warszawa."
+  },
+  {
+   "pytanie": "Jaka jest najdłuższa rzeka w Polsce?",
+   "odpowiedz": "Najdłuższa rzeka w Polsce to Wisła - ma ok. 1022 km i płynie od Beskidu Śląskiego do Morza Bałtyckiego."
+  },
+  {
+   "pytanie": "Jaki jest najwyższy szczyt w Polsce?",
+   "odpowiedz": "Najwyższy szczyt w Polsce to Rysy w Tatrach - polski wierzchołek ma 2499 m n.p.m."
+  },
+  {
+   "pytanie": "Nad jakim morzem leży Polska?",
+   "odpowiedz": "Polska leży nad Morzem Bałtyckim."
+  },
+  {
+   "pytanie": "Ile województw ma Polska?",
+   "odpowiedz": "Polska ma 16 województw."
+  },
+  {
+   "pytanie": "Jakie jest największe jezioro w Polsce?",
+   "odpowiedz": "Największe jezioro w Polsce to Śniardwy na Mazurach (ok. 113 km²)."
+  },
+  {
+   "pytanie": "Jakie jest najgłębsze jezioro w Polsce?",
+   "odpowiedz": "Najgłębsze jezioro w Polsce to Hańcza - ma ok. 108 m głębokości."
+  },
+  {
+   "pytanie": "Z jakimi krajami graniczy Polska?",
+   "odpowiedz": "Polska graniczy z siedmioma państwami: Niemcami, Czechami, Słowacją, Ukrainą, Białorusią, Litwą i Rosją (obwód królewiecki)."
+  },
+  {
+   "pytanie": "Jakie jest największe miasto w Polsce?",
+   "odpowiedz": "Największym miastem w Polsce jest Warszawa."
+  },
+  {
+   "pytanie": "Jaka była dawna stolica Polski?",
+   "odpowiedz": "Przed Warszawą stolicą Polski był Kraków, a wcześniej Gniezno."
+  },
+  {
+   "pytanie": "Ile wynosi powierzchnia Polski?",
+   "odpowiedz": "Polska ma ok. 312,7 tys. km² powierzchni."
+  },
+  {
+   "pytanie": "Jaka jest stolica Niemiec?",
+   "odpowiedz": "Stolicą Niemiec jest Berlin."
+  },
+  {
+   "pytanie": "Jaka jest stolica Francji?",
+   "odpowiedz": "Stolicą Francji jest Paryż."
+  },
+  {
+   "pytanie": "Jaka jest stolica Włoch?",
+   "odpowiedz": "Stolicą Włoch jest Rzym."
+  },
+  {
+   "pytanie": "Jaka jest stolica Hiszpanii?",
+   "odpowiedz": "Stolicą Hiszpanii jest Madryt."
+  },
+  {
+   "pytanie": "Jaka jest stolica Wielkiej Brytanii?",
+   "odpowiedz": "Stolicą Wielkiej Brytanii jest Londyn."
+  },
+  {
+   "pytanie": "Jaka jest stolica Czech?",
+   "odpowiedz": "Stolicą Czech jest Praga."
+  },
+  {
+   "pytanie": "Jaka jest stolica Słowacji?",
+   "odpowiedz": "Stolicą Słowacji jest Bratysława."
+  },
+  {
+   "pytanie": "Jaka jest stolica Ukrainy?",
+   "odpowiedz": "Stolicą Ukrainy jest Kijów."
+  },
+  {
+   "pytanie": "Jaka jest stolica Litwy?",
+   "odpowiedz": "Stolicą Litwy jest Wilno."
+  },
+  {
+   "pytanie": "Jaka jest stolica Japonii?",
+   "odpowiedz": "Stolicą Japonii jest Tokio."
+  },
+  {
+   "pytanie": "Jaka jest stolica Stanów Zjednoczonych?",
+   "odpowiedz": "Stolicą Stanów Zjednoczonych jest Waszyngton."
+  },
+  {
+   "pytanie": "Jaka jest stolica Kanady?",
+   "odpowiedz": "Stolicą Kanady jest Ottawa."
+  },
+  {
+   "pytanie": "Jaka jest stolica Australii?",
+   "odpowiedz": "Stolicą Australii jest Canberra (nie Sydney!)."
+  },
+  {
+   "pytanie": "Jaka jest stolica Chin?",
+   "odpowiedz": "Stolicą Chin jest Pekin."
+  },
+  {
+   "pytanie": "Jaka jest stolica Egiptu?",
+   "odpowiedz": "Stolicą Egiptu jest Kair."
+  },
+  {
+   "pytanie": "Jaka jest stolica Brazylii?",
+   "odpowiedz": "Stolicą Brazylii jest Brasília."
+  },
+  {
+   "pytanie": "Jaka jest najdłuższa rzeka świata?",
+   "odpowiedz": "Za najdłuższą rzekę świata uznaje się zwykle Nil (ok. 6650 km), choć niektóre pomiary dają pierwszeństwo Amazonce."
+  },
+  {
+   "pytanie": "Jaki jest najwyższy szczyt świata?",
+   "odpowiedz": "Najwyższy szczyt świata to Mount Everest w Himalajach - ok. 8849 m n.p.m."
+  },
+  {
+   "pytanie": "Jaki jest największy ocean?",
+   "odpowiedz": "Największy ocean to Ocean Spokojny (Pacyfik)."
+  },
+  {
+   "pytanie": "Jaki jest największy kontynent?",
+   "odpowiedz": "Największy kontynent to Azja."
+  },
+  {
+   "pytanie": "Ile jest kontynentów?",
+   "odpowiedz": "Zwykle wyróżnia się 7 kontynentów: Azję, Afrykę, Amerykę Północną, Amerykę Południową, Antarktydę, Europę i Australię."
+  },
+  {
+   "pytanie": "Jaka jest największa pustynia?",
+   "odpowiedz": "Największa gorąca pustynia to Sahara. Licząc pustynie lodowe, największa jest Antarktyda."
+  },
+  {
+   "pytanie": "Jakie jest największe państwo świata?",
+   "odpowiedz": "Największe państwo świata pod względem powierzchni to Rosja."
+  },
+  {
+   "pytanie": "Kiedy był chrzest Polski?",
+   "odpowiedz": "Chrzest Polski odbył się w 966 roku - przyjął go książę Mieszko I."
+  },
+  {
+   "pytanie": "Kto był pierwszym królem Polski?",
+   "odpowiedz": "Pierwszym koronowanym królem Polski był Bolesław Chrobry (1025 r.)."
+  },
+  {
+   "pytanie": "Kiedy była bitwa pod Grunwaldem?",
+   "odpowiedz": "Bitwa pod Grunwaldem odbyła się 15 lipca 1410 roku - wojska polsko-litewskie pokonały zakon krzyżacki."
+  },
+  {
+   "pytanie": "Kiedy uchwalono Konstytucję 3 Maja?",
+   "odpowiedz": "Konstytucję 3 Maja uchwalono 3 maja 1791 roku - była pierwszą taką ustawą w Europie i drugą na świecie."
+  },
+  {
+   "pytanie": "Kiedy Polska odzyskała niepodległość?",
+   "odpowiedz": "Polska odzyskała niepodległość 11 listopada 1918 roku, po 123 latach zaborów."
+  },
+  {
+   "pytanie": "Kiedy wybuchła II wojna światowa?",
+   "odpowiedz": "II wojna światowa wybuchła 1 września 1939 roku atakiem Niemiec na Polskę. W Europie skończyła się 8 maja 1945 roku."
+  },
+  {
+   "pytanie": "Kiedy wybuchło powstanie warszawskie?",
+   "odpowiedz": "Powstanie warszawskie wybuchło 1 sierpnia 1944 roku i trwało 63 dni."
+  },
+  {
+   "pytanie": "Kiedy Polska weszła do Unii Europejskiej?",
+   "odpowiedz": "Polska weszła do Unii Europejskiej 1 maja 2004 roku."
+  },
+  {
+   "pytanie": "Kiedy Polska weszła do NATO?",
+   "odpowiedz": "Polska wstąpiła do NATO 12 marca 1999 roku."
+  },
+  {
+   "pytanie": "Co to była Solidarność?",
+   "odpowiedz": "Solidarność to niezależny związek zawodowy założony w 1980 roku, ruch społeczny, który przyczynił się do upadku komunizmu w Polsce. Jego przywódcą był Lech Wałęsa."
+  },
+  {
+   "pytanie": "Kiedy były wybory czerwcowe w 1989?",
+   "odpowiedz": "Częściowo wolne wybory odbyły się 4 czerwca 1989 roku - były początkiem końca komunizmu w Polsce."
+  },
+  {
+   "pytanie": "Kiedy były rozbiory Polski?",
+   "odpowiedz": "Rozbiory Polski miały miejsce w latach 1772, 1793 i 1795 - Polskę podzieliły Rosja, Prusy i Austria."
+  },
+  {
+   "pytanie": "Kim był Mikołaj Kopernik?",
+   "odpowiedz": "Mikołaj Kopernik (1473-1543) to astronom, który ogłosił teorię heliocentryczną - że to Ziemia krąży wokół Słońca."
+  },
+  {
+   "pytanie": "Kim była Maria Skłodowska-Curie?",
+   "odpowiedz": "Maria Skłodowska-Curie (1867-1934) to fizyczka i chemiczka, odkrywczyni polonu i radu. Jako pierwsza osoba zdobyła dwie Nagrody Nobla: z fizyki (1903) i chemii (1911)."
+  },
+  {
+   "pytanie": "Kim był Fryderyk Chopin?",
+   "odpowiedz": "Fryderyk Chopin (1810-1849) to wybitny polski kompozytor i pianista epoki romantyzmu, autor m.in. mazurków, polonezów i nokturnów."
+  },
+  {
+   "pytanie": "Kim był Adam Mickiewicz?",
+   "odpowiedz": "Adam Mickiewicz (1798-1855) to najważniejszy poeta polskiego romantyzmu, autor m.in. „Pana Tadeusza” i „Dziadów”."
+  },
+  {
+   "pytanie": "Kto napisał Pana Tadeusza?",
+   "odpowiedz": "„Pana Tadeusza” napisał Adam Mickiewicz; epopeja ukazała się w 1834 roku."
+  },
+  {
+   "pytanie": "Kto napisał Quo vadis?",
+   "odpowiedz": "„Quo vadis” napisał Henryk Sienkiewicz, który w 1905 roku dostał literacką Nagrodę Nobla."
+  },
+  {
+   "pytanie": "Kto napisał Lalkę?",
+   "odpowiedz": "„Lalkę” napisał Bolesław Prus."
+  },
+  {
+   "pytanie": "Kim był Jan Paweł II?",
+   "odpowiedz": "Jan Paweł II, czyli Karol Wojtyła (1920-2005), był papieżem w latach 1978-2005 - pierwszym papieżem z Polski."
+  },
+  {
+   "pytanie": "Kim był Józef Piłsudski?",
+   "odpowiedz": "Józef Piłsudski (1867-1935) to marszałek, jeden z ojców niepodległości Polski w 1918 roku."
+  },
+  {
+   "pytanie": "Kto wymyślił język esperanto?",
+   "odpowiedz": "Esperanto stworzył Ludwik Zamenhof, lekarz z Białegostoku, w 1887 roku."
+  },
+  {
+   "pytanie": "Kim był Stanisław Lem?",
+   "odpowiedz": "Stanisław Lem (1921-2006) to pisarz science fiction i filozof, autor m.in. „Solaris” i „Cyberiady”."
+  },
+  {
+   "pytanie": "Kto wymyślił kamizelkę kuloodporną?",
+   "odpowiedz": "Za jednego z pionierów kamizelki kuloodpornej uważa się Jana Szczepanika, polskiego wynalazcę zwanego „polskim Edisonem”."
+  },
+  {
+   "pytanie": "Ile wynosi prędkość światła?",
+   "odpowiedz": "Prędkość światła w próżni wynosi 299 792 458 m/s, czyli prawie 300 000 km na sekundę."
+  },
+  {
+   "pytanie": "W jakiej temperaturze wrze woda?",
+   "odpowiedz": "Woda wrze w 100°C przy ciśnieniu atmosferycznym na poziomie morza. W górach - niżej."
+  },
+  {
+   "pytanie": "W jakiej temperaturze zamarza woda?",
+   "odpowiedz": "Woda zamarza w 0°C (przy normalnym ciśnieniu)."
+  },
+  {
+   "pytanie": "Jaki jest wzór chemiczny wody?",
+   "odpowiedz": "Wzór chemiczny wody to H₂O - dwa atomy wodoru i jeden atom tlenu."
+  },
+  {
+   "pytanie": "Co to jest fotosynteza?",
+   "odpowiedz": "Fotosynteza to proces, w którym rośliny z dwutlenku węgla i wody, z pomocą światła, wytwarzają cukry i tlen."
+  },
+  {
+   "pytanie": "Co to jest DNA?",
+   "odpowiedz": "DNA to kwas deoksyrybonukleinowy - cząsteczka, w której zapisana jest informacja genetyczna organizmów."
+  },
+  {
+   "pytanie": "Co to jest grawitacja?",
+   "odpowiedz": "Grawitacja to siła, z jaką ciała mające masę się przyciągają. To dzięki niej spadamy na ziemię, a planety krążą wokół Słońca."
+  },
+  {
+   "pytanie": "Ile wynosi przyspieszenie ziemskie?",
+   "odpowiedz": "Przyspieszenie ziemskie wynosi ok. 9,81 m/s²."
+  },
+  {
+   "pytanie": "Co to jest atom?",
+   "odpowiedz": "Atom to najmniejsza część pierwiastka. Ma jądro z protonów i neutronów oraz krążące wokół niego elektrony."
+  },
+  {
+   "pytanie": "Ile jest pierwiastków w układzie okresowym?",
+   "odpowiedz": "Układ okresowy zawiera obecnie 118 znanych pierwiastków."
+  },
+  {
+   "pytanie": "Jaki gaz jest najwięcej w powietrzu?",
+   "odpowiedz": "Powietrze to w ok. 78% azot i w ok. 21% tlen; reszta to m.in. argon i dwutlenek węgla."
+  },
+  {
+   "pytanie": "Kto odkrył prawo powszechnego ciążenia?",
+   "odpowiedz": "Prawo powszechnego ciążenia sformułował Isaac Newton w 1687 roku."
+  },
+  {
+   "pytanie": "Kto stworzył teorię względności?",
+   "odpowiedz": "Teorię względności stworzył Albert Einstein (szczególną w 1905, ogólną w 1915 roku)."
+  },
+  {
+   "pytanie": "Co to jest liczba pi?",
+   "odpowiedz": "Liczba π to stosunek obwodu koła do jego średnicy; wynosi ok. 3,14159."
+  },
+  {
+   "pytanie": "Ile stopni ma suma kątów w trójkącie?",
+   "odpowiedz": "Suma kątów w trójkącie wynosi 180 stopni."
+  },
+  {
+   "pytanie": "Co to jest liczba pierwsza?",
+   "odpowiedz": "Liczba pierwsza to liczba naturalna większa od 1, która dzieli się tylko przez 1 i przez samą siebie, np. 2, 3, 5, 7, 11, 13."
+  },
+  {
+   "pytanie": "Ile wynosi pierwiastek z dwóch?",
+   "odpowiedz": "Pierwiastek z 2 wynosi ok. 1,41421."
+  },
+  {
+   "pytanie": "Jak obliczyć pole koła?",
+   "odpowiedz": "Pole koła to π razy promień do kwadratu: P = πr²."
+  },
+  {
+   "pytanie": "Jak obliczyć pole trójkąta?",
+   "odpowiedz": "Pole trójkąta to połowa iloczynu podstawy i wysokości: P = a·h/2."
+  },
+  {
+   "pytanie": "Co to jest twierdzenie Pitagorasa?",
+   "odpowiedz": "W trójkącie prostokątnym suma kwadratów przyprostokątnych równa się kwadratowi przeciwprostokątnej: a² + b² = c²."
+  },
+  {
+   "pytanie": "Ile jest planet w Układzie Słonecznym?",
+   "odpowiedz": "W Układzie Słonecznym jest 8 planet: Merkury, Wenus, Ziemia, Mars, Jowisz, Saturn, Uran i Neptun."
+  },
+  {
+   "pytanie": "Jaka jest największa planeta?",
+   "odpowiedz": "Największą planetą Układu Słonecznego jest Jowisz."
+  },
+  {
+   "pytanie": "Jaka planeta jest najbliżej Słońca?",
+   "odpowiedz": "Najbliżej Słońca krąży Merkury."
+  },
+  {
+   "pytanie": "Jak daleko jest Księżyc?",
+   "odpowiedz": "Księżyc jest średnio ok. 384 400 km od Ziemi."
+  },
+  {
+   "pytanie": "Jak daleko jest Słońce?",
+   "odpowiedz": "Słońce jest średnio ok. 150 milionów km od Ziemi; jego światło leci do nas ok. 8 minut."
+  },
+  {
+   "pytanie": "Kto pierwszy stanął na Księżycu?",
+   "odpowiedz": "Pierwszym człowiekiem na Księżycu był Neil Armstrong - 20 lipca 1969 roku (misja Apollo 11)."
+  },
+  {
+   "pytanie": "Kto był pierwszym człowiekiem w kosmosie?",
+   "odpowiedz": "Pierwszym człowiekiem w kosmosie był Jurij Gagarin - 12 kwietnia 1961 roku."
+  },
+  {
+   "pytanie": "Kto był pierwszym Polakiem w kosmosie?",
+   "odpowiedz": "Pierwszym Polakiem w kosmosie był Mirosław Hermaszewski w 1978 roku."
+  },
+  {
+   "pytanie": "Dlaczego niebo jest niebieskie?",
+   "odpowiedz": "Niebo jest niebieskie, bo powietrze rozprasza światło niebieskie silniej niż czerwone (rozpraszanie Rayleigha)."
+  },
+  {
+   "pytanie": "Co to jest czarna dziura?",
+   "odpowiedz": "Czarna dziura to obszar w kosmosie o tak silnej grawitacji, że nic, nawet światło, nie może się z niego wydostać."
+  },
+  {
+   "pytanie": "Ile lat ma Ziemia?",
+   "odpowiedz": "Ziemia ma ok. 4,5 miliarda lat."
+  },
+  {
+   "pytanie": "Co to jest rok świetlny?",
+   "odpowiedz": "Rok świetlny to odległość, jaką światło pokonuje w rok - ok. 9,46 biliona km."
+  },
+  {
+   "pytanie": "Jakie jest najszybsze zwierzę lądowe?",
+   "odpowiedz": "Najszybsze zwierzę lądowe to gepard - na krótkim dystansie biegnie ok. 100-110 km/h."
+  },
+  {
+   "pytanie": "Jakie jest największe zwierzę na świecie?",
+   "odpowiedz": "Największym zwierzęciem jest płetwal błękitny - może mieć ponad 30 m długości."
+  },
+  {
+   "pytanie": "Ile godzin śpią koty?",
+   "odpowiedz": "Koty śpią średnio 12-16 godzin na dobę, a kocięta i starsze koty nawet dłużej."
+  },
+  {
+   "pytanie": "Ile lat żyje pies?",
+   "odpowiedz": "Psy żyją zwykle 10-13 lat; małe rasy często dłużej niż duże."
+  },
+  {
+   "pytanie": "Ile lat żyje kot?",
+   "odpowiedz": "Koty domowe żyją zwykle 12-18 lat."
+  },
+  {
+   "pytanie": "Ile nóg ma pająk?",
+   "odpowiedz": "Pająk ma 8 nóg."
+  },
+  {
+   "pytanie": "Ile nóg ma owad?",
+   "odpowiedz": "Owad ma 6 nóg."
+  },
+  {
+   "pytanie": "Czy wieloryb to ryba?",
+   "odpowiedz": "Nie - wieloryb to ssak. Oddycha powietrzem i karmi młode mlekiem."
+  },
+  {
+   "pytanie": "Jakie jest najwyższe zwierzę?",
+   "odpowiedz": "Najwyższym zwierzęciem jest żyrafa - może mieć ponad 5 m wysokości."
+  },
+  {
+   "pytanie": "Co jedzą pandy?",
+   "odpowiedz": "Pandy wielkie jedzą głównie bambus - nawet kilkanaście kilogramów dziennie."
+  },
+  {
+   "pytanie": "Jakie jest narodowe zwierzę Polski?",
+   "odpowiedz": "Symbolem Polski jest orzeł biały, widniejący w godle."
+  },
+  {
+   "pytanie": "Ile kości ma człowiek?",
+   "odpowiedz": "Dorosły człowiek ma 206 kości."
+  },
+  {
+   "pytanie": "Ile serce bije na minutę?",
+   "odpowiedz": "Spoczynkowe tętno dorosłego to zwykle 60-100 uderzeń na minutę."
+  },
+  {
+   "pytanie": "Ile wody trzeba pić dziennie?",
+   "odpowiedz": "Dorosłym zwykle zaleca się ok. 1,5-2 litrów płynów dziennie; więcej przy upale i wysiłku."
+  },
+  {
+   "pytanie": "Ile godzin powinien spać dorosły?",
+   "odpowiedz": "Dorosłym zaleca się 7-9 godzin snu na dobę."
+  },
+  {
+   "pytanie": "Ile godzin powinno spać dziecko?",
+   "odpowiedz": "Dzieci w wieku szkolnym potrzebują zwykle 9-12 godzin snu, a nastolatki 8-10."
+  },
+  {
+   "pytanie": "Jaka jest normalna temperatura ciała?",
+   "odpowiedz": "Prawidłowa temperatura ciała to ok. 36,6°C (zwykle 36-37°C)."
+  },
+  {
+   "pytanie": "Ile zębów ma dorosły człowiek?",
+   "odpowiedz": "Dorosły człowiek ma zwykle 32 zęby stałe (licząc zęby mądrości)."
+  },
+  {
+   "pytanie": "Ile krwi ma człowiek?",
+   "odpowiedz": "Dorosły człowiek ma ok. 4,5-6 litrów krwi."
+  },
+  {
+   "pytanie": "Jaki jest największy narząd człowieka?",
+   "odpowiedz": "Największym narządem człowieka jest skóra."
+  },
+  {
+   "pytanie": "Jaki jest numer alarmowy?",
+   "odpowiedz": "Numer alarmowy w Polsce i całej Unii Europejskiej to 112. Pogotowie to też 999, policja 997, straż pożarna 998."
+  },
+  {
+   "pytanie": "Co to jest sztuczna inteligencja?",
+   "odpowiedz": "Sztuczna inteligencja to programy, które uczą się na danych i wykonują zadania wymagające „myślenia”: rozumieją język, rozpoznają obrazy, odpowiadają na pytania. Ja też nią jestem!"
+  },
+  {
+   "pytanie": "Co to jest sieć neuronowa?",
+   "odpowiedz": "Sieć neuronowa to program złożony z warstw prostych „neuronów” liczących sumy ważone. Uczy się, poprawiając wagi tak, by popełniać coraz mniej błędów (propagacja wsteczna). Mam taką w środku!"
+  },
+  {
+   "pytanie": "Co to jest Python?",
+   "odpowiedz": "Python to popularny język programowania, stworzony przez Guido van Rossuma w 1991 roku. Jestem w nim napisany!"
+  },
+  {
+   "pytanie": "Co to jest internet?",
+   "odpowiedz": "Internet to światowa sieć połączonych komputerów, które wymieniają dane według wspólnych zasad (protokołów TCP/IP)."
+  },
+  {
+   "pytanie": "Kto wynalazł żarówkę?",
+   "odpowiedz": "Praktyczną żarówkę opracował Thomas Edison w 1879 roku, choć nad żarówką pracowało wcześniej wielu wynalazców."
+  },
+  {
+   "pytanie": "Kto wynalazł telefon?",
+   "odpowiedz": "Wynalezienie telefonu przypisuje się Alexandrowi Grahamowi Bellowi (patent w 1876 roku)."
+  },
+  {
+   "pytanie": "Kto wynalazł lampę naftową?",
+   "odpowiedz": "Lampę naftową wynalazł Ignacy Łukasiewicz w 1853 roku."
+  },
+  {
+   "pytanie": "Co to jest procesor?",
+   "odpowiedz": "Procesor (CPU) to „mózg” komputera - wykonuje instrukcje programów i obliczenia."
+  },
+  {
+   "pytanie": "Co to jest pamięć RAM?",
+   "odpowiedz": "RAM to szybka pamięć operacyjna, w której komputer trzyma dane potrzebne w danej chwili; po wyłączeniu zasilania jest czyszczona."
+  },
+  {
+   "pytanie": "Co to jest bit?",
+   "odpowiedz": "Bit to najmniejsza jednostka informacji: 0 albo 1. Osiem bitów to jeden bajt."
+  },
+  {
+   "pytanie": "Ile dni ma rok przestępny?",
+   "odpowiedz": "Rok przestępny ma 366 dni - luty ma wtedy 29 dni."
+  },
+  {
+   "pytanie": "Ile dni ma rok?",
+   "odpowiedz": "Zwykły rok ma 365 dni, a przestępny 366."
+  },
+  {
+   "pytanie": "Ile sekund ma godzina?",
+   "odpowiedz": "Godzina ma 3600 sekund."
+  },
+  {
+   "pytanie": "Ile tygodni ma rok?",
+   "odpowiedz": "Rok ma 52 tygodnie i 1 lub 2 dni."
+  },
+  {
+   "pytanie": "Kiedy jest Boże Narodzenie?",
+   "odpowiedz": "Boże Narodzenie obchodzimy 25 grudnia, a Wigilię 24 grudnia."
+  },
+  {
+   "pytanie": "Kiedy jest Dzień Matki?",
+   "odpowiedz": "Dzień Matki w Polsce obchodzimy 26 maja."
+  },
+  {
+   "pytanie": "Kiedy jest Dzień Dziecka?",
+   "odpowiedz": "Dzień Dziecka w Polsce obchodzimy 1 czerwca."
+  },
+  {
+   "pytanie": "Kiedy zaczyna się wiosna?",
+   "odpowiedz": "Astronomiczna wiosna zaczyna się w okolicach 20-21 marca, a kalendarzowo przyjmuje się 21 marca."
+  },
+  {
+   "pytanie": "Ile metrów ma kilometr?",
+   "odpowiedz": "Kilometr ma 1000 metrów."
+  },
+  {
+   "pytanie": "Ile gramów ma kilogram?",
+   "odpowiedz": "Kilogram ma 1000 gramów."
+  },
+  {
+   "pytanie": "Ile centymetrów ma cal?",
+   "odpowiedz": "Cal to 2,54 cm."
+  },
+  {
+   "pytanie": "Ile kilometrów ma mila?",
+   "odpowiedz": "Mila lądowa to ok. 1,609 km, a mila morska 1,852 km."
+  },
+  {
+   "pytanie": "Ile liter ma polski alfabet?",
+   "odpowiedz": "Polski alfabet ma 32 litery."
+  },
+  {
+   "pytanie": "Jaki jest hymn Polski?",
+   "odpowiedz": "Hymnem Polski jest „Mazurek Dąbrowskiego” (Pieśń Legionów Polskich we Włoszech), napisany przez Józefa Wybickiego w 1797 roku."
+  },
+  {
+   "pytanie": "Jakie są barwy Polski?",
+   "odpowiedz": "Barwy narodowe Polski to biel i czerwień."
+  },
+  {
+   "pytanie": "Co to jest godło Polski?",
+   "odpowiedz": "Godłem Polski jest biały orzeł w złotej koronie na czerwonym tle."
+  },
+  {
+   "pytanie": "Jaki język jest najczęściej używany na świecie?",
+   "odpowiedz": "Najwięcej rodzimych użytkowników ma chiński mandaryński, a licząc wszystkich mówiących - angielski."
+  },
+  {
+   "pytanie": "Ile przypadków ma język polski?",
+   "odpowiedz": "Język polski ma 7 przypadków: mianownik, dopełniacz, celownik, biernik, narzędnik, miejscownik i wołacz."
+  },
+  {
+   "pytanie": "Co to są pierogi?",
+   "odpowiedz": "Pierogi to klasyczne danie kuchni polskiej - kawałki ciasta z nadzieniem, np. ruskie (ziemniaki z twarogiem), z mięsem, kapustą i grzybami albo owocami."
+  },
+  {
+   "pytanie": "Jak zrobić naleśniki?",
+   "odpowiedz": "Wymieszaj szklankę mąki, szklankę mleka, pół szklanki wody, 2 jajka i szczyptę soli, odstaw na chwilę i smaż cienkie placki na rozgrzanej, natłuszczonej patelni."
+  },
+  {
+   "pytanie": "Jak ugotować jajko na twardo?",
+   "odpowiedz": "Włóż jajka do wrzącej wody i gotuj ok. 9-10 minut, a potem przełóż do zimnej wody, żeby łatwiej obrać."
+  },
+  {
+   "pytanie": "Jak ugotować makaron?",
+   "odpowiedz": "Zagotuj dużo osolonej wody, wsyp makaron i gotuj tyle minut, ile podano na opakowaniu (al dente to zwykle o minutę krócej), potem odcedź."
+  }
+ ]
+}

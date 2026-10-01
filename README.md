@@ -122,6 +122,26 @@ panbadek --web
 
 🌐 wymaga internetu. Wszystkie usługi są darmowe i nie potrzebują kluczy API.
 
+### Samodzielna nauka 🧠
+
+Pan Badek uczy się z każdej rozmowy:
+
+- **Od mocniejszych AI:** gdy odpowiada Claude albo model w telefonie, Badek zapamiętuje pytanie
+  i odpowiedź. Na podobne pytanie odpowie potem sam, bez internetu i za darmo
+  („zapamiętałem od: Claude”).
+- **Z twoich ocen:** 👍/👎 przy odpowiedziach (albo słowa „źle”, „dobra odpowiedź”). Złą odpowiedź
+  zapomina, a ocenione zdania dopisuje do przykładów treningowych i od razu douczą sieć.
+- **Z lekcji:** `naucz się: pytanie => odpowiedź`, `zapamiętaj, że mój pies ma na imię Burek`.
+- **`ucz się`** porządkuje wiedzę, trenuje sieć od nowa, mierzy jej dokładność i mówi,
+  o co najczęściej pytano, a on nie wiedział. Do tego `statystyki` i `czego nie wiesz`.
+- **Ze wszystkich urządzeń:** w ⚙️ zapiszesz kopię pamięci i wczytasz ją na innym telefonie
+  albo komputerze (`python3 -m panbadek --eksport pamiec.json` / `--import pamiec.json`).
+  Wiedza się łączy, nic nie ginie.
+
+Na start zna 143 odpowiedzi z wiedzy ogólnej (geografia, historia Polski, nauka, przyroda, kosmos).
+Jakość sieci mierzy `python3 narzedzia/ocen_siec.py` na zdaniach, których nie widziała przy
+treningu: obecnie ok. 97%.
+
 ### Biblioteki wiedzy 📚
 
 Biblioteka to nazwany zbiór faktów, który Pan Badek przeszukuje jak mała wyszukiwarka

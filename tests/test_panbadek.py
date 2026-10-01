@@ -14,7 +14,8 @@ class TestTekst(unittest.TestCase):
         self.assertEqual(normalizuj("Zażółć GĘŚLĄ jaźń"), "zazolc gesla jazn")
 
     def test_tokenizacja_obcina_koncowki(self):
-        self.assertEqual(tokenizuj("Opowiedz żart!"), ["opowi", "zart"])
+        self.assertEqual(tokenizuj("Opowiedz żart!"), ["opowi", "zar"])
+        self.assertEqual(tokenizuj("koty żyją"), tokenizuj("kot żyje"))
 
     def test_wektor_pomija_nieznane_cechy(self):
         slownik = Slownik.zbuduj(["cześć"])

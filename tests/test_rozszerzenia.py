@@ -162,8 +162,7 @@ class TestPanBadekRozszerzony(unittest.TestCase):
         kurs.assert_not_called()
 
     def test_siec_nie_strzela_na_obcych_zdaniach(self):
-        intencja, _ = self.badek.klasyfikuj("kurs programowania")
-        self.assertIsNone(intencja)
+        self.assertIsNone(self.badek.rozpoznaj_intencje("kurs programowania"))
 
     def test_zapomnij(self):
         self.badek.odpowiedz("naucz się: ulubiony kolor => Zielony!")

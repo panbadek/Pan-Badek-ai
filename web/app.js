@@ -22,7 +22,7 @@ const czat = $("czat"), pole = $("t"), status = $("status");
 
 // --- ustawienia (tylko w tym urządzeniu) ---------------------------------------
 
-const DOMYSLNE = { mozg: "badek", kiedy: "zawsze", rozpoznawanie: true, model: "", klucz: "" };
+const DOMYSLNE = { mozg: "badek", kiedy: "zawsze", rozpoznawanie: true, model: "", klucz: "", uczSie: true };
 let ust = { ...DOMYSLNE };
 try { ust = { ...DOMYSLNE, ...JSON.parse(localStorage.getItem("panbadek") || "{}") }; } catch {}
 function zapiszUstawienia() {
@@ -224,13 +224,33 @@ async function odpowiedzAI(rodzaj, wiadomosci, zapasowa) {
     dymek.classList.remove("pisze");
     aktualizuj(dymek, tekst || zapasowa);
     ustawPodpis(dymek, podpis);
-    return tekst;
+    return { tekst, dymek, nazwa: podpis.replace("🧠 ", "").replace(" (w telefonie)", "") };
   } catch (e) {
     dymek.classList.remove("pisze");
     aktualizuj(dymek, zapasowa || "");
     ustawPodpis(dymek, rodzaj === "claude" ? opisBleduClaude(e) : "Model w telefonie zgłosił błąd: " + e.message);
-    return null;
+    return { tekst: null, dymek };
   }
+}
+
+// --- oceny 👍/👎: Badek uczy się na nich ---------------------------------------------
+
+const OCENIANE = ["siec_neuronowa", "wiedza", "biblioteka", "internet", "ai"];
+
+function dodajOceny(dymek, idOdpowiedzi) {
+  const oceny = document.createElement("span");
+  oceny.className = "oceny";
+  for (const [znak, dobra, opis] of [["👍", true, "Dobra odpowiedź"], ["👎", false, "Zła odpowiedź"]]) {
+    const przycisk = document.createElement("button");
+    przycisk.type = "button"; przycisk.textContent = znak; przycisk.title = opis; przycisk.setAttribute("aria-label", opis);
+    przycisk.addEventListener("click", async () => {
+      oceny.remove();
+      const wynik = await zapytajBadka({ typ: "ocena", id_odpowiedzi: idOdpowiedzi, dobra });
+      ustawPodpis(dymek, (dobra ? "👍 " : "👎 ") + wynik.odpowiedz);
+    });
+    oceny.appendChild(przycisk);
+  }
+  dymek.appendChild(oceny);
 }
 
 // --- rozmowa ----------------------------------------------------------------------
@@ -243,10 +263,17 @@ async function wyslijTekst(tekst) {
   const pogawedka = ["siec_neuronowa", "biblioteka"].includes(wynik.zrodlo);
   zapamietaj("user", tekst);
   if (rodzaj && (wynik.zrodlo === "nie_wiem" || (ust.kiedy === "zawsze" && pogawedka))) {
-    const tekstAI = await odpowiedzAI(rodzaj, historiaDlaModelu(), wynik.odpowiedz);
-    zapamietaj("assistant", tekstAI || wynik.odpowiedz);
+    const ai = await odpowiedzAI(rodzaj, historiaDlaModelu(), wynik.odpowiedz);
+    zapamietaj("assistant", ai.tekst || wynik.odpowiedz);
+    if (ai.tekst && ust.uczSie) {
+      // Badek zapamiętuje odpowiedź dużego modelu - na podobne pytanie odpowie potem sam.
+      const nauka = await zapytajBadka({ typ: "naucz_od_ai", pytanie: tekst, odpowiedz: ai.tekst, zrodlo: ai.nazwa });
+      if (nauka.zapamietane) ai.dymek.querySelector(".podpis").textContent += " · Badek zapamiętał";
+      dodajOceny(ai.dymek, nauka.id_odpowiedzi);
+    }
   } else {
-    dodaj(wynik.odpowiedz, "badek");
+    const dymek = dodaj(wynik.odpowiedz, "badek");
+    if (OCENIANE.includes(wynik.zrodlo) && wynik.id_odpowiedzi) dodajOceny(dymek, wynik.id_odpowiedzi);
     zapamietaj("assistant", wynik.odpowiedz);
     if (wynik.zrodlo === "nie_wiem" && ust.mozg === "lokalny" && !silnik && ladowanieSilnika) {
       dodaj("Model AI jeszcze się ładuje - za chwilę odpowiem mądrzej.", "badek");
@@ -342,7 +369,7 @@ async function wyslijZdjecie(plik) {
 
   if (aktywneAI() === "claude") {
     const jpeg = pomniejsz(img, ROZMIAR_DLA_CLAUDE).toDataURL("image/jpeg", 0.85).split(",")[1];
-    const opis = await odpowiedzAI("claude", [{ role: "user", content: [
+    const { tekst: opis } = await odpowiedzAI("claude", [{ role: "user", content: [
       { type: "image", source: { type: "base64", media_type: "image/jpeg", data: jpeg } },
       { type: "text", text: "Opisz po polsku, co jest na tym zdjęciu (2-4 zdania). Jeśli jest na nim tekst, przepisz najważniejszy fragment." },
     ] }], "");
@@ -388,6 +415,7 @@ function pokazPanel() {
   pokazSekcje();
   formularz.kiedy.value = ust.kiedy;
   $("rozpoznawanie").checked = ust.rozpoznawanie;
+  $("ucz-sie").checked = ust.uczSie;
   $("klucz").value = ust.klucz;
   panel.showModal();
   wypelnijModele();
@@ -421,6 +449,7 @@ panel.addEventListener("close", () => {
   ust.mozg = formularz.mozg.value || "badek";
   ust.kiedy = formularz.kiedy.value || "zawsze";
   ust.rozpoznawanie = $("rozpoznawanie").checked;
+  ust.uczSie = $("ucz-sie").checked;
   ust.klucz = $("klucz").value.trim();
   if ($("model-lokalny").value) ust.model = $("model-lokalny").value;
   zapiszUstawienia();
@@ -433,6 +462,26 @@ panel.addEventListener("close", () => {
 if (ust.mozg === "lokalny" && ust.model) {
   wspieraWebGPU().then((gpu) => gpu && wlaczSilnik(ust.model, () => {}).then(odswiezStatus, () => odswiezStatus()));
 }
+
+// --- kopia pamięci: przenoszenie wiedzy między telefonem, komputerem i innymi czatami -------
+
+$("eksport").addEventListener("click", async () => {
+  const { dane } = await zapytajBadka({ typ: "eksport" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(new Blob([dane], { type: "application/json" }));
+  link.download = `pan-badek-pamiec-${new Date().toISOString().slice(0, 10)}.json`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+});
+$("import").addEventListener("click", () => $("plik-pamieci").click());
+$("plik-pamieci").addEventListener("change", async (e) => {
+  const plik = e.target.files[0];
+  e.target.value = "";
+  if (!plik) return;
+  const wynik = await zapytajBadka({ typ: "import", dane: await plik.text() });
+  panel.close();
+  dodaj(wynik.odpowiedz, "badek");
+});
 
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 odswiezStatus();

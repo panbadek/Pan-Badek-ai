@@ -65,6 +65,9 @@
   .wiersz { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .drugi { padding: 8px 12px; background: var(--badek); color: var(--tekst); }
   .ostrzezenie { color: var(--blad); font-size: 13px; }
+  .oceny { display: inline-flex; gap: 2px; margin-left: 6px; vertical-align: middle; }
+  .oceny button { background: none; padding: 0 4px; font-size: 15px; opacity: .55; }
+  .oceny button:hover, .oceny button:focus-visible { opacity: 1; }
 </style>
 </head>
 <body>
@@ -125,6 +128,20 @@
         <span>W każdej rozmowie <span class="opis">- zalecane; polecenia, pogodę, kursy, kalkulator i zdjęcia dalej obsługuje Badek</span></span></label>
       <label class="opcja"><input type="radio" name="kiedy" value="nie_wie">
         <span>Tylko gdy Pan Badek nie zna odpowiedzi <span class="opis">- oszczędniej</span></span></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Samodzielna nauka</legend>
+      <label class="opcja"><input type="checkbox" id="ucz-sie">
+        <span>Ucz się z odpowiedzi AI <span class="opis">- Badek zapamiętuje odpowiedzi Claude / modelu
+          w telefonie i potem odpowiada sam: offline i za darmo. Oceniaj odpowiedzi 👍/👎, a złe zapomni.</span></span></label>
+      <div class="wiersz">
+        <button type="button" class="drugi" id="eksport">💾 Zapisz kopię pamięci</button>
+        <button type="button" class="drugi" id="import">📂 Wczytaj kopię</button>
+        <input type="file" id="plik-pamieci" accept="application/json,.json" hidden>
+      </div>
+      <span class="opis">Kopia przenosi wiedzę między telefonem, komputerem i innymi przeglądarkami.
+        Napisz w czacie „ucz się”, „statystyki” albo „czego nie wiesz”.</span>
     </fieldset>
 
     <fieldset>

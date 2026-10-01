@@ -22,8 +22,30 @@ def start(katalog_pamieci):
 
 def czat(tekst):
     odpowiedz = _badek.odpowiedz(tekst)
-    return json.dumps({"odpowiedz": odpowiedz, "zrodlo": _badek.zrodlo, "imie": _badek.imie},
-                      ensure_ascii=False)
+    return json.dumps({"odpowiedz": odpowiedz, "zrodlo": _badek.zrodlo, "imie": _badek.imie,
+                       "id_odpowiedzi": _badek.id_odpowiedzi}, ensure_ascii=False)
+
+
+def naucz_od_ai(pytanie, odpowiedz, zrodlo):
+    """Badek zapamiętuje odpowiedź dużego modelu. Zwraca numer odpowiedzi do ocen 👍/👎."""
+    wpis = _badek.naucz_od_ai(pytanie, odpowiedz, zrodlo)
+    id_odpowiedzi = _badek.zarejestruj_odpowiedz(pytanie, "ai", wiedza=wpis)
+    return json.dumps({"id_odpowiedzi": id_odpowiedzi, "zapamietane": wpis is not None})
+
+
+def ocena(id_odpowiedzi, dobra):
+    return json.dumps({"odpowiedz": _badek.ocen(int(id_odpowiedzi), bool(dobra))}, ensure_ascii=False)
+
+
+def eksport():
+    return json.dumps(_badek.eksport(), ensure_ascii=False)
+
+
+def import_(tekst_json):
+    try:
+        return json.dumps({"odpowiedz": _badek.importuj(json.loads(tekst_json))}, ensure_ascii=False)
+    except ValueError as e:
+        return json.dumps({"odpowiedz": f"Nie udało się wczytać pamięci: {e}"}, ensure_ascii=False)
 
 
 def _bajty(dane):

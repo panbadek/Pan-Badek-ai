@@ -25,6 +25,10 @@ def main():
                         help="z --web: od razu otwórz czat w przeglądarce")
     parser.add_argument("--skrot", nargs="?", const="", metavar="KATALOG",
                         help="utwórz skrót do Pana Badka na pulpicie (albo we wskazanym katalogu)")
+    parser.add_argument("--eksport", metavar="PLIK",
+                        help="zapisz całą wyuczoną pamięć do pliku JSON (np. żeby przenieść ją na telefon)")
+    parser.add_argument("--import", dest="import_", metavar="PLIK",
+                        help="dołącz pamięć z pliku JSON (z telefonu albo innego komputera)")
     parser.add_argument("--version", action="version", version=f"Pan Badek {__version__}")
     args = parser.parse_args()
 
@@ -36,6 +40,18 @@ def main():
         except Exception as e:
             raise SystemExit(f"Nie udało się utworzyć skrótu: {e}")
         print("Utworzono skrót:\n" + "\n".join(f"  {p}" for p in pliki))
+        return
+
+    if args.eksport or args.import_:
+        import json
+        badek = PanBadek(internet=False)
+        if args.import_:
+            with open(args.import_, encoding="utf-8") as f:
+                print(badek.importuj(json.load(f)))
+        if args.eksport:
+            with open(args.eksport, "w", encoding="utf-8") as f:
+                json.dump(badek.eksport(), f, ensure_ascii=False)
+            print(f"Zapisano pamięć do {args.eksport}")
         return
 
     if args.web:

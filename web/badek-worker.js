@@ -46,11 +46,20 @@ onmessage = async ({ data }) => {
     } else if (data.typ === "zdjecie") {
       wynik = JSON.parse(most.zdjecie(data.szer, data.wys, data.oryg_szer, data.oryg_wys,
                                       data.piksele, data.naglowek));
+    } else if (data.typ === "naucz_od_ai") {
+      wynik = JSON.parse(most.naucz_od_ai(data.pytanie, data.odpowiedz, data.zrodlo));
+    } else if (data.typ === "ocena") {
+      wynik = JSON.parse(most.ocena(data.id_odpowiedzi, data.dobra));
+    } else if (data.typ === "eksport") {
+      wynik = { dane: most.eksport() };
+    } else if (data.typ === "import") {
+      wynik = JSON.parse(most.import_(data.dane));
     }
     await zapiszPamiec();
   } catch (e) {
     wynik = { odpowiedz: "Ups, coś mi się pomieszało w głowie: " + e.message.split("\n").slice(-2).join(" "),
               zrodlo: "blad" };
   }
-  postMessage({ typ: "wynik", id: data.id, ...wynik });
+  // Pola "typ" i "id" na końcu - wynik z Pythona nie może ich nadpisać.
+  postMessage({ ...wynik, typ: "wynik", id: data.id });
 };

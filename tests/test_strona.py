@@ -26,8 +26,9 @@ class TestZrodloOdpowiedzi(unittest.TestCase):
         self.assertEqual(self.zrodlo("ile to 2+2"), "kalkulator")
         self.assertEqual(self.zrodlo("Mam na imię Ola"), "polecenia_pamieci")
         self.assertEqual(self.zrodlo("asdf qwerty zxcv"), "nie_wiem")
-        self.badek.biblioteki.dodaj("koty", "Koty śpią nawet szesnaście godzin na dobę.")
-        self.assertEqual(self.zrodlo("jak długo śpią koty?"), "biblioteka")
+        self.assertEqual(self.zrodlo("jak długo śpią koty?"), "wiedza")
+        self.badek.biblioteki.dodaj("zwierzaki", "Chomik Puszek uwielbia marchewkę.")
+        self.assertEqual(self.zrodlo("co uwielbia chomik Puszek?"), "biblioteka")
 
 
 class TestMostPrzegladarki(unittest.TestCase):

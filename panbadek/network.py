@@ -94,6 +94,13 @@ class SiecNeuronowa:
                 break
         return srednia
 
+    def dodaj_wejscia(self, ile, ziarno=None):
+        """Nowe wejścia (nowe słowa) z małymi losowymi wagami - reszta wiedzy zostaje."""
+        los = random.Random(ziarno)
+        ukryte = len(self.b1)
+        skala = math.sqrt(2.0 / max(1, len(self.w1) + ile))
+        self.w1.extend([los.gauss(0, skala) for _ in range(ukryte)] for _ in range(ile))
+
     def do_slownika(self):
         return {"w1": self.w1, "b1": self.b1, "w2": self.w2, "b2": self.b2}
 

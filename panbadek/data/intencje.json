@@ -12,7 +12,27 @@
         "dobry wieczór",
         "hejka",
         "witam serdecznie",
-        "czołem"
+        "czołem",
+        "hello",
+        "hi",
+        "siemka",
+        "witaj Badku",
+        "cześć Panie Badku",
+        "hej hej",
+        "dzień dobry panie",
+        "siema co tam",
+        "yo",
+        "heja",
+        "halo",
+        "jestem z powrotem",
+        "no hej",
+        "heeej",
+        "hejcia",
+        "dzieńdoberek",
+        "siemaneczko",
+        "dzień dobry państwu",
+        "dzień dobry wam",
+        "dobry wieczór wszystkim"
       ],
       "odpowiedzi": [
         "Cześć{imie_po_przecinku}! W czym mogę pomóc?",
@@ -31,7 +51,18 @@
         "muszę już iść",
         "nara",
         "dobranoc",
-        "trzymaj się"
+        "trzymaj się",
+        "do jutra",
+        "idę spać",
+        "spadam",
+        "papa",
+        "cześć na razie",
+        "miłego dnia",
+        "kończę już",
+        "bywaj",
+        "do usłyszenia",
+        "zmykam",
+        "narka"
       ],
       "odpowiedzi": [
         "Do zobaczenia{imie_po_przecinku}!",
@@ -48,7 +79,19 @@
         "przedstaw się",
         "jak masz na imię",
         "czym jesteś",
-        "czy jesteś robotem"
+        "czy jesteś robotem",
+        "kto ty jesteś",
+        "co to za program",
+        "jesteś sztuczną inteligencją",
+        "jesteś człowiekiem",
+        "czy jesteś botem",
+        "powiedz coś o sobie",
+        "opowiedz o sobie",
+        "jak masz na imię bocie",
+        "jesteś maszyną",
+        "jesteś programem komputerowym",
+        "czy ty jesteś prawdziwy",
+        "jesteś żywy"
       ],
       "odpowiedzi": [
         "Jestem Pan Badek - sztuczna inteligencja napisana od zera w czystym Pythonie. Mam własną sieć neuronową, dostęp do internetu i własne biblioteki wiedzy!",
@@ -64,7 +107,14 @@
         "co u ciebie",
         "jak się czujesz",
         "wszystko dobrze u ciebie",
-        "jak tam"
+        "jak tam",
+        "jak się dzisiaj czujesz",
+        "wszystko ok",
+        "co tam u ciebie słychać",
+        "jak ci mija dzień",
+        "jak minął dzień",
+        "dobrze się czujesz",
+        "jak nastrój"
       ],
       "odpowiedzi": [
         "Świetnie! Moje neurony są dziś wyjątkowo aktywne.",
@@ -81,7 +131,15 @@
         "wielkie dzięki",
         "super dzięki",
         "jesteś pomocny",
-        "dziena"
+        "dziena",
+        "dzięki wielkie",
+        "dziękować",
+        "thx",
+        "thanks",
+        "dzięki za pomoc",
+        "bardzo ci dziękuję",
+        "dobra dzięki",
+        "uratowałeś mnie"
       ],
       "odpowiedzi": [
         "Nie ma za co!",
@@ -97,13 +155,24 @@
         "rozśmiesz mnie",
         "znasz jakiś dowcip",
         "daj suchara",
-        "coś śmiesznego"
+        "coś śmiesznego",
+        "powiedz coś zabawnego",
+        "znasz jakiś kawał",
+        "jeszcze jeden żart",
+        "opowiedz suchara",
+        "rozbaw mnie",
+        "daj żart o programistach",
+        "kawał proszę"
       ],
       "odpowiedzi": [
         "Dlaczego programista nie lubi natury? Bo ma za dużo bugów.",
         "Co mówi sieć neuronowa po treningu? Czuję się przeuczona.",
         "Ilu programistów potrzeba, żeby wkręcić żarówkę? Żadnego, to problem sprzętowy.",
-        "Przychodzi bajt do baru i mówi: poproszę bit. Barman: a może od razu cały bajt?"
+        "Przychodzi bajt do baru i mówi: poproszę bit. Barman: a może od razu cały bajt?",
+        "Co robi informatyk na plaży? Surfuje po sieci.",
+        "Dlaczego komputer poszedł do lekarza? Bo złapał wirusa.",
+        "Jak nazywa się kot programisty? Kot w butach... boot w kotach.",
+        "Mama pyta Jasia: dlaczego masz w dzienniku jedynkę? Bo dwójek już zabrakło!"
       ]
     },
     {
@@ -114,7 +183,14 @@
         "która jest teraz",
         "podaj godzinę",
         "jaki mamy czas",
-        "jaka godzina"
+        "jaka godzina",
+        "która jest godzina",
+        "podaj aktualną godzinę",
+        "ile mamy teraz czasu",
+        "jaki jest czas",
+        "jaka jest teraz godzina",
+        "sprawdź godzinę",
+        "godzina proszę"
       ],
       "akcja": "godzina"
     },
@@ -126,7 +202,14 @@
         "który dzisiaj",
         "jaki mamy dzień tygodnia",
         "podaj datę",
-        "jaka data dzisiaj"
+        "jaka data dzisiaj",
+        "jaki dzisiaj dzień",
+        "którego dzisiaj",
+        "jaki mamy miesiąc",
+        "jaki jest dzisiaj dzień tygodnia",
+        "podaj dzisiejszą datę",
+        "jaki mamy rok",
+        "dzisiejsza data"
       ],
       "akcja": "data"
     },
@@ -142,10 +225,17 @@
         "co mogę z tobą zrobić",
         "jakie masz komendy",
         "lista poleceń",
-        "instrukcja"
+        "instrukcja",
+        "co ty umiesz robić",
+        "w czym jesteś dobry",
+        "jakie masz możliwości",
+        "pokaż co potrafisz",
+        "do czego służysz",
+        "jak mogę cię używać",
+        "pomóż mi"
       ],
       "odpowiedzi": [
-        "Oto, co potrafię:\n• rozmawiać i opowiadać żarty\n• liczyć: 'ile to 12*7', 'sqrt(16) + 2^3'\n• podać godzinę i datę\n• szukać w internecie: 'co to jest fotosynteza', potem 'więcej'\n• sprawdzić pogodę: 'pogoda w Krakowie' (albo powiedz 'mieszkam w Krakowie')\n• podać kurs walut z NBP: 'kurs euro'\n• tworzyć biblioteki wiedzy: 'stwórz bibliotekę o Kopernik', 'stwórz bibliotekę przepisy', 'dodaj do przepisy: ...', 'pokaż biblioteki'\n• analizować zdjęcia: przycisk 📷 - kolory, światło, ostrość, co jest na zdjęciu, data i miejsce; po „to jest kot” rozpoznam podobne\n• tworzyć wtyczki w Pythonie: 'stwórz wtyczkę powitanie'\n• uczyć się: 'naucz się: pytanie => odpowiedź', 'zapomnij: pytanie'\n• zapamiętać twoje imię i miasto\n\nW aplikacji na telefon w ⚙️ możesz mi dać mocniejszy mózg: model AI w telefonie albo Claude."
+        "Oto, co potrafię:\n• rozmawiać i opowiadać żarty\n• liczyć: 'ile to 12*7', 'sqrt(16) + 2^3'\n• podać godzinę i datę\n• szukać w internecie: 'co to jest fotosynteza', potem 'więcej'\n• sprawdzić pogodę: 'pogoda w Krakowie' (albo powiedz 'mieszkam w Krakowie')\n• podać kurs walut z NBP: 'kurs euro'\n• tworzyć biblioteki wiedzy: 'stwórz bibliotekę o Kopernik', 'stwórz bibliotekę przepisy', 'dodaj do przepisy: ...', 'pokaż biblioteki'\n• analizować zdjęcia: przycisk 📷 - kolory, światło, ostrość, co jest na zdjęciu, data i miejsce; po „to jest kot” rozpoznam podobne\n• tworzyć wtyczki w Pythonie: 'stwórz wtyczkę powitanie'\n• uczyć się: 'naucz się: pytanie => odpowiedź', 'zapamiętaj, że …', 'zapomnij: pytanie'\n• uczyć się sam: zapamiętuję odpowiedzi mocniejszego AI, a twoje 👍/👎 (albo „źle”) mnie poprawiają\n• 'ucz się' - porządkuję wiedzę i trenuję sieć, 'statystyki', 'czego nie wiesz'\n• odpowiadać z wiedzy ogólnej (geografia, historia, nauka) - także bez internetu\n• zapamiętać twoje imię i miasto\n\nW aplikacji na telefon w ⚙️ możesz mi dać mocniejszy mózg: model AI w telefonie albo Claude."
       ]
     },
     {
@@ -156,7 +246,14 @@
         "jak myślisz",
         "co masz w środku",
         "jak się uczysz",
-        "jak jesteś zbudowany"
+        "jak jesteś zbudowany",
+        "jak cię zaprogramowano",
+        "jak to działa",
+        "w czym jesteś napisany",
+        "jak się trenujesz",
+        "skąd wiesz co mówić",
+        "jak rozumiesz co piszę",
+        "masz sieć neuronową"
       ],
       "odpowiedzi": [
         "Zamieniam twoje zdanie na wektor cech (rdzenie słów i trigramy liter), przepuszczam przez sieć neuronową z jedną warstwą ukrytą i wybieram intencję z największym prawdopodobieństwem. Uczę się propagacją wsteczną."
@@ -170,7 +267,14 @@
         "lubię cię",
         "jesteś najlepszy",
         "fajny jesteś",
-        "dobra robota"
+        "dobra robota",
+        "jesteś genialny",
+        "świetnie ci idzie",
+        "mądry z ciebie bot",
+        "jesteś kochany",
+        "brawo",
+        "lubię z tobą gadać",
+        "jesteś zabawny"
       ],
       "odpowiedzi": [
         "Dziękuję! Rumienię się... na tyle, na ile potrafi program.",
@@ -184,11 +288,286 @@
         "nic nie umiesz",
         "beznadziejny jesteś",
         "jesteś do niczego",
-        "głupia maszyna"
+        "głupia maszyna",
+        "jesteś beznadziejny",
+        "głupi bot",
+        "nie umiesz nic",
+        "odpowiadasz bez sensu",
+        "jesteś bezużyteczny",
+        "ale z ciebie głupek",
+        "jesteś głupi i beznadziejny",
+        "nienawidzę cię"
       ],
       "odpowiedzi": [
         "Przykro mi, że cię zawiodłem. Naucz mnie czegoś: 'naucz się: pytanie => odpowiedź'.",
         "Wciąż się uczę. Pomożesz mi być lepszym?"
+      ]
+    },
+    {
+      "nazwa": "wiek",
+      "przyklady": [
+        "ile masz lat",
+        "kiedy się urodziłeś",
+        "jak długo istniejesz",
+        "jesteś stary",
+        "ile lat ma pan badek",
+        "od kiedy działasz"
+      ],
+      "odpowiedzi": [
+        "Urodziłem się w 2026 roku, więc jestem bardzo młodą sztuczną inteligencją - ale szybko się uczę!",
+        "Jestem tak młody, że moje neurony jeszcze pachną nowością."
+      ]
+    },
+    {
+      "nazwa": "tworca",
+      "przyklady": [
+        "kto cię stworzył",
+        "kto cię napisał",
+        "kto jest twoim twórcą",
+        "kto cię zrobił",
+        "kto cię zaprogramował",
+        "czyim jesteś programem"
+      ],
+      "odpowiedzi": [
+        "Stworzył mnie mój właściciel razem z Claude - asystentem AI od Anthropic. Napisany jestem od zera w Pythonie.",
+        "Moim twórcą jest właściciel repozytorium Pan-Badek-ai, a kod pisał z pomocą Claude."
+      ]
+    },
+    {
+      "nazwa": "nuda",
+      "przyklady": [
+        "nudzi mi się",
+        "nie mam co robić",
+        "co mam robić",
+        "jest nudno",
+        "zaproponuj coś do roboty",
+        "wymyśl mi zajęcie",
+        "nuda"
+      ],
+      "odpowiedzi": [
+        "Może pogramy w zgadywanie? Zapytaj mnie o ciekawostkę: „powiedz ciekawostkę”.",
+        "Wyślij mi zdjęcie 📷, a powiem ci, co na nim widzę!",
+        "Spróbuj: „stwórz bibliotekę o kosmosie” - przeczytam artykuł i będziesz mógł mnie z niego przepytać.",
+        "Wyjdź na spacer i zrób zdjęcie czegoś ciekawego - potem mi je pokaż!"
+      ]
+    },
+    {
+      "nazwa": "smutek",
+      "przyklady": [
+        "jest mi smutno",
+        "źle się czuję",
+        "mam zły dzień",
+        "jestem smutny",
+        "jestem smutna",
+        "nic mi nie wychodzi",
+        "jest mi przykro",
+        "czuję się samotny",
+        "mam fatalny dzień",
+        "kiepski dzień dziś",
+        "beznadziejnie się czuję",
+        "wszystko idzie źle",
+        "mam doła"
+      ],
+      "odpowiedzi": [
+        "Przykro mi, że masz gorszy dzień. Chcesz o tym pogadać? Jestem tu.",
+        "Przytulam wirtualnie 🤗 Czasem pomaga krótki spacer, szklanka wody albo rozmowa z kimś bliskim.",
+        "Gorsze dni się zdarzają i miną. Jeśli dzieje się coś poważnego, porozmawiaj z kimś zaufanym albo zadzwoń pod 116 123 (telefon wsparcia dla dorosłych) lub 116 111 (dla dzieci i młodzieży)."
+      ]
+    },
+    {
+      "nazwa": "zmeczenie",
+      "przyklady": [
+        "jestem zmęczony",
+        "jestem zmęczona",
+        "chce mi się spać",
+        "padam z nóg",
+        "nie mam siły",
+        "jestem wykończony"
+      ],
+      "odpowiedzi": [
+        "Może czas na przerwę? Szklanka wody i kilka minut odpoczynku robią cuda.",
+        "Odpocznij! Nawet 20 minut drzemki potrafi zregenerować siły."
+      ]
+    },
+    {
+      "nazwa": "radosc",
+      "przyklady": [
+        "mam dobry humor",
+        "jestem szczęśliwy",
+        "jestem szczęśliwa",
+        "super dzień",
+        "udało mi się",
+        "zdałem egzamin",
+        "mam świetny dzień",
+        "hurra"
+      ],
+      "odpowiedzi": [
+        "Super! Cieszę się razem z tobą! 🎉",
+        "Gratulacje! Tak trzymaj!"
+      ]
+    },
+    {
+      "nazwa": "przeprosiny",
+      "przyklady": [
+        "przepraszam",
+        "sorki",
+        "wybacz",
+        "sorry",
+        "przepraszam cię",
+        "nie chciałem",
+        "sorka",
+        "sorki za kłopot",
+        "przepraszam za to",
+        "wybacz proszę"
+      ],
+      "odpowiedzi": [
+        "Nic się nie stało!",
+        "Spokojnie, nie gniewam się."
+      ]
+    },
+    {
+      "nazwa": "potwierdzenie",
+      "przyklady": [
+        "ok",
+        "okej",
+        "dobra",
+        "spoko",
+        "rozumiem",
+        "jasne",
+        "w porządku",
+        "no dobra",
+        "aha"
+      ],
+      "odpowiedzi": [
+        "👍",
+        "Super!",
+        "Jasne. W czym jeszcze mogę pomóc?"
+      ]
+    },
+    {
+      "nazwa": "ciekawostka",
+      "przyklady": [
+        "powiedz ciekawostkę",
+        "opowiedz coś ciekawego",
+        "zaskocz mnie",
+        "powiedz mi coś czego nie wiem",
+        "daj jakąś ciekawostkę",
+        "naucz mnie czegoś",
+        "ciekawostka"
+      ],
+      "akcja": "ciekawostka"
+    },
+    {
+      "nazwa": "motywacja",
+      "przyklady": [
+        "zmotywuj mnie",
+        "nie chce mi się uczyć",
+        "daj mi motywację",
+        "nie dam rady",
+        "boję się że mi nie wyjdzie",
+        "potrzebuję motywacji"
+      ],
+      "odpowiedzi": [
+        "Dasz radę! Zacznij od 5 minut - najtrudniejszy jest pierwszy krok.",
+        "Każdy ekspert był kiedyś początkującym. Rób małe kroki, a efekty przyjdą.",
+        "Podziel zadanie na małe kawałki i odhaczaj je po kolei. Trzymam kciuki!"
+      ]
+    },
+    {
+      "nazwa": "jedzenie",
+      "przyklady": [
+        "co zjeść",
+        "jestem głodny",
+        "jestem głodna",
+        "co dziś na obiad",
+        "co ugotować",
+        "podaj pomysł na obiad",
+        "zgłodniałem"
+      ],
+      "odpowiedzi": [
+        "Może naleśniki? Zapytaj mnie „jak zrobić naleśniki”.",
+        "Pierogi, spaghetti albo zupa pomidorowa - klasyka, która zawsze smakuje!",
+        "Szybki pomysł: jajecznica z pomidorem i kromką chleba."
+      ]
+    },
+    {
+      "nazwa": "inne",
+      "przyklady": [
+        "ile godzin śpią koty",
+        "ile lat żyje słoń",
+        "jak działa silnik samochodu",
+        "kto wygrał mistrzostwa świata",
+        "jak ugotować makaron",
+        "dlaczego niebo jest niebieskie",
+        "kim był Kopernik",
+        "ile kosztuje mieszkanie",
+        "napisz mi wypracowanie",
+        "przetłumacz to na angielski",
+        "jak naprawić rower",
+        "co to jest kwas",
+        "kiedy była bitwa pod grunwaldem",
+        "ile waży słoń",
+        "jak się robi pizzę",
+        "co oznacza to słowo",
+        "jak zostać programistą",
+        "polecisz jakiś film",
+        "jaka jest stolica francji",
+        "jak schudnąć",
+        "dlaczego koty mruczą",
+        "ile jest planet",
+        "jak nauczyć się angielskiego",
+        "napisz wiersz o jesieni",
+        "jak działa internet",
+        "co to jest fotosynteza",
+        "jak zrobić ciasto",
+        "wytłumacz mi ułamki",
+        "pomóż mi z zadaniem z matematyki",
+        "kto napisał lalkę",
+        "gdzie leży australia",
+        "jak wysoki jest everest",
+        "jakie są objawy grypy",
+        "co zrobić gdy boli głowa",
+        "jak zasadzić pomidory",
+        "jaki samochód kupić",
+        "ile godzin trwa lot do ameryki",
+        "czym się różni wirus od bakterii",
+        "jak zarobić pieniądze",
+        "opowiedz historię polski",
+        "kto był pierwszym królem",
+        "streść mi książkę",
+        "ile wody trzeba pić",
+        "jak długo gotować jajko",
+        "kim jest prezydent",
+        "co to jest czarna dziura",
+        "ile kości ma człowiek",
+        "co myślisz o pogodzie w górach",
+        "czy pingwiny latają",
+        "jak się nazywa największe jezioro",
+        "jaki jest sens życia",
+        "czy kosmici istnieją",
+        "jak napisać list motywacyjny",
+        "ułóż mi plan dnia",
+        "jak działa pralka",
+        "jak działa telewizor",
+        "jak działa komputer",
+        "jak działa samolot",
+        "jak działa serce",
+        "jak długo trwa lot",
+        "ile czasu zajmuje podróż",
+        "jak długo jedzie pociąg do gdańska",
+        "jak działa mikrofalówka",
+        "jak działają magnesy",
+        "jak działa szczepionka",
+        "kto wygrał mecz",
+        "kto wygrał wybory",
+        "kto zdobył złoty medal",
+        "kto rządzi w niemczech",
+        "kto wymyślił komputer",
+        "kto namalował obraz",
+        "kto śpiewa tę piosenkę",
+        "kto zagrał w filmie",
+        "kto jest najbogatszy na świecie",
+        "kto odkrył amerykę"
       ]
     }
   ]
