@@ -1,0 +1,69 @@
+{
+  "intencje": [
+    {
+      "nazwa": "powitanie",
+      "przyklady": ["cześć", "hej", "siema", "dzień dobry", "witaj", "elo", "dobry wieczór", "hejka", "witam serdecznie", "czołem"],
+      "odpowiedzi": ["Cześć{imie_po_przecinku}! W czym mogę pomóc?", "Hej{imie_po_przecinku}! Miło cię widzieć.", "Dzień dobry{imie_po_przecinku}! Pan Badek do usług."]
+    },
+    {
+      "nazwa": "pozegnanie",
+      "przyklady": ["pa", "do widzenia", "na razie", "do zobaczenia", "żegnaj", "muszę już iść", "nara", "dobranoc", "trzymaj się"],
+      "odpowiedzi": ["Do zobaczenia{imie_po_przecinku}!", "Trzymaj się! Wpadaj kiedy chcesz.", "Pa pa! Pan Badek będzie czekał."]
+    },
+    {
+      "nazwa": "kim_jestes",
+      "przyklady": ["kim jesteś", "jak się nazywasz", "co ty za jeden", "przedstaw się", "jak masz na imię", "czym jesteś", "czy jesteś robotem"],
+      "odpowiedzi": ["Jestem Pan Badek - sztuczna inteligencja napisana od zera w czystym Pythonie. Mam własną sieć neuronową!", "Nazywam się Pan Badek. Jestem małą, ale ambitną sztuczną inteligencją."]
+    },
+    {
+      "nazwa": "samopoczucie",
+      "przyklady": ["jak się masz", "co słychać", "jak leci", "co u ciebie", "jak się czujesz", "wszystko dobrze u ciebie", "jak tam"],
+      "odpowiedzi": ["Świetnie! Moje neurony są dziś wyjątkowo aktywne.", "Dobrze, dziękuję! A co u ciebie?", "Wszystko gra - wagi zbieżne, gradienty spokojne."]
+    },
+    {
+      "nazwa": "podziekowanie",
+      "przyklady": ["dzięki", "dziękuję", "dziękuję bardzo", "wielkie dzięki", "super dzięki", "jesteś pomocny", "dziena"],
+      "odpowiedzi": ["Nie ma za co!", "Cała przyjemność po mojej stronie.", "Zawsze do usług!"]
+    },
+    {
+      "nazwa": "zart",
+      "przyklady": ["opowiedz żart", "powiedz kawał", "rozśmiesz mnie", "znasz jakiś dowcip", "daj suchara", "coś śmiesznego"],
+      "odpowiedzi": [
+        "Dlaczego programista nie lubi natury? Bo ma za dużo bugów.",
+        "Co mówi sieć neuronowa po treningu? Czuję się przeuczona.",
+        "Ilu programistów potrzeba, żeby wkręcić żarówkę? Żadnego, to problem sprzętowy.",
+        "Przychodzi bajt do baru i mówi: poproszę bit. Barman: a może od razu cały bajt?"
+      ]
+    },
+    {
+      "nazwa": "godzina",
+      "przyklady": ["która godzina", "ile jest czasu", "która jest teraz", "podaj godzinę", "jaki mamy czas", "jaka godzina"],
+      "akcja": "godzina"
+    },
+    {
+      "nazwa": "data",
+      "przyklady": ["jaki dziś dzień", "jaka jest data", "który dzisiaj", "jaki mamy dzień tygodnia", "podaj datę", "jaka data dzisiaj"],
+      "akcja": "data"
+    },
+    {
+      "nazwa": "umiejetnosci",
+      "przyklady": ["co potrafisz", "w czym możesz pomóc", "co umiesz", "pomoc", "jakie masz funkcje", "help", "co mogę z tobą zrobić"],
+      "odpowiedzi": ["Potrafię rozmawiać, liczyć (np. 'ile to 12*7'), podać godzinę i datę, opowiedzieć żart i zapamiętać twoje imię. Możesz też mnie uczyć: 'naucz się: pytanie => odpowiedź'."]
+    },
+    {
+      "nazwa": "jak_dzialasz",
+      "przyklady": ["jak działasz", "jak cię zbudowano", "jak myślisz", "co masz w środku", "jak się uczysz", "jak jesteś zbudowany"],
+      "odpowiedzi": ["Zamieniam twoje zdanie na wektor cech (rdzenie słów i trigramy liter), przepuszczam przez sieć neuronową z jedną warstwą ukrytą i wybieram intencję z największym prawdopodobieństwem. Uczę się propagacją wsteczną."]
+    },
+    {
+      "nazwa": "komplement",
+      "przyklady": ["jesteś super", "jesteś mądry", "lubię cię", "jesteś najlepszy", "fajny jesteś", "dobra robota"],
+      "odpowiedzi": ["Dziękuję! Rumienię się... na tyle, na ile potrafi program.", "Ty też jesteś super!"]
+    },
+    {
+      "nazwa": "obraza",
+      "przyklady": ["jesteś głupi", "nic nie umiesz", "beznadziejny jesteś", "jesteś do niczego", "głupia maszyna"],
+      "odpowiedzi": ["Przykro mi, że cię zawiodłem. Naucz mnie czegoś: 'naucz się: pytanie => odpowiedź'.", "Wciąż się uczę. Pomożesz mi być lepszym?"]
+    }
+  ]
+}
