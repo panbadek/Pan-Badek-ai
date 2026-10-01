@@ -1,5 +1,7 @@
 """Czat z Panem Badkiem w przeglądarce: python -m panbadek --web"""
 
+import base64
+import binascii
 import json
 import socket
 import threading
@@ -8,6 +10,7 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from . import __version__, ikona
+from .obrazy import Obraz
 
 # Manifest i service worker pozwalają dodać czat do ekranu głównego telefonu
 # albo zainstalować go jako aplikację w Chrome/Edge.
@@ -84,13 +87,20 @@ STRONA = """<!doctype html>
           background: var(--karta); color: var(--tekst); }
   button { padding: 10px 16px; font: inherit; border: 0; border-radius: 10px; background: var(--ty);
            color: #fff; cursor: pointer; }
+  #aparat { padding: 10px 12px; background: var(--badek); color: var(--tekst); }
+  .msg img { display: block; max-width: 220px; max-height: 220px; border-radius: 8px; }
+  .msg.ty:has(img) { padding: 4px; }
 </style>
 </head>
 <body>
 <main>
   <h1>🤖 Pan Badek</h1>
   <div id="czat"><div class="msg badek">Cześć! Jestem Pan Badek. Napisz „co potrafisz”, żeby zobaczyć, co umiem.</div></div>
-  <form id="f"><input id="t" autocomplete="off" placeholder="Napisz wiadomość…" autofocus><button>Wyślij</button></form>
+  <form id="f">
+    <button type="button" id="aparat" title="Wyślij zdjęcie do analizy" aria-label="Wyślij zdjęcie">📷</button>
+    <input type="file" id="plik" accept="image/*" hidden>
+    <input id="t" autocomplete="off" placeholder="Napisz wiadomość…" autofocus><button>Wyślij</button>
+  </form>
 </main>
 <script>
 const czat = document.getElementById("czat"), pole = document.getElementById("t");
@@ -112,6 +122,46 @@ document.getElementById("f").addEventListener("submit", async (e) => {
     dodaj("Ups, nie mogę się połączyć z Panem Badkiem. Czy program działa na komputerze?", "badek");
   }
 });
+// Zdjęcie dekoduje przeglądarka (JPEG, PNG, HEIC...), pomniejsza do 256 px i wysyła piksele.
+// Do odczytu metadanych (data, aparat, miejsce) dokładamy początek oryginalnego pliku.
+const ROZMIAR = 256;
+document.getElementById("aparat").addEventListener("click", () => document.getElementById("plik").click());
+document.getElementById("plik").addEventListener("change", async (e) => {
+  const plik = e.target.files[0];
+  e.target.value = "";
+  if (!plik) return;
+  const adres = URL.createObjectURL(plik);
+  const d = document.createElement("div");
+  d.className = "msg ty";
+  const img = document.createElement("img");
+  img.src = adres; img.alt = plik.name;
+  d.appendChild(img); czat.appendChild(d); czat.scrollTop = czat.scrollHeight;
+  try {
+    await img.decode();
+    const skala = Math.min(1, ROZMIAR / Math.max(img.naturalWidth, img.naturalHeight));
+    const s = Math.max(1, Math.round(img.naturalWidth * skala)), w = Math.max(1, Math.round(img.naturalHeight * skala));
+    const plotno = document.createElement("canvas");
+    plotno.width = s; plotno.height = w;
+    const ctx = plotno.getContext("2d");
+    ctx.drawImage(img, 0, 0, s, w);
+    const rgba = ctx.getImageData(0, 0, s, w).data, rgb = new Uint8Array(s * w * 3);
+    for (let i = 0, j = 0; i < rgba.length; i += 4) {
+      rgb[j++] = rgba[i]; rgb[j++] = rgba[i + 1]; rgb[j++] = rgba[i + 2];
+    }
+    const naglowek = new Uint8Array(await plik.slice(0, 256 * 1024).arrayBuffer());
+    const r = await fetch("/api/zdjecie", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({szer: s, wys: w, oryg_szer: img.naturalWidth, oryg_wys: img.naturalHeight,
+                            piksele: base64(rgb), naglowek: base64(naglowek)})});
+    dodaj((await r.json()).odpowiedz, "badek");
+  } catch (err) {
+    dodaj("Nie udało się odczytać tego zdjęcia. Spróbuj JPEG albo PNG.", "badek");
+  }
+});
+function base64(bajty) {
+  let s = "";
+  for (let i = 0; i < bajty.length; i += 0x8000) s += String.fromCharCode.apply(null, bajty.subarray(i, i + 0x8000));
+  return btoa(s);
+}
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
 </script>
 </body>
@@ -144,23 +194,42 @@ def stworz_serwer(badek, host="127.0.0.1", port=8000):
             else:
                 self._wyslij(404, "Nie ma takiej strony", "text/plain; charset=utf-8")
 
+        def _odpowiedz(self, kod, odpowiedz):
+            self._wyslij(kod, json.dumps({"odpowiedz": odpowiedz}, ensure_ascii=False),
+                         "application/json; charset=utf-8")
+
         def do_POST(self):
-            if self.path != "/api/czat":
+            limity = {"/api/czat": 10_000, "/api/zdjecie": 2_000_000}
+            if self.path not in limity:
                 return self._wyslij(404, "{}", "application/json")
             try:
-                dlugosc = min(int(self.headers.get("Content-Length", 0)), 10_000)
-                tekst = str(json.loads(self.rfile.read(dlugosc) or b"{}").get("tekst", ""))
-            except (ValueError, AttributeError):
-                return self._wyslij(400, json.dumps({"odpowiedz": "Niepoprawne zapytanie."}),
-                                    "application/json; charset=utf-8")
+                dlugosc = int(self.headers.get("Content-Length", 0))
+                if dlugosc > limity[self.path]:
+                    return self._odpowiedz(413, "Za duże zapytanie.")
+                dane = json.loads(self.rfile.read(dlugosc) or b"{}")
+                if self.path == "/api/czat":
+                    tekst = str(dane.get("tekst", ""))
+                else:
+                    obraz = Obraz(int(dane["szer"]), int(dane["wys"]),
+                                  base64.b64decode(dane["piksele"]),
+                                  int(dane.get("oryg_szer") or 0), int(dane.get("oryg_wys") or 0))
+                    if max(obraz.szer, obraz.wys) > 1024:
+                        return self._odpowiedz(413, "Wyślij pomniejszone zdjęcie (do 1024 px).")
+                    naglowek = base64.b64decode(dane.get("naglowek") or "")
+            except (ValueError, AttributeError, KeyError, TypeError, binascii.Error):
+                return self._odpowiedz(400, "Niepoprawne zapytanie.")
             with blokada:  # jeden mózg, więc myślimy po kolei
-                odpowiedz = badek.odpowiedz(tekst)
-            self._wyslij(200, json.dumps({"odpowiedz": odpowiedz}, ensure_ascii=False),
-                         "application/json; charset=utf-8")
+                if self.path == "/api/czat":
+                    odpowiedz = badek.odpowiedz(tekst)
+                else:
+                    odpowiedz = badek.analizuj_zdjecie(obraz, naglowek)
+            self._odpowiedz(200, odpowiedz)
 
         def log_message(self, *_):
             pass
 
+    # Przez czat nie wolno czytać plików z dysku komputera po ścieżce.
+    badek.pliki_lokalne = False
     return ThreadingHTTPServer((host, port), Obsluga)
 
 

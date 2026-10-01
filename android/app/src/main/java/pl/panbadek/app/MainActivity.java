@@ -5,6 +5,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -27,7 +29,10 @@ public class MainActivity extends Activity {
         + "@keyframes p{50%{transform:scale(1.15)}}</style></head>"
         + "<body><div class='r'>🤖</div><p>Pan Badek ładuje neurony…</p></body></html>";
 
+    private static final int WYBOR_ZDJECIA = 1;
+
     private WebView web;
+    private ValueCallback<Uri[]> czekaNaZdjecie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,24 @@ public class MainActivity extends Activity {
                 return true;
             }
         });
+        // Przycisk 📷 w czacie otwiera systemowy wybór zdjęcia (galeria, pliki, aparat).
+        web.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback,
+                                             FileChooserParams parametry) {
+                if (czekaNaZdjecie != null) {
+                    czekaNaZdjecie.onReceiveValue(null);
+                }
+                czekaNaZdjecie = callback;
+                try {
+                    startActivityForResult(parametry.createIntent(), WYBOR_ZDJECIA);
+                } catch (ActivityNotFoundException e) {
+                    czekaNaZdjecie = null;
+                    return false;
+                }
+                return true;
+            }
+        });
         setContentView(web);
         web.loadDataWithBaseURL(null, EKRAN_STARTOWY, "text/html", "utf-8", null);
 
@@ -68,6 +91,16 @@ public class MainActivity extends Activity {
                         + blad + "</pre>", "text/html", "utf-8", null));
             }
         }, "pan-badek-start").start();
+    }
+
+    @Override
+    protected void onActivityResult(int kod, int wynik, Intent dane) {
+        if (kod == WYBOR_ZDJECIA && czekaNaZdjecie != null) {
+            czekaNaZdjecie.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(wynik, dane));
+            czekaNaZdjecie = null;
+            return;
+        }
+        super.onActivityResult(kod, wynik, dane);
     }
 
     @Override

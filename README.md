@@ -89,6 +89,7 @@ panbadek --web
 | Biblioteki wiedzy 📚 | `stwórz bibliotekę o Koperniku`, `stwórz bibliotekę przepisy` |
 | Wtyczki w Pythonie 🔌 | `stwórz wtyczkę kostka`, `przeładuj wtyczki` |
 | Nauka | `naucz się: pytanie => odpowiedź`, `zapomnij: pytanie` |
+| Analiza zdjęć 📷 | przycisk 📷 w czacie, potem `to jest kot` |
 | Kalkulator | `ile to 12*7+3`, `sqrt(16) + 2^3`, `5 razy 4` |
 | Pamięć | `mam na imię Ania`, `jak mam na imię?` |
 | Godzina i data | `która godzina`, `jaki dziś dzień` |
@@ -107,6 +108,25 @@ Biblioteka to nazwany zbiór faktów, który Pan Badek przeszukuje jak mała wys
 - `pokaż biblioteki`, `usuń bibliotekę przepisy`.
 - Wszystko, czego Pan Badek dowie się z Wikipedii przez `co to jest ...`, trafia do biblioteki
   „Internet”, więc pamięta to na później.
+
+### Analiza zdjęć 📷
+
+W czacie (przeglądarka, telefon, aplikacja) naciśnij 📷 i wybierz zdjęcie. Pan Badek opisze:
+
+- **kolory** dominujące z udziałami, np. „niebieski 61%, brązowy 27%” (algorytm k-średnich),
+- **światło**: jasność, kontrast, nasycenie, barwy ciepłe lub chłodne,
+- **ostrość**: ostre, lekko miękkie albo rozmyte (rozmyte tło portretu nie obniża oceny),
+- **co widzi**: ostrożne domysły, np. niebo, zieleń, noc, zachód słońca, dokument lub zrzut ekranu,
+- **metadane EXIF**: datę, telefon i miejsce z linkiem do mapy (o ile zdjęcie je zawiera).
+
+Po analizie napisz **„to jest kot”**, a Badek zapamięta przykład i następnym razem powie
+„Przypomina mi: kot”. Rozpoznaje po kolorach i ich układzie, a nie po kształtach, więc
+najlepiej działa na podobnych ujęciach (ten sam pies, ten sam pokój, ten sam widok z okna).
+Im więcej przykładów, tym lepiej. `jakie zdjęcia znasz` pokazuje, czego się nauczył.
+
+W terminalu: `przeanalizuj zdjęcie ~/Obrazy/zdjecie.png`. PNG Badek czyta sam, a JPEG po
+zainstalowaniu Pillow (`pip install pillow`). Zdjęcie nigdzie nie jest wysyłane: wszystko
+liczy się na twoim urządzeniu.
 
 ### Wtyczki 🔌
 

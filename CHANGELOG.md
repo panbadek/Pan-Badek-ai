@@ -1,5 +1,18 @@
 # Historia zmian
 
+## 0.5.0
+
+### Nowe
+- **Analiza zdjęć** (przycisk 📷 w czacie, w aplikacji na Androida i w przeglądarce): dominujące
+  kolory (k-średnie, polskie nazwy), jasność, kontrast, nasycenie, temperatura barw, ostrość
+  (wariancja laplasjanu w najostrzejszym fragmencie) i ostrożne domysły (niebo, zieleń, noc,
+  zachód słońca, dokument lub zrzut ekranu, ludzie, zwierzęta).
+- **Metadane EXIF**: data zrobienia, telefon lub aparat, miejsce z linkiem do mapy.
+- **Uczenie się zdjęć**: „to jest …” po zdjęciu zapamiętuje przykład, a podobne zdjęcia
+  są potem rozpoznawane. Dodane też „jakie zdjęcia znasz”, „zapomnij zdjęcia”.
+- W terminalu: `przeanalizuj zdjęcie ścieżka.png`, z własnym dekoderem PNG.
+  JPEG i inne formaty są obsługiwane, gdy zainstalowany jest Pillow.
+
 ## 0.4.0
 
 ### Nowe

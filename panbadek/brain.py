@@ -4,8 +4,9 @@ import json
 import os
 import random
 import re
+from zlib import error as zlib_error
 
-from . import internet, skills, wtyczki
+from . import exif, internet, obrazy, skills, wtyczki
 from .biblioteki import NIEISTOTNE, Biblioteki
 from .network import SiecNeuronowa
 from .text import Slownik, cechy, normalizuj
@@ -62,6 +63,19 @@ _WIECEJ = re.compile(
 
 _O_SOBIE = {"sobie", "tobie", "ciebie", "ty"}
 
+_TO_JEST = re.compile(
+    r"^\s*(?:to\s+(?:jest|s[aą])|zapami[eę]taj\s+(?:to\s+)?(?:zdj[eę]cie\s+)?jako"
+    r"|na\s+zdj[eę]ciu\s+(?:jest|s[aą]))\s*:?\s+(.+?)" + _KONIEC, _I)
+_ZDJECIE_Z_PLIKU = re.compile(
+    r"^\s*(?:(?:prze)?analizuj|opisz|oce[nń]|sprawd[zź]|poka[zż])?\s*"
+    r"(?:zdj[eę]cie|obraz(?:ek)?|fotk[eę]|plik)\s*:?\s+(.+?)\s*$", _I)
+_PYTANIE_O_ZDJECIE = re.compile(r"(analiz|opisz|co\s+jest\s+na|rozpozn|oce[nń]|wy[sś]l)", re.I)
+_SLOWO_ZDJECIE = re.compile(r"zdj[eę]|obraz|fotk|foto", re.I)
+_ZNANE_ZDJECIA = re.compile(r"^\s*(?:jakie|co)\s+(?:zdj[eę]cia|obrazy|rzeczy)\s+"
+                            r"(?:znasz|rozpoznajesz)" + _KONIEC, _I)
+_ZAPOMNIJ_ZDJECIA = re.compile(r"^\s*zapomnij\s+(?:wszystkie\s+)?zdj[eę]cia" + _KONIEC, _I)
+LIMIT_ZDJEC = 500
+
 # Najczęstsze polskie końcówki miejscownika ("w Krakowie") -> mianownik ("Kraków").
 _MIANOWNIK = [("owie", "ów"), ("awie", "awa"), ("dzi", "dź"), ("niu", "ń"), ("sku", "sk"),
               ("cku", "ck"), ("iu", ""), ("ach", "e"), ("ynie", "yn"), ("inie", "in"),
@@ -109,6 +123,18 @@ class PanBadek:
         self.miasto = None
         # Ostatni temat z internetu - do obsługi "powiedz więcej".
         self.kontekst = None
+        # Cechy ostatnio analizowanego zdjęcia - czekają na podpis "to jest ...".
+        self.ostatnie_zdjecie = None
+        # Czy wolno czytać zdjęcia z dysku po ścieżce (w czacie przez sieć - nie).
+        self.pliki_lokalne = True
+        self.plik_zdjec = sciezka("zdjecia.json")
+        self.zdjecia = []
+        if self.plik_zdjec and os.path.exists(self.plik_zdjec):
+            try:
+                with open(self.plik_zdjec, encoding="utf-8") as f:
+                    self.zdjecia = json.load(f)
+            except (OSError, ValueError):
+                self.zdjecia = []
 
         with open(plik_intencji, encoding="utf-8") as f:
             self.intencje = json.load(f)["intencje"]
@@ -234,13 +260,83 @@ class PanBadek:
         tekst = tekst.strip()
         if not tekst:
             return "Powiedz coś - słucham!"
-        for obsluga in (self._polecenia_pamieci, self._polecenia_bibliotek,
+        zdjecie, self.ostatnie_zdjecie = self.ostatnie_zdjecie, None
+        podpis = _TO_JEST.match(tekst)
+        if zdjecie and podpis:
+            return self.naucz_zdjecie(zdjecie, podpis.group(1))
+        for obsluga in (self._polecenia_zdjec, self._polecenia_pamieci, self._polecenia_bibliotek,
                         self._polecenia_wtyczek, self._wtyczki, self._internet,
                         self._kalkulator, self._siec_neuronowa):
             wynik = obsluga(tekst)
             if wynik:
                 return wynik
         return self._nie_wiem(tekst)
+
+    # --- zdjęcia --------------------------------------------------------------
+
+    def analizuj_zdjecie(self, obraz, naglowek=b""):
+        """Opisuje zdjęcie: kolory, światło, ostrość, domysły, metadane i rozpoznanie."""
+        opis = obrazy.opisz(obrazy.analizuj(obraz))
+        metadane = exif.opisz(exif.czytaj(naglowek))
+        if metadane:
+            opis += "\n" + metadane
+        wektor = obrazy.cechy(obraz)
+        rozpoznanie = obrazy.rozpoznaj(wektor, self.zdjecia)
+        if rozpoznanie:
+            etykieta, pewnosc = rozpoznanie
+            opis += f"\n🧠 Przypomina mi: {etykieta} (podobieństwo {pewnosc:.0%})."
+        self.ostatnie_zdjecie = wektor
+        opis += ("\nNapisz „to jest …”, a zapamiętam, co jest na zdjęciu, i rozpoznam podobne."
+                 if not rozpoznanie else
+                 "\nJeśli się mylę, napisz „to jest …”, a zapamiętam poprawnie.")
+        return opis
+
+    def naucz_zdjecie(self, wektor, etykieta):
+        etykieta = etykieta.strip(" .,!?\"'„”")[:60]
+        self.zdjecia.append({"etykieta": etykieta, "cechy": wektor})
+        self.zdjecia = self.zdjecia[-LIMIT_ZDJEC:]
+        self._zapisz_zdjecia()
+        ile = sum(1 for z in self.zdjecia if z["etykieta"] == etykieta)
+        return (f"Zapamiętałem: to jest {etykieta}. Mam już "
+                f"{ile} {odmien(ile, 'przykład', 'przykłady', 'przykładów')} „{etykieta}”. "
+                "Im więcej podobnych zdjęć mi pokażesz, tym lepiej będę rozpoznawać.")
+
+    def _zapisz_zdjecia(self):
+        if not self.plik_zdjec:
+            return
+        os.makedirs(self.katalog_pamieci, exist_ok=True)
+        with open(self.plik_zdjec, "w", encoding="utf-8") as f:
+            json.dump(self.zdjecia, f)
+
+    def _polecenia_zdjec(self, tekst):
+        if _ZNANE_ZDJECIA.match(tekst):
+            if not self.zdjecia:
+                return "Nie znam jeszcze żadnych zdjęć. Wyślij zdjęcie i napisz „to jest …”."
+            licznik = {}
+            for z in self.zdjecia:
+                licznik[z["etykieta"]] = licznik.get(z["etykieta"], 0) + 1
+            return "Rozpoznaję: " + ", ".join(f"{e} ({n})" for e, n in sorted(licznik.items())) + "."
+        if _ZAPOMNIJ_ZDJECIA.match(tekst):
+            self.zdjecia = []
+            self._zapisz_zdjecia()
+            return "Zapomniałem wszystkie zdjęcia."
+
+        z_pliku = _ZDJECIE_Z_PLIKU.match(tekst)
+        if z_pliku and self.pliki_lokalne:
+            sciezka = os.path.expanduser(z_pliku.group(1).strip("\"'"))
+            if os.path.isfile(sciezka):
+                try:
+                    obraz, naglowek = obrazy.wczytaj_plik(sciezka)
+                except (ValueError, OSError, zlib_error) as e:
+                    return f"Nie umiem otworzyć tego obrazu: {e}"
+                return self.analizuj_zdjecie(obraz, naglowek)
+
+        if _SLOWO_ZDJECIE.search(tekst) and _PYTANIE_O_ZDJECIE.search(tekst):
+            if self.pliki_lokalne:
+                return ("Podaj ścieżkę do pliku, np. „przeanalizuj zdjęcie ~/Obrazy/kot.png”, "
+                        "albo uruchom mnie z --web i wyślij zdjęcie przyciskiem 📷.")
+            return "Wyślij zdjęcie przyciskiem 📷 obok pola wiadomości, a je przeanalizuję."
+        return None
 
     # --- obsługa poszczególnych rodzajów wiadomości -------------------------
 
