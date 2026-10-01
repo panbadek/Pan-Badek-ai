@@ -1,5 +1,15 @@
 # Historia zmian
 
+## 0.3.0
+
+### Nowe
+- **Skrót na pulpicie**: `--skrot` tworzy ikonę na Windows (.lnk z ikoną, bez okna konsoli),
+  macOS (.command) i Linux (.desktop na pulpicie i w menu programów). Rozpoznaje polski „Pulpit”.
+- **Aplikacja na ekran główny telefonu (PWA)**: manifest, ikony, service worker i tryb
+  pełnoekranowy. `--web --telefon` udostępnia czat w domowej sieci Wi-Fi i wypisuje adres dla telefonu.
+- Ikona robota rysowana w kodzie (PNG i ICO bez bibliotek graficznych).
+- `--otworz` od razu otwiera przeglądarkę. Ponowne uruchomienie, gdy Badek już działa, tylko otwiera okno.
+
 ## 0.2.0
 
 ### Nowe

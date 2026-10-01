@@ -19,8 +19,34 @@ def main():
     parser.add_argument("--web", action="store_true",
                         help="uruchom czat w przeglądarce zamiast w terminalu")
     parser.add_argument("--port", type=int, default=8000, help="port dla --web (domyślnie 8000)")
+    parser.add_argument("--telefon", action="store_true",
+                        help="z --web: udostępnij czat telefonom w tej samej sieci Wi-Fi")
+    parser.add_argument("--otworz", action="store_true",
+                        help="z --web: od razu otwórz czat w przeglądarce")
+    parser.add_argument("--skrot", nargs="?", const="", metavar="KATALOG",
+                        help="utwórz skrót do Pana Badka na pulpicie (albo we wskazanym katalogu)")
     parser.add_argument("--version", action="version", version=f"Pan Badek {__version__}")
     args = parser.parse_args()
+
+    if args.skrot is not None:
+        from .brain import DOMYSLNA_PAMIEC
+        from .skrot import utworz_skrot
+        try:
+            pliki = utworz_skrot(DOMYSLNA_PAMIEC, args.skrot or None)
+        except Exception as e:
+            raise SystemExit(f"Nie udało się utworzyć skrótu: {e}")
+        print("Utworzono skrót:\n" + "\n".join(f"  {p}" for p in pliki))
+        return
+
+    if args.web:
+        from .web import juz_dziala
+        if juz_dziala(args.port):
+            # Drugie kliknięcie skrótu: Badek już działa, więc tylko otwieramy okno.
+            print(f"Pan Badek już działa na http://127.0.0.1:{args.port}")
+            if args.otworz:
+                import webbrowser
+                webbrowser.open(f"http://127.0.0.1:{args.port}")
+            return
 
     print("Pan Badek: Ładuję neurony...")
     opcje = {"internet": not args.offline}
@@ -32,7 +58,8 @@ def main():
 
     if args.web:
         from .web import uruchom
-        uruchom(badek, port=args.port)
+        uruchom(badek, host="0.0.0.0" if args.telefon else "127.0.0.1", port=args.port,
+                otworz=args.otworz)
         return
 
     try:

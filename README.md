@@ -12,9 +12,34 @@ Wymagany jest tylko Python 3.8+.
 ```bash
 python3 -m panbadek            # rozmowa w terminalu
 python3 -m panbadek --web      # rozmowa w przeglądarce: http://127.0.0.1:8000
+python3 -m panbadek --skrot    # ikona Pana Badka na pulpicie
 python3 -m panbadek --offline  # bez internetu
 python3 -m panbadek --debug    # pokazuje, co „myśli” sieć (intencja + pewność)
 ```
+
+## Skrót na ekranie głównym 📱 / pulpicie 🖥️
+
+**Komputer (Windows, macOS, Linux):**
+
+```bash
+python3 -m panbadek --skrot
+```
+
+Na pulpicie pojawi się ikona **Pan Badek**. Kliknięcie uruchamia Badka i otwiera czat w przeglądarce.
+Jeśli Badek już działa, skrót tylko otwiera okno. Możesz też wskazać inny katalog:
+`--skrot ŚCIEŻKA`.
+
+**Telefon (Android i iPhone):** Pan Badek działa na komputerze, a telefon łączy się z nim przez Wi-Fi.
+
+1. Na komputerze uruchom: `python3 -m panbadek --web --telefon`
+2. Program wypisze adres, np. `http://192.168.1.20:8000`. Otwórz go na telefonie
+   (telefon musi być w tej samej sieci Wi-Fi).
+3. **Android (Chrome):** menu ⋮ → „Dodaj do ekranu głównego”.
+   **iPhone (Safari):** przycisk Udostępnij → „Do ekranu początkowego”.
+
+Na ekranie głównym pojawi się ikona robota. Czat otwiera się jak osobna aplikacja, na pełnym
+ekranie. Uwaga: z `--telefon` każdy w twojej sieci Wi-Fi może rozmawiać z Badkiem, więc używaj
+tego w domu, nie w publicznej sieci.
 
 Możesz też zainstalować Pana Badka jako polecenie `panbadek`:
 
