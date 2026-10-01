@@ -1,9 +1,12 @@
+// Przelicza opisy kategorii (narzedzia/kategorie.json) modelem tekstowym MobileCLIP i zapisuje
+// web/etykiety.json. Dzięki temu telefon pobiera tylko model obrazu.
+// Uruchomienie (wymaga Playwright z Chromium): node narzedzia/policz_etykiety.js narzedzia/kategorie.json web/etykiety.json
 const { chromium } = require('playwright');
 const fs = require('fs');
 (async () => {
   const [wejscie, wyjscie] = process.argv.slice(2);
   const kategorie = JSON.parse(fs.readFileSync(wejscie, 'utf8'));
-  const b = await chromium.launch({ proxy: { server: process.env.HTTPS_PROXY, bypass: '127.0.0.1,localhost' }, args: ['--ignore-certificate-errors'] });
+  const b = await chromium.launch();
   const p = await b.newPage();
   p.on('console', m => console.log('[strona]', m.text()));
   await p.goto('about:blank');
