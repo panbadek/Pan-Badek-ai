@@ -415,7 +415,7 @@ class PanBadek:
             f"• sieć neuronowa: {len(self.intencje)} {odmien(len(self.intencje), 'temat', 'tematy', 'tematów')}, "
             f"{przyklady} {odmien(przyklady, 'przykład', 'przykłady', 'przykładów')}"
             + (f" (w tym {dopisane} z twoich ocen)" if dopisane else ""),
-            f"• biblioteki: {len(self.biblioteki.lista())} ({biblioteki} faktów)",
+            f"• biblioteki: {len(self.biblioteki.lista())} ({biblioteki} {odmien(biblioteki, 'fakt', 'fakty', 'faktów')})",
             f"• zdjęcia: {len(self.zdjecia)} zapamiętanych",
             f"• przeczytane wiadomości: {rozmowy}",
         ]
