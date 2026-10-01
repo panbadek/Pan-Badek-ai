@@ -5,7 +5,33 @@ bez numpy, bez PyTorcha i bez płatnych API. Sercem jest samodzielnie
 zaimplementowana sieć neuronowa z propagacją wsteczną. Do tego dochodzą dostęp do
 internetu, własne biblioteki wiedzy i wtyczki.
 
-## Uruchomienie
+## 📱 Na telefonie - najprościej
+
+**Otwórz w telefonie: https://panbadek.github.io/Pan-Badek-ai/**
+
+Potem w menu przeglądarki wybierz **„Dodaj do ekranu głównego”** (Android: Chrome ⋮,
+iPhone: Safari → Udostępnij). Nic nie trzeba instalować ani mieć włączonego komputera:
+cały Pan Badek (Python!) działa w przeglądarce telefonu dzięki
+[Pyodide](https://pyodide.org), a po pierwszym otwarciu działa też bez internetu.
+
+W ⚙️ wybierasz, jak mocny ma być mózg:
+
+| Mózg | Co daje | Koszt |
+|---|---|---|
+| **Pan Badek** | polecenia, pamięć, Wikipedia, pogoda, kursy, kalkulator, analiza zdjęć | darmowy |
+| **Rozpoznawanie obiektów** (MobileCLIP, 23 MB) | „🤖 AI rozpoznaje: kot 88%”: 180 kategorii, liczone w telefonie | darmowy |
+| **Model AI w telefonie** (Qwen3.5 0,8B / 2B / 4B, WebLLM) | swobodna rozmowa po polsku na GPU telefonu, prywatnie i offline | darmowy, pobierany raz |
+| **Claude** (Claude Opus 5.5) | najmocniejszy: rozmowa i dokładny opis zdjęć | własny klucz API, płatny za użycie |
+
+Model AI w telefonie wymaga WebGPU: aktualny Chrome na Androidzie albo Safari na iOS 26+,
+najlepiej 6 GB RAM lub więcej dla wersji 2B. Klucz API do Claude zostaje tylko w twoim telefonie.
+
+> **Jednorazowo, żeby strona ruszyła:** w repozytorium na GitHubie wejdź w
+> **Settings → Pages → Build and deployment → Source: GitHub Actions**. Od tej pory każda zmiana
+> w kodzie sama aktualizuje stronę (workflow `.github/workflows/strona.yml`).
+> Lokalnie stronę zbudujesz poleceniem `python3 narzedzia/zbuduj_strone.py _site`.
+
+## Uruchomienie na komputerze
 
 Wymagany jest tylko Python 3.8+.
 

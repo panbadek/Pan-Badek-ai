@@ -1,0 +1,49 @@
+name: Strona na telefon (GitHub Pages)
+
+on:
+  push:
+    paths: ["panbadek/**", "web/**", "narzedzia/**", ".github/workflows/strona.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  zbuduj:
+    # GitHub Pages publikuje tylko z domyślnej gałęzi repozytorium.
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Testy
+        run: python -m unittest discover -s tests
+
+      - name: Budowanie strony
+        run: python narzedzia/zbuduj_strone.py _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  opublikuj:
+    needs: zbuduj
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publikacja.outputs.page_url }}
+    steps:
+      - id: publikacja
+        uses: actions/deploy-pages@v4

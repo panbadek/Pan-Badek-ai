@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pan Badek</title>
+<meta name="description" content="Pan Badek - twoja sztuczna inteligencja, która działa w telefonie">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2f6fed">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pan Badek">
+<style>
+  :root { --tlo: #f4f5f7; --karta: #fff; --tekst: #1d2330; --przygaszony: #5d6575; --badek: #e8edf7;
+          --ty: #2f6fed; --ramka: #d8dce3; --ai: #7a4fd6; --blad: #c0392b; }
+  @media (prefers-color-scheme: dark) {
+    :root { --tlo: #15181e; --karta: #1e222b; --tekst: #e6e9ef; --przygaszony: #9aa3b2; --badek: #2a303c;
+            --ty: #3d7bf2; --ramka: #343a46; --ai: #a07ef0; --blad: #e2675a; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font: 16px/1.5 system-ui, -apple-system, sans-serif; background: var(--tlo); color: var(--tekst);
+         display: flex; justify-content: center; height: 100dvh; }
+  main { width: 100%; max-width: 720px; display: flex; flex-direction: column;
+         padding: max(12px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom)); }
+  header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  header h1 { font-size: 20px; margin: 0; flex: 1; }
+  #status { font-size: 13px; color: var(--przygaszony); }
+  .ikona { background: none; border: 0; font-size: 22px; padding: 6px; cursor: pointer; color: var(--tekst); }
+  #czat { flex: 1; overflow-y: auto; background: var(--karta); border: 1px solid var(--ramka);
+          border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 88%; padding: 8px 12px; border-radius: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .badek { background: var(--badek); align-self: flex-start; }
+  .ty { background: var(--ty); color: #fff; align-self: flex-end; }
+  .ty.foto { padding: 4px; }
+  .msg img { display: block; max-width: 220px; max-height: 220px; border-radius: 10px; }
+  .podpis { display: block; font-size: 12px; color: var(--przygaszony); margin-top: 4px; }
+  .podpis.ai { color: var(--ai); }
+  .msg a { color: inherit; }
+  .pisze::after { content: "▍"; animation: miga 1s steps(2) infinite; }
+  @keyframes miga { 50% { opacity: 0; } }
+  form#f { display: flex; gap: 8px; margin-top: 10px; }
+  #t { flex: 1; min-width: 0; padding: 11px 12px; font: inherit; border-radius: 12px; border: 1px solid var(--ramka);
+       background: var(--karta); color: var(--tekst); }
+  button { font: inherit; border: 0; border-radius: 12px; cursor: pointer; }
+  .glowny { padding: 10px 16px; background: var(--ty); color: #fff; }
+  .glowny:disabled { opacity: .5; }
+  #aparat { padding: 10px 12px; background: var(--badek); color: var(--tekst); }
+  dialog { border: 0; border-radius: 16px; padding: 0; width: min(560px, calc(100vw - 24px));
+           background: var(--karta); color: var(--tekst); max-height: calc(100dvh - 24px); }
+  dialog::backdrop { background: rgb(0 0 0 / .45); }
+  .panel { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+  .panel h2 { margin: 0; font-size: 18px; }
+  fieldset[hidden] { display: none; }
+  fieldset { border: 1px solid var(--ramka); border-radius: 12px; padding: 10px 12px; margin: 0;
+             display: flex; flex-direction: column; gap: 8px; }
+  legend { font-weight: 600; padding: 0 4px; }
+  label.opcja { display: flex; gap: 8px; align-items: flex-start; }
+  .opis { font-size: 13px; color: var(--przygaszony); }
+  select, input[type=password] { font: inherit; padding: 8px; border-radius: 10px; border: 1px solid var(--ramka);
+                                 background: var(--tlo); color: var(--tekst); width: 100%; }
+  progress { width: 100%; }
+  .wiersz { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .drugi { padding: 8px 12px; background: var(--badek); color: var(--tekst); }
+  .ostrzezenie { color: var(--blad); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>🤖 Pan Badek</h1>
+    <span id="status">uruchamiam…</span>
+    <button class="ikona" id="ustawienia" aria-label="Ustawienia" title="Ustawienia">⚙️</button>
+  </header>
+  <div id="czat" aria-live="polite">
+    <div class="msg badek">Cześć! Jestem Pan Badek. Napisz „co potrafisz”, wyślij zdjęcie 📷, a w ⚙️ możesz mi dać mocniejszy mózg AI.</div>
+  </div>
+  <form id="f">
+    <button type="button" id="aparat" aria-label="Wyślij zdjęcie" title="Wyślij zdjęcie">📷</button>
+    <input type="file" id="plik" accept="image/*" hidden>
+    <input id="t" autocomplete="off" placeholder="Napisz wiadomość…" enterkeyhint="send">
+    <button class="glowny" id="wyslij" disabled>Wyślij</button>
+  </form>
+</main>
+
+<dialog id="panel">
+  <form method="dialog" class="panel" id="formularz">
+    <h2>⚙️ Mózg Pana Badka</h2>
+
+    <fieldset>
+      <legend>Kto odpowiada w rozmowie</legend>
+      <label class="opcja"><input type="radio" name="mozg" value="badek">
+        <span>Tylko Pan Badek <span class="opis">- najszybszy, działa zawsze, także bez internetu.</span></span></label>
+      <label class="opcja"><input type="radio" name="mozg" value="lokalny">
+        <span>Model AI w telefonie <span class="opis">- prawdziwy model językowy na karcie graficznej
+          telefonu. Darmowy, prywatny, po pobraniu działa bez internetu.</span></span></label>
+      <label class="opcja"><input type="radio" name="mozg" value="claude">
+        <span>Claude <span class="opis">- najmocniejszy: najlepsza rozmowa i opisywanie zdjęć.
+          Wymaga internetu i klucza API (płatnego za użycie).</span></span></label>
+    </fieldset>
+
+    <fieldset id="ustawienia-lokalne">
+      <legend>Model w telefonie</legend>
+      <select id="model-lokalny"></select>
+      <div class="wiersz"><button type="button" class="drugi" id="pobierz-model">Pobierz i włącz</button>
+        <span class="opis" id="stan-modelu"></span></div>
+      <progress id="postep-modelu" max="1" value="0" hidden></progress>
+      <span class="ostrzezenie" id="brak-webgpu" hidden>Ta przeglądarka nie obsługuje WebGPU, więc model w telefonie
+        nie zadziała. Spróbuj aktualnego Chrome na Androidzie albo Safari na iOS 26+.</span>
+    </fieldset>
+
+    <fieldset id="ustawienia-claude">
+      <legend>Claude</legend>
+      <input type="password" id="klucz" placeholder="Klucz API (sk-ant-…)" autocomplete="off">
+      <span class="opis">Klucz utworzysz na <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
+        Zostaje tylko w tym telefonie i jest wysyłany wyłącznie do api.anthropic.com. Każda odpowiedź kosztuje
+        ułamek centa, dłuższe rozmowy i zdjęcia trochę więcej.</span>
+    </fieldset>
+
+    <fieldset>
+      <legend>Kiedy włącza się AI</legend>
+      <label class="opcja"><input type="radio" name="kiedy" value="zawsze">
+        <span>W każdej rozmowie <span class="opis">- zalecane; polecenia, pogodę, kursy, kalkulator i zdjęcia dalej obsługuje Badek</span></span></label>
+      <label class="opcja"><input type="radio" name="kiedy" value="nie_wie">
+        <span>Tylko gdy Pan Badek nie zna odpowiedzi <span class="opis">- oszczędniej</span></span></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Zdjęcia</legend>
+      <label class="opcja"><input type="checkbox" id="rozpoznawanie">
+        <span>Rozpoznawanie obiektów AI <span class="opis">- model MobileCLIP (23 MB, pobierany raz), działa w telefonie.</span></span></label>
+    </fieldset>
+
+    <div class="wiersz"><button class="glowny" value="ok">Gotowe</button></div>
+  </form>
+</dialog>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

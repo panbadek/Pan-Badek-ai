@@ -1,5 +1,21 @@
 # Historia zmian
 
+## 0.6.0
+
+### Nowe
+- **Pan Badek jako aplikacja w przeglądarce telefonu** (GitHub Pages, PWA): cały Python
+  Pana Badka działa przez Pyodide w Web Workerze, bez serwera i bez instalacji. Pamięć jest
+  trzymana w IndexedDB, a po pierwszym otwarciu aplikacja działa offline.
+- **Rozpoznawanie obiektów na zdjęciach**: MobileCLIP (Transformers.js) w telefonie,
+  180 kategorii z polskimi nazwami. Opisy kategorii są przeliczone z góry (`web/etykiety.json`),
+  więc telefon pobiera tylko 23-megabajtowy model obrazu.
+- **Model językowy w telefonie**: Qwen3.5 0,8B / 2B / 4B przez WebLLM (WebGPU).
+- **Tryb Claude** (Claude Opus 5.5 przez oficjalne SDK, z kluczem API użytkownika):
+  strumieniowane odpowiedzi, opis zdjęć, automatyczny model zapasowy przy odmowie.
+- Mózg zgłasza, która część odpowiedziała (`PanBadek.zrodlo`), żeby rozmowę mógł przejąć model AI.
+- Internet działa też w przeglądarce (XMLHttpRequest w Pyodide, CORS dla Wikipedii).
+- Gotowa, wytrenowana sieć jest dołączana do strony, więc telefon nie trenuje jej sam.
+
 ## 0.5.0
 
 ### Nowe

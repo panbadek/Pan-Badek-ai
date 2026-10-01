@@ -123,6 +123,7 @@ class PanBadek:
         self.miasto = None
         # Ostatni temat z internetu - do obsługi "powiedz więcej".
         self.kontekst = None
+        self.zrodlo = None
         # Cechy ostatnio analizowanego zdjęcia - czekają na podpis "to jest ...".
         self.ostatnie_zdjecie = None
         # Czy wolno czytać zdjęcia z dysku po ścieżce (w czacie przez sieć - nie).
@@ -257,20 +258,29 @@ class PanBadek:
                               imie_po_przecinku=f", {self.imie}" if self.imie else "")
 
     def odpowiedz(self, tekst):
+        # Która część mózgu odpowiedziała - np. aplikacja w przeglądarce oddaje rozmowę
+        # dużemu modelowi językowemu, gdy było to "nie_wiem" albo zwykła pogawędka.
+        self.zrodlo = "nie_wiem"
         tekst = tekst.strip()
         if not tekst:
             return "Powiedz coś - słucham!"
         zdjecie, self.ostatnie_zdjecie = self.ostatnie_zdjecie, None
         podpis = _TO_JEST.match(tekst)
         if zdjecie and podpis:
+            self.zrodlo = "zdjecia"
             return self.naucz_zdjecie(zdjecie, podpis.group(1))
         for obsluga in (self._polecenia_zdjec, self._polecenia_pamieci, self._polecenia_bibliotek,
                         self._polecenia_wtyczek, self._wtyczki, self._internet,
                         self._kalkulator, self._siec_neuronowa):
             wynik = obsluga(tekst)
             if wynik:
+                self.zrodlo = obsluga.__name__.lstrip("_")
                 return wynik
-        return self._nie_wiem(tekst)
+        z_biblioteki = self._z_biblioteki(tekst)
+        if z_biblioteki:
+            self.zrodlo = "biblioteka"
+            return z_biblioteki
+        return self.los.choice(NIE_WIEM).format(pytanie=tekst)
 
     # --- zdjęcia --------------------------------------------------------------
 
@@ -565,5 +575,3 @@ class PanBadek:
             return f"{wpis}\n(z mojej biblioteki „{nazwa}”)"
         return None
 
-    def _nie_wiem(self, tekst):
-        return self._z_biblioteki(tekst) or self.los.choice(NIE_WIEM).format(pytanie=tekst)

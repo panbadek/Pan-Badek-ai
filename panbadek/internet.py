@@ -5,6 +5,7 @@ Używa wyłącznie biblioteki standardowej (urllib) i darmowych API bez kluczy.
 
 import json
 import re
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -36,6 +37,8 @@ def pobierz_json(url, parametry=None, limit_czasu=LIMIT_CZASU, proby=2):
 
 
 def _pobierz(url, limit_czasu):
+    if sys.platform == "emscripten":
+        return _pobierz_w_przegladarce(url, limit_czasu)
     zapytanie = urllib.request.Request(url, headers={"User-Agent": USER_AGENT,
                                                     "Accept": "application/json"})
     try:
@@ -47,6 +50,29 @@ def _pobierz(url, limit_czasu):
         raise BladInternetu(f"serwer odpowiedział błędem {e.code}") from e
     except (urllib.error.URLError, TimeoutError, OSError) as e:
         raise BladInternetu("brak połączenia z internetem", chwilowy=True) from e
+    except ValueError as e:
+        raise BladInternetu("serwer zwrócił niezrozumiałe dane") from e
+
+
+def _pobierz_w_przegladarce(url, limit_czasu):
+    """W przeglądarce (Pyodide, w Web Workerze) urllib nie działa - używamy XMLHttpRequest."""
+    from js import XMLHttpRequest  # dostępne tylko w Pyodide
+
+    zapytanie = XMLHttpRequest.new()
+    try:
+        zapytanie.open("GET", url, False)
+        zapytanie.timeout = int(limit_czasu * 1000)
+        zapytanie.send(None)
+    except Exception as e:  # błąd sieci albo CORS przychodzi jako wyjątek JavaScriptu
+        raise BladInternetu("brak połączenia z internetem", chwilowy=True) from e
+    if zapytanie.status == 404:
+        return None
+    if zapytanie.status == 0:
+        raise BladInternetu("brak połączenia z internetem", chwilowy=True)
+    if zapytanie.status >= 400:
+        raise BladInternetu(f"serwer odpowiedział błędem {zapytanie.status}")
+    try:
+        return json.loads(zapytanie.responseText)
     except ValueError as e:
         raise BladInternetu("serwer zwrócił niezrozumiałe dane") from e
 
@@ -84,6 +110,7 @@ def wikipedia(haslo, caly_artykul=False):
         "action": "query", "format": "json", "formatversion": "2",
         "prop": "extracts|info", "inprop": "url", "explaintext": "1", "redirects": "1",
         "generator": "search", "gsrsearch": haslo, "gsrlimit": "1",
+        "origin": "*",  # zgoda na zapytania z przeglądarki (CORS)
     }
     if not caly_artykul:
         parametry["exintro"] = "1"
