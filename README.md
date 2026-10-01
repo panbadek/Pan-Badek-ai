@@ -17,6 +17,36 @@ python3 -m panbadek --offline  # bez internetu
 python3 -m panbadek --debug    # pokazuje, co „myśli” sieć (intencja + pewność)
 ```
 
+## Aplikacja na Androida (APK) 📱
+
+Pan Badek działa też jako zwykła aplikacja na telefonie, bez komputera i bez Termuksa.
+W środku jest ten sam Python i ten sam mózg (dzięki [Chaquopy](https://chaquo.com/chaquopy/)),
+a czat wyświetla się w oknie aplikacji.
+
+**Instalacja:**
+1. Pobierz plik `app-release.apk` na telefon (z GitHub Actions: zakładka *Actions* →
+   *Buduj APK* → najnowsze uruchomienie → *Artifacts*).
+2. Otwórz go. Android zapyta o zgodę na instalację z nieznanego źródła; zezwól na nią
+   dla przeglądarki albo menedżera plików.
+3. Na ekranie głównym pojawi się ikona **Pan Badek**.
+
+Pierwsze uruchomienie trwa kilka sekund, bo sieć neuronowa trenuje się na telefonie. Kolejne są
+szybsze. Pamięć Badka (imię, biblioteki, nauczone odpowiedzi) zostaje w telefonie.
+
+**Budowanie samemu** (wymaga JDK 17+ i Android SDK, np. z Android Studio):
+
+```bash
+cd android
+./gradlew assembleRelease
+# gotowy plik: android/app/build/outputs/apk/release/app-release.apk
+```
+
+Bez dodatkowej konfiguracji APK jest podpisywane kluczem debug. Wystarczy to do instalacji
+na własnym telefonie, ale aktualizacje trzeba budować na tym samym komputerze, bo inaczej
+Android każe najpierw odinstalować starą wersję. Własny klucz ustawisz zmiennymi
+`PANBADEK_KEYSTORE`, `PANBADEK_KEYSTORE_PASSWORD`, `PANBADEK_KEY_ALIAS`, `PANBADEK_KEY_PASSWORD`.
+Ikony aplikacji generuje `python3 android/generuj_ikony.py`.
+
 ## Skrót na ekranie głównym 📱 / pulpicie 🖥️
 
 **Komputer (Windows, macOS, Linux):**

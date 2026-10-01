@@ -1,0 +1,35 @@
+name: Buduj APK
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["panbadek/**", "android/**", ".github/workflows/apk.yml"]
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      # Ta sama wersja Pythona co w aplikacji - Chaquopy kompiluje wtedy kod do .pyc.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Testy
+        run: python -m unittest discover -s tests
+
+      - name: Budowanie APK
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PanBadek-apk
+          path: android/app/build/outputs/apk/release/app-release.apk

@@ -1,5 +1,14 @@
 # Historia zmian
 
+## 0.4.0
+
+### Nowe
+- **Aplikacja na Androida (APK)**: Python wbudowany przez Chaquopy, czat w WebView, działa
+  bez komputera. Ma ikonę adaptacyjną robota, ekran ładowania, a linki otwiera w przeglądarce.
+  Pamięć jest trzymana w telefonie.
+- Automatyczne budowanie APK w GitHub Actions (`.github/workflows/apk.yml`).
+- Ikona z przezroczystym tłem i skalowaniem (warstwa ikony adaptacyjnej).
+
 ## 0.3.0
 
 ### Nowe

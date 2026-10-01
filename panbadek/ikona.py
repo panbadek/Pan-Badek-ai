@@ -37,23 +37,39 @@ def _kolor(x, y):
     return TLO
 
 
-@functools.lru_cache(maxsize=8)
-def png(rozmiar):
-    """Zwraca bajty pliku PNG z ikoną o boku `rozmiar` pikseli (wygładzanie 2x2)."""
+@functools.lru_cache(maxsize=16)
+def png(rozmiar, przezroczyste_tlo=False, skala=1.0):
+    """Zwraca bajty pliku PNG z ikoną o boku `rozmiar` pikseli (wygładzanie 2x2).
+
+    Z przezroczystym tłem powstaje sam robot - np. warstwa ikony adaptacyjnej Androida.
+    `skala` < 1 pomniejsza robota względem środka (np. żeby zmieścił się w okrągłej masce).
+    """
     probki = [(0.25, 0.25), (0.75, 0.25), (0.25, 0.75), (0.75, 0.75)]
+    kanaly = 4 if przezroczyste_tlo else 3
     wiersze = bytearray()
     for py in range(rozmiar):
         wiersze.append(0)  # filtr PNG: brak
         for px in range(rozmiar):
-            kolory = [_kolor((px + ox) / rozmiar, (py + oy) / rozmiar) for ox, oy in probki]
-            for kanal in range(3):
-                wiersze.append(sum(k[kanal] for k in kolory) // 4)
+            kolory = [_kolor(0.5 + ((px + ox) / rozmiar - 0.5) / skala,
+                             0.5 + ((py + oy) / rozmiar - 0.5) / skala) for ox, oy in probki]
+            if przezroczyste_tlo:
+                kolory = [k for k in kolory if k is not TLO]
+                if not kolory:
+                    wiersze.extend(b"\0\0\0\0")
+                    continue
+                for kanal in range(3):
+                    wiersze.append(sum(k[kanal] for k in kolory) // len(kolory))
+                wiersze.append(255 * len(kolory) // len(probki))
+            else:
+                for kanal in range(3):
+                    wiersze.append(sum(k[kanal] for k in kolory) // len(probki))
 
     def blok(typ, dane):
         return (struct.pack(">I", len(dane)) + typ + dane
                 + struct.pack(">I", zlib.crc32(typ + dane) & 0xFFFFFFFF))
 
-    naglowek = struct.pack(">IIBBBBB", rozmiar, rozmiar, 8, 2, 0, 0, 0)  # 8 bitów, RGB
+    typ_koloru = 6 if przezroczyste_tlo else 2  # RGBA albo RGB, po 8 bitów
+    naglowek = struct.pack(">IIBBBBB", rozmiar, rozmiar, 8, typ_koloru, 0, 0, 0)
     return (b"\x89PNG\r\n\x1a\n" + blok(b"IHDR", naglowek)
             + blok(b"IDAT", zlib.compress(bytes(wiersze), 9)) + blok(b"IEND", b""))
 
@@ -66,7 +82,7 @@ def ico(rozmiar=256):
             + struct.pack("<BBBBHHII", bok, bok, 0, 0, 1, 32, len(dane), 6 + 16) + dane)
 
 
-def zapisz(sciezka, rozmiar=256):
+def zapisz(sciezka, rozmiar=256, przezroczyste_tlo=False, skala=1.0):
     with open(sciezka, "wb") as f:
-        f.write(png(rozmiar))
+        f.write(png(rozmiar, przezroczyste_tlo, skala))
     return sciezka
