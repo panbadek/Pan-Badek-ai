@@ -136,6 +136,13 @@ class Biblioteki:
         self._zapisz(nazwa)
         return len(nowe)
 
+    def ustaw(self, nazwa, **pola):
+        """Dodatkowe informacje o bibliotece (np. streszczenie filmu)."""
+        nazwa = self.znajdz_nazwe(nazwa)
+        if nazwa:
+            self.dane[nazwa].update(pola)
+            self._zapisz(nazwa)
+
     def usun(self, nazwa):
         nazwa = self.znajdz_nazwe(nazwa)
         if not nazwa:

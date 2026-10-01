@@ -4,10 +4,11 @@ import json
 import os
 import random
 import re
+import sys
 import time
 from zlib import error as zlib_error
 
-from . import augmentacja, exif, internet, matematyka, obrazy, programowanie, skills, wtyczki
+from . import augmentacja, exif, internet, matematyka, obrazy, programowanie, skills, szkola, wtyczki, youtube
 from .biblioteki import NIEISTOTNE, Biblioteki
 from .network import SiecNeuronowa
 from .text import Slownik, cechy, normalizuj, rdzen
@@ -59,6 +60,14 @@ _KONIEC = r"\s*[.!?]*\s*$"
 _STWORZ = r"^\s*(?:stw[oó]rz|zr[oó]b|utw[oó]rz|za[lł][oó][zż])\s+(?:now[aą]\s+)?"
 _NAZWA_WLASNA = r"([A-ZĄĆĘŁŃÓŚŹŻ][\wąćęłńóśźż-]+(?:[ -][A-ZĄĆĘŁŃÓŚŹŻ][\wąćęłńóśźż-]+)?)"
 
+# Nauka z materiałów: filmy na YouTube i wklejone teksty (np. transkrypcje, notatki z lekcji).
+_OBEJRZYJ = re.compile(r"^\s*(?:obejrzyj|zobacz|naucz\s+si[eę]\s+z\s+filmu|przeanalizuj\s+film|ogl[aą]dnij)\b", _I)
+_Z_TEKSTU = re.compile(r"^\s*(?:naucz\s+si[eę]\s+z\s+tekstu|przeczytaj(?:\s+(?:ten\s+)?tekst)?|zapami[eę]taj\s+tekst)\s*:\s*(.+)$",
+                       _I | re.S)
+_O_CZYM_FILM = re.compile(r"^\s*(?:o\s+czym\s+(?:by[lł]|jest)\s+(?:ten\s+|ostatni\s+)?(?:film|tekst)|stre[sś][cć]\s+"
+                          r"(?:ten\s+|ostatni\s+)?(?:film|tekst)|streszczenie\s+(?:filmu|tekstu))\s*\??\s*$", _I)
+_LISTA_FILMOW = re.compile(r"^\s*(?:jakie\s+filmy\s+(?:obejrza[lł]e[sś]|znasz|widzia[lł]e[sś])|obejrzane\s+filmy|"
+                           r"lista\s+film[oó]w)\s*\??\s*$", _I)
 _NAUCZ = re.compile(r"^\s*naucz\s+si[eę]\s*:?\s*(.+?)\s*=>\s*(.+?)\s*$", _I)
 _ZAPOMNIJ = re.compile(r"^\s*zapomnij\s*:?\s*(.+?)" + _KONIEC, _I)
 _IMIE = re.compile(r"\b(?i:mam\s+na\s+imi[eę]|nazywam\s+si[eę]|jestem)\s+([A-ZĄĆĘŁŃÓŚŹŻ][\wąćęłńóśźż-]+)")
@@ -631,9 +640,9 @@ class PanBadek:
             if poprzednia and wzor.match(tekst):
                 self.zrodlo = "ocena"
                 return self.ocen(poprzednia, dobra)
-        for obsluga in (self._polecenia_uczenia, self._polecenia_zdjec, self._polecenia_pamieci,
+        for obsluga in (self._polecenia_materialow, self._polecenia_uczenia, self._polecenia_zdjec, self._polecenia_pamieci,
                         self._polecenia_bibliotek, self._polecenia_wtyczek, self._wtyczki,
-                        self._programowanie, self._internet, self._matematyka, self._kalkulator, self._wiedza_lub_siec):
+                        self._programowanie, self._internet, self._szkola, self._matematyka, self._kalkulator, self._wiedza_lub_siec):
             self._zrodlo_szczegol = None
             wynik = obsluga(tekst)
             if wynik:
@@ -682,6 +691,9 @@ class PanBadek:
             return None
         self._temat = kandydat
         return wynik
+
+    def _szkola(self, tekst):
+        return szkola.rozwiaz(tekst)
 
     def _programowanie(self, tekst):
         kod = programowanie.napisz(tekst)
@@ -812,6 +824,88 @@ class PanBadek:
             self._zapisz_nauczone()
             return f"Zapamiętałem, że mieszkasz w {self.miasto}. Teraz wystarczy zapytać o pogodę."
         return None
+
+    # --- nauka z filmów i tekstów ------------------------------------------------
+
+    def _polecenia_materialow(self, tekst):
+        tekst_do_nauki = _Z_TEKSTU.match(tekst)
+        if tekst_do_nauki:
+            return self.naucz_sie_z_tekstu(tekst_do_nauki.group(1))
+        film = youtube.id_filmu(tekst)
+        if film and (_OBEJRZYJ.match(tekst) or len(tekst.split()) <= 3):
+            return self.obejrzyj_film(film)
+        if _O_CZYM_FILM.match(tekst):
+            materialy = self._materialy()
+            if not materialy:
+                return ("Nie obejrzałem jeszcze żadnego filmu. Wyślij mi link: "
+                        "„obejrzyj https://youtu.be/…” albo wklej tekst: „naucz się z tekstu: …”.")
+            nazwa, biblioteka = materialy[-1]
+            return self._podsumowanie(nazwa, biblioteka.get("streszczenie", []), biblioteka.get("slowa", []))
+        if _LISTA_FILMOW.match(tekst):
+            materialy = self._materialy()
+            if not materialy:
+                return "Jeszcze niczego nie obejrzałem ani nie przeczytałem."
+            return "Z tego się uczyłem:\n" + "\n".join(
+                f"• {nazwa} ({len(b['wpisy'])} {odmien(len(b['wpisy']), 'fragment', 'fragmenty', 'fragmentów')})"
+                for nazwa, b in materialy)
+        return None
+
+    def _materialy(self):
+        """Biblioteki z filmów i tekstów, od najstarszej do najnowszej."""
+        return sorted(((n, b) for n, b in self.biblioteki.dane.items() if b.get("zrodlo", "").startswith(("youtube", "tekst"))),
+                      key=lambda nb: nb[1].get("dodano", 0))
+
+    def obejrzyj_film(self, id_filmu):
+        if not self.internet:
+            return "Jestem w trybie offline, więc nie mogę obejrzeć filmu."
+        try:
+            tytul, autor, fragmenty, jezyk, automatyczne = youtube.pobierz_napisy(id_filmu)
+        except youtube.BrakNapisow:
+            return ("Ten film nie ma napisów, a ja nie słyszę dźwięku ani nie widzę obrazu - uczę się z napisów. "
+                    "Spróbuj filmu z napisami (większość ma przynajmniej automatyczne).")
+        except internet.BladInternetu as e:
+            if sys.platform == "emscripten":
+                return ("W przeglądarce YouTube nie pozwala mi pobrać napisów. Dwa sposoby:\n"
+                        "1. Otwórz film w YouTube → opis → **Pokaż transkrypcję**, skopiuj tekst i napisz: "
+                        "„naucz się z tekstu: …” (i wklej).\n"
+                        "2. Użyj Pana Badka na komputerze albo w aplikacji na Androida - tam oglądam filmy sam.")
+            return f"Nie udało się pobrać napisów z YouTube ({e})."
+        zdania = youtube.na_zdania(fragmenty)
+        nazwa = self._zapisz_material("Film", tytul, zdania, f"youtube:{id_filmu}",
+                                      f"YouTube{', ' + autor if autor else ''}")
+        rodzaj = "automatycznych napisów" if automatyczne else "napisów"
+        wstep = (f"📺 Obejrzałem „{tytul}”{' (' + autor + ')' if autor else ''} - przeczytałem {len(zdania)} "
+                 f"{odmien(len(zdania), 'fragment', 'fragmenty', 'fragmentów')} {rodzaj} ({jezyk}).")
+        biblioteka = self.biblioteki.dane[nazwa]
+        return wstep + "\n\n" + self._podsumowanie(nazwa, biblioteka["streszczenie"], biblioteka["slowa"])
+
+    def naucz_sie_z_tekstu(self, tekst):
+        zdania = [z for z in internet.podziel_na_zdania(tekst) if len(z.split()) >= 3]
+        if len(" ".join(zdania).split()) < 15:
+            return "To za krótki tekst, żeby zrobić z niego notatki. Wklej przynajmniej kilka zdań."
+        if len(zdania) <= 2:  # transkrypcja bez kropek - tniemy jak napisy
+            zdania = youtube.na_zdania([(0, z) for z in tekst.split("\n") if z.strip()] or [(0, tekst)])
+        tytul = " ".join(re.sub(r"[^\w\s-]", "", zdania[0]).split()[:6])
+        nazwa = self._zapisz_material("Tekst", tytul, zdania, "tekst", "wklejony tekst")
+        biblioteka = self.biblioteki.dane[nazwa]
+        return (f"📖 Przeczytałem tekst ({len(zdania)} {odmien(len(zdania), 'zdanie', 'zdania', 'zdań')}).\n\n"
+                + self._podsumowanie(nazwa, biblioteka["streszczenie"], biblioteka["slowa"]))
+
+    def _zapisz_material(self, rodzaj, tytul, zdania, zrodlo, opis):
+        czysty = " ".join(re.sub(r"[^\w\s-]", " ", tytul).split())
+        nazwa = f"{rodzaj} - {czysty}"[:60].rstrip(" -") or rodzaj
+        nazwa = self.biblioteki.znajdz_nazwe(nazwa) or self.biblioteki.stworz(nazwa, opis=opis, zrodlo=zrodlo)
+        self.biblioteki.dodaj(nazwa, *zdania)
+        self.biblioteki.ustaw(nazwa, streszczenie=youtube.streszczenie(zdania), slowa=youtube.slowa_kluczowe(zdania),
+                              dodano=time.time(), tytul=tytul)
+        return nazwa
+
+    def _podsumowanie(self, nazwa, streszczenie, slowa):
+        linie = ["**W skrócie:**"] + [f"- {z}" for z in streszczenie]
+        if len(slowa) >= 3:
+            linie.append(f"\n**Najważniejsze słowa:** {', '.join(slowa)}")
+        linie.append(f"\nZapisałem notatki w bibliotece „{nazwa}”. Pytaj mnie o to, co tam było!")
+        return "\n".join(linie)
 
     def _polecenia_bibliotek(self, tekst):
         if _LISTA_BIBLIOTEK.match(tekst):

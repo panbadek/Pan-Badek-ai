@@ -916,6 +916,62 @@
    "pytanie": "jak się czuje ryba w akwarium",
    "kategoria": "pulapki",
    "nie_intencja": true
+  },
+  {
+   "pytanie": "Samochód jedzie z prędkością 80 km/h przez 2 godziny. Jaką drogę przejedzie?",
+   "kategoria": "szkola",
+   "zawiera": [
+    "160 km"
+   ]
+  },
+  {
+   "pytanie": "Oblicz pole kwadratu o boku 7 cm.",
+   "kategoria": "szkola",
+   "zawiera": [
+    "49 cm²"
+   ]
+  },
+  {
+   "pytanie": "Oblicz obwód prostokąta o bokach 3 cm i 5 cm.",
+   "kategoria": "szkola",
+   "zawiera": [
+    "16 cm"
+   ]
+  },
+  {
+   "pytanie": "Ciało o masie 4 kg porusza się z przyspieszeniem 3 m/s². Jaka siła na nie działa?",
+   "kategoria": "szkola",
+   "zawiera": [
+    "12 N"
+   ]
+  },
+  {
+   "pytanie": "Bluzka kosztowała 80 zł. Cenę obniżono o 25%. Ile kosztuje teraz?",
+   "kategoria": "szkola",
+   "zawiera": [
+    "60 zł"
+   ]
+  },
+  {
+   "pytanie": "Marek miał 15 zł. Kupił lody za 4 zł i dostał od mamy 10 zł. Ile ma teraz złotych?",
+   "kategoria": "szkola",
+   "zawiera": [
+    "21"
+   ]
+  },
+  {
+   "pytanie": "Oblicz gęstość ciała o masie 300 g i objętości 100 cm³.",
+   "kategoria": "szkola",
+   "zawiera": [
+    "3 g/cm³"
+   ]
+  },
+  {
+   "pytanie": "Przyprostokątne mają 6 cm i 8 cm. Oblicz przeciwprostokątną.",
+   "kategoria": "szkola",
+   "zawiera": [
+    "10 cm"
+   ]
   }
  ]
 }

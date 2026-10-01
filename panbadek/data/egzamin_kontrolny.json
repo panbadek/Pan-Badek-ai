@@ -281,6 +281,62 @@
    "pytanie": "dzień dobry po angielsku to",
    "kategoria": "pulapki",
    "nie_intencja": true
+  },
+  {
+   "pytanie": "Rowerzysta jechał 45 minut z prędkością 20 km/h. Jaką drogę pokonał?",
+   "kategoria": "szkola",
+   "zawiera": [
+    "15 km"
+   ]
+  },
+  {
+   "pytanie": "Oblicz pole trójkąta o podstawie 10 cm i wysokości 4 cm.",
+   "kategoria": "szkola",
+   "zawiera": [
+    "20 cm²"
+   ]
+  },
+  {
+   "pytanie": "Oblicz objętość sześcianu o krawędzi 3 cm.",
+   "kategoria": "szkola",
+   "zawiera": [
+    "27 cm³"
+   ]
+  },
+  {
+   "pytanie": "Napięcie wynosi 230 V, a natężenie prądu 2 A. Oblicz moc.",
+   "kategoria": "szkola",
+   "zawiera": [
+    "460 W"
+   ]
+  },
+  {
+   "pytanie": "Telewizor kosztował 1500 zł, a potem jego cena wzrosła o 10%. Ile kosztuje teraz?",
+   "kategoria": "szkola",
+   "zawiera": [
+    "1650 zł"
+   ]
+  },
+  {
+   "pytanie": "W koszyku było 18 jabłek. Zjedliśmy 5, a babcia dołożyła 7. Ile jabłek jest w koszyku?",
+   "kategoria": "szkola",
+   "zawiera": [
+    "20"
+   ]
+  },
+  {
+   "pytanie": "Ile czasu zajmie przejście 6 km z prędkością 4 km/h?",
+   "kategoria": "szkola",
+   "zawiera": [
+    "1,5 h"
+   ]
+  },
+  {
+   "pytanie": "Oblicz pole koła o promieniu 5 cm.",
+   "kategoria": "szkola",
+   "zawiera": [
+    "25π"
+   ]
   }
  ]
 }

@@ -43,7 +43,7 @@ EGZAMIN_KONTROLNY = os.path.join(DANE, "egzamin_kontrolny.json")
 ZESTAWY_TESTOWE = {"testowe": os.path.join(DANE, "test_intencje.json"),
                    "trudne": os.path.join(DANE, "test_trudne.json")}
 NAZWY_KATEGORII = {"rozmowa": "rozmowa", "wiedza": "wiedza", "matematyka": "matematyka",
-                   "programowanie": "C++", "uczciwosc": "uczciwość", "pulapki": "pułapki"}
+                   "programowanie": "C++", "szkola": "szkoła", "uczciwosc": "uczciwość", "pulapki": "pułapki"}
 
 TOLERANCJA = 0.01
 KANDYDACI = [

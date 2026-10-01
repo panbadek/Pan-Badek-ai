@@ -140,6 +140,51 @@ Trudne problemy, takie jak dowody, kod, analiza czy planowanie, Badek rozpoznaje
 mocniejszemu AI w **trybie głębokiego myślenia** (Claude z wysokim wysiłkiem i widocznym tokiem
 rozumowania albo model w telefonie z włączonym myśleniem).
 
+### Zadania ze szkoły 📚
+
+Badek rozwiązuje zadania tekstowe offline, jak w zeszycie: **Dane, Szukane, Wzór, Rozwiązanie, Odpowiedź**.
+
+| Przykład | Wynik |
+|---|---|
+| `Pieszy idzie z prędkością 5 km/h. Jaką drogę pokona w 30 minut?` | t = 30 min = 0,5 h, s = v · t = 2,5 km |
+| `Oblicz gęstość ciała o masie 200 g i objętości 50 cm³.` | ρ = m / V = 4 g/cm³ |
+| `Przyprostokątne mają 3 cm i 4 cm. Oblicz przeciwprostokątną.` | twierdzenie Pitagorasa: 5 cm |
+| `Oblicz objętość walca o promieniu podstawy 2 cm i wysokości 10 cm.` | 40π cm³ ≈ 125,66 cm³ |
+| `Po podwyżce o 10% bilet kosztuje 33 zł. Ile kosztował przed podwyżką?` | 30 zł |
+| `Ania miała 12 cukierków. Zjadła 3, a potem dostała 5. Ile ma teraz?` | 12 − 3 + 5 = 14 |
+
+- **Fizyka:** ruch, siła, gęstość, praca, moc, ciśnienie, prawo Ohma, moc prądu, energia
+  kinetyczna i potencjalna, ciężar. Badek sam zamienia jednostki (km/h ↔ m/s, minuty ↔ godziny,
+  g ↔ kg, cm³ ↔ m³) i podaje wynik w jednostkach z zadania.
+- **Geometria:** pola, obwody, przekątne i objętości (kwadrat, prostokąt, trójkąty, koło, trapez,
+  romb, równoległobok, sześcian, prostopadłościan, walec, stożek, kula), Pitagoras.
+- **Procenty:** obniżki, podwyżki, cena sprzed zmiany, „25% z 28 uczniów”.
+- **Zadania z treścią:** dostał/zjadł/kupił za…, „4 paczki po 6”, „po równo między 4”,
+  „o 3 lata starszy”, „3 razy więcej”.
+- **Zadanie ze zdjęcia (📝 w aplikacji, z Claude):** zrób zdjęcie zeszytu albo podręcznika.
+  Claude przepisze treść i rozwiąże zadanie krok po kroku, jak korepetytor.
+  Możesz też wpisać prośbę (np. „rozwiąż zadanie 3”) i dopiero potem dodać zdjęcie 📷.
+
+Gdy zadanie nie pasuje do żadnego wzoru, Badek nie zgaduje. Oddaje je Claude w trybie głębokiego myślenia.
+
+### Nauka z filmów na YouTube 📺
+
+```
+obejrzyj https://www.youtube.com/watch?v=…
+o czym był film?
+jakie filmy obejrzałeś
+naucz się z tekstu: <wklejony tekst, np. notatka z lekcji albo transkrypcja>
+```
+
+Badek nie widzi obrazu ani nie słyszy dźwięku, ale **czyta napisy filmu** (od autora albo
+automatyczne, najchętniej polskie). Dzieli je na zdania, robi streszczenie i listę najważniejszych
+słów, a wszystko zapisuje w bibliotece wiedzy „Film - <tytuł>”. Potem odpowiada na pytania o film,
+także offline.
+
+Pobieranie napisów działa w programie na komputerze i w aplikacji na Androida. W przeglądarce
+YouTube na to nie pozwala, więc tam Badek poprosi o wklejenie transkrypcji (YouTube → opis filmu →
+„Pokaż transkrypcję”).
+
 ### Programowanie w C++ 💻
 
 Badek pisze programy w C++ także bez internetu: 29 gotowych wzorów, z których każdy kompiluje się
@@ -216,8 +261,8 @@ Wyniki (sieć: średnia z 2 losowań wag; zestawy testowe i egzaminy nie są uż
 | Zestaw testowy (101 zdań) | 97,0% | 98,5% |
 | Trudny zestaw (176 zdań: slang, bez ogonków) | 93,2% | 93,2% |
 | Te same zdania z literówkami | 78,3% | 82,4% |
-| Egzamin całego Badka | 91,3% | 97,8% |
-| Egzamin kontrolny | 79,5% | 82,1% |
+| Egzamin całego Badka | 91,3% | 97,8% (0.11.0: 97,9% ze 146 pytań) |
+| Egzamin kontrolny | 79,5% | 82,1% (0.11.0: 85,1% z 47 pytań) |
 
 Główny egzamin posłużył do znajdowania błędów, więc najuczciwszą miarą postępu jest egzamin kontrolny.
 

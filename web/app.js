@@ -199,6 +199,9 @@ function instrukcja() {
     "- Bądź ciepły, ale bez przesadnych zachwytów i bez schlebiania.",
     "- W sprawach zdrowia, prawa i pieniędzy podawaj rzetelne informacje i zachęcaj do konsultacji ze specjalistą.",
     "- Jeśli ktoś jest w kryzysie, okaż troskę i podaj numery 116 123, 800 70 2222 albo 112.",
+    "- Zadania szkolne rozwiązuj jak w zeszycie: **Dane**, **Szukane**, **Wzór**, **Rozwiązanie** krok po kroku",
+    "  (z jednostkami), **Odpowiedź** pełnym zdaniem. Tłumacz jak cierpliwy korepetytor. Gdy uczeń prosi",
+    "  o podpowiedź albo sprawdzenie, nie podawaj od razu całego rozwiązania - naprowadź go.",
     "- Programowanie (szczególnie C++): pisz kompletny, kompilujący się kod w nowoczesnym C++17/20 w bloku ```cpp,",
     "  z potrzebnymi #include, std:: zamiast 'using namespace std', kontenerami STL, RAII i inteligentnymi",
     "  wskaźnikami zamiast new/delete, sprawdzaniem danych wejściowych i krótkimi komentarzami po polsku.",
@@ -206,6 +209,7 @@ function instrukcja() {
     "  Przy szukaniu błędów najpierw wskaż przyczynę, potem poprawiony fragment.",
     "Aplikacja ma też własne polecenia, które możesz podpowiadać: 'pogoda w <mieście>', 'kurs <waluta>',",
     "'co to jest <hasło>', 'rozwiąż <równanie>', 'pochodna <funkcja>', 'napisz w C++ <temat>', analiza zdjęć (📷),",
+    "zadanie ze zdjęcia (📝), 'obejrzyj <link do YouTube>', 'naucz się z tekstu: <tekst>',",
     "'naucz się: pytanie => odpowiedź'.",
   ].filter(Boolean).join("\n");
 }
@@ -438,6 +442,7 @@ $("f").addEventListener("submit", (e) => {
   const tekst = pole.value.trim();
   if (!tekst || !badekGotowy) return;
   pole.value = "";
+  pole.placeholder = PODPOWIEDZ_POLA;
   dopasujPole();
   wyslijTekst(tekst);
 });
@@ -460,6 +465,12 @@ for (const przycisk of document.querySelectorAll("#powitanie [data-pytanie]")) {
   przycisk.addEventListener("click", () => {
     if (!badekGotowy) return;
     if (przycisk.dataset.pytanie === "📷") { $("plik").click(); return; }
+    if (przycisk.dataset.pytanie === "📝") { trybZadania = true; $("plik").click(); return; }
+    if (przycisk.dataset.pytanie === "📺") {
+      pole.value = "obejrzyj "; pole.focus(); dopasujPole();
+      pole.placeholder = "Wklej link do filmu z YouTube…";
+      return;
+    }
     wyslijTekst(przycisk.dataset.pytanie);
   });
 }
@@ -561,12 +572,63 @@ async function wyslijZdjecie(plik) {
   }
 }
 
+// Zadanie ze zdjęcia: po podpowiedzi „📝” albo gdy w polu tekstowym jest prośba
+// („rozwiąż zadanie 3”) - wtedy zdjęcie zeszytu trafia do Claude zamiast do analizy kolorów.
+let trybZadania = false;
+const PODPOWIEDZ_POLA = pole.placeholder;
+const PROSBA_O_ZADANIE = /zadani|rozwi|oblicz|policz|sprawd|pom[oó][zż]|wyt[lł]umacz|wyja[sś]nij|jak zrobi/i;
+
 $("aparat").addEventListener("click", () => $("plik").click());
 $("plik").addEventListener("change", (e) => {
   const plik = e.target.files[0];
   e.target.value = "";
-  if (plik && badekGotowy) wyslijZdjecie(plik);
+  if (!plik || !badekGotowy) { trybZadania = false; return; }
+  const polecenie = pole.value.trim();
+  if (trybZadania || PROSBA_O_ZADANIE.test(polecenie)) {
+    pole.value = ""; dopasujPole();
+    zadanieZeZdjecia(plik, polecenie);
+  } else {
+    wyslijZdjecie(plik);
+  }
+  trybZadania = false;
 });
+
+async function zadanieZeZdjecia(plik, polecenie) {
+  const adres = URL.createObjectURL(plik);
+  const dymek = document.createElement("div");
+  dymek.className = "msg ty foto";
+  const img = document.createElement("img");
+  img.src = adres; img.alt = "Zdjęcie zadania";
+  $("powitanie")?.remove();
+  dymek.appendChild(img);
+  if (polecenie) { const p = document.createElement("div"); p.textContent = polecenie; dymek.appendChild(p); }
+  czat.appendChild(dymek); przewin();
+  try {
+    await img.decode();
+  } catch {
+    dodaj("Nie udało się odczytać tego zdjęcia. Spróbuj JPEG albo PNG.", "badek");
+    return;
+  }
+  if (aktywneAI() !== "claude") {
+    dodaj("Do zadań ze zdjęcia potrzebuję Claude (⚙️ → mózg: Claude), bo sam nie umiem czytać pisma " +
+      "ze zdjęć. Możesz też **przepisać treść zadania** - zadania z fizyki, geometrii, procentów " +
+      "i zadania z treścią rozwiążę sam, krok po kroku.", "badek");
+    return;
+  }
+  const jpeg = pomniejsz(img, ROZMIAR_DLA_CLAUDE).toDataURL("image/jpeg", 0.9).split(",")[1];
+  const prosba = (polecenie ? `Uczeń prosi: „${polecenie}”.\n` : "") +
+    "To zdjęcie zadania szkolnego (zeszyt, podręcznik albo karta pracy). Najpierw przepisz treść zadania, " +
+    "a potem rozwiąż je jak w zeszycie: **Dane**, **Szukane**, **Wzór** (jeśli jest), **Rozwiązanie** krok po kroku, " +
+    "**Odpowiedź** pełnym zdaniem. Jeśli na zdjęciu jest kilka zadań, a uczeń nie wskazał które, rozwiąż pierwsze " +
+    "i zapytaj o resztę. Jeśli czegoś nie da się odczytać, powiedz to wprost zamiast zgadywać.";
+  const wiadomosc = { role: "user", content: [
+    { type: "image", source: { type: "base64", media_type: "image/jpeg", data: jpeg } },
+    { type: "text", text: prosba },
+  ] };
+  const ai = await odpowiedzAI("claude", [...historiaDlaModelu(), wiadomosc], "", true);
+  zapamietaj("user", "(Wysłałem zdjęcie zadania" + (polecenie ? `: ${polecenie}` : "") + ".)");
+  if (ai.tekst) zapamietaj("assistant", ai.tekst);
+}
 
 // --- panel ustawień ---------------------------------------------------------------
 

@@ -1,5 +1,32 @@
 # Historia zmian
 
+## 0.11.0
+
+### Zadania ze szkoły (`panbadek/szkola.py`)
+- Zadania tekstowe rozwiązywane offline jak w zeszycie: **Dane, Szukane, Wzór, Rozwiązanie, Odpowiedź**.
+- Fizyka z jednostkami i ich zamianą: ruch, siła, gęstość, praca, moc, ciśnienie, prawo Ohma,
+  moc prądu, energia kinetyczna i potencjalna, ciężar.
+- Geometria: pola, obwody, przekątne, objętości 14 figur i brył oraz twierdzenie Pitagorasa
+  (wynik z π dokładnie i w przybliżeniu).
+- Procenty w zadaniach (obniżki, podwyżki, cena sprzed zmiany) i zadania z treścią
+  (dostał/zjadł, „za 4 zł”, „po 6”, „po równo między”, „o 3 starszy”, „3 razy więcej”).
+- Gdy zadanie nie pasuje do wzoru, Badek nie zgaduje i oddaje je mocniejszemu AI.
+- **Zadanie ze zdjęcia** (📝): zdjęcie zeszytu idzie do Claude, który przepisuje treść i rozwiązuje
+  zadanie krok po kroku, jak korepetytor. Claude dostał też zasady rozwiązywania zadań szkolnych.
+
+### Nauka z filmów i tekstów (`panbadek/youtube.py`)
+- **„obejrzyj <link do YouTube>”:** Badek pobiera napisy filmu (polskie mają pierwszeństwo), dzieli je
+  na zdania, robi streszczenie i listę najważniejszych słów, a notatki zapisuje w bibliotece
+  „Film - <tytuł>”. Potem odpowiada na pytania o film, także offline.
+- **„naucz się z tekstu: …”:** to samo z wklejonym tekstem (notatka z lekcji, transkrypcja).
+- „o czym był film?”, „jakie filmy obejrzałeś”.
+- W przeglądarce YouTube blokuje pobieranie napisów, więc Badek prosi o wklejenie transkrypcji.
+  Na komputerze i w aplikacji na Androida ogląda filmy sam.
+
+### Egzaminy
+- Nowa kategoria „szkoła”: egzamin 97,9% (146 pytań), egzamin kontrolny 85,1% (47 pytań,
+  w tym 8/8 nowych zadań szkolnych).
+
 ## 0.10.0
 
 ### Trener (`python3 -m panbadek --trener`)

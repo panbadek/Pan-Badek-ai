@@ -77,6 +77,45 @@ def _pobierz_w_przegladarce(url, limit_czasu):
         raise BladInternetu("serwer zwrócił niezrozumiałe dane") from e
 
 
+def pobierz_tekst(url, dane=None, naglowki=None, limit_czasu=LIMIT_CZASU):
+    """Pobiera stronę jako tekst; z `dane` wysyła je jako JSON (POST). 404 daje None."""
+    naglowki = {"User-Agent": USER_AGENT, **(naglowki or {})}
+    cialo = json.dumps(dane).encode("utf-8") if dane is not None else None
+    if cialo is not None:
+        naglowki["Content-Type"] = "application/json"
+    if sys.platform == "emscripten":
+        return _tekst_w_przegladarce(url, cialo, naglowki, limit_czasu)
+    zapytanie = urllib.request.Request(url, data=cialo, headers=naglowki)
+    try:
+        with urllib.request.urlopen(zapytanie, timeout=limit_czasu) as odp:
+            return odp.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise BladInternetu(f"serwer odpowiedział błędem {e.code}") from e
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        raise BladInternetu("brak połączenia z internetem", chwilowy=True) from e
+
+
+def _tekst_w_przegladarce(url, cialo, naglowki, limit_czasu):
+    from js import XMLHttpRequest  # dostępne tylko w Pyodide
+
+    zapytanie = XMLHttpRequest.new()
+    try:
+        zapytanie.open("POST" if cialo is not None else "GET", url, False)
+        zapytanie.timeout = int(limit_czasu * 1000)
+        if cialo is not None:
+            zapytanie.setRequestHeader("Content-Type", "application/json")
+        zapytanie.send(cialo.decode("utf-8") if cialo is not None else None)
+    except Exception as e:  # CORS albo brak sieci
+        raise BladInternetu("strona nie pozwala na dostęp z przeglądarki", chwilowy=False) from e
+    if zapytanie.status == 404:
+        return None
+    if zapytanie.status == 0 or zapytanie.status >= 400:
+        raise BladInternetu(f"serwer odpowiedział błędem {zapytanie.status}")
+    return zapytanie.responseText
+
+
 # --- tekst ------------------------------------------------------------------
 
 _SKROTY = {"r", "w", "ok", "np", "tzw", "m.in", "in", "św", "ul", "im", "wg", "tj",

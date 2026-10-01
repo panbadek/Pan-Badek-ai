@@ -1,0 +1,23 @@
+{
+ "videoDetails": {
+  "videoId": "abcdefghijk",
+  "title": "Fotosynteza - lekcja biologii",
+  "author": "Pani od biologii"
+ },
+ "captions": {
+  "playerCaptionsTracklistRenderer": {
+   "captionTracks": [
+    {
+     "baseUrl": "https://www.youtube.com/api/timedtext?v=abcdefghijk&lang=en&fmt=srv3",
+     "languageCode": "en",
+     "kind": "asr"
+    },
+    {
+     "baseUrl": "https://www.youtube.com/api/timedtext?v=abcdefghijk&lang=pl&kind=asr&fmt=srv3",
+     "languageCode": "pl",
+     "kind": "asr"
+    }
+   ]
+  }
+ }
+}
