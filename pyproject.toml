@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "panbadek"
+dynamic = ["version"]
+description = "Pan Badek - mała sztuczna inteligencja napisana od zera w czystym Pythonie"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+panbadek = "panbadek.__main__:main"
+
+[tool.setuptools]
+packages = ["panbadek"]
+
+[tool.setuptools.dynamic]
+version = { attr = "panbadek.__version__" }
+
+[tool.setuptools.package-data]
+panbadek = ["data/*.json"]

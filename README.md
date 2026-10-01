@@ -1,63 +1,101 @@
 # Pan Badek AI 🤖
 
-Własna, mała sztuczna inteligencja napisana **od zera w czystym Pythonie** —
-bez numpy, bez PyTorcha, bez zewnętrznych API. Cała „inteligencja” to
-samodzielnie zaimplementowana sieć neuronowa z propagacją wsteczną.
+Własna, mała sztuczna inteligencja napisana **od zera w czystym Pythonie**:
+bez numpy, bez PyTorcha i bez płatnych API. Sercem jest samodzielnie
+zaimplementowana sieć neuronowa z propagacją wsteczną. Do tego dochodzą dostęp do
+internetu, własne biblioteki wiedzy i wtyczki.
 
 ## Uruchomienie
 
 Wymagany jest tylko Python 3.8+.
 
 ```bash
-python3 -m panbadek          # rozmowa w terminalu
-python3 -m panbadek --debug  # pokazuje, co „myśli” sieć (intencja + pewność)
+python3 -m panbadek            # rozmowa w terminalu
+python3 -m panbadek --web      # rozmowa w przeglądarce: http://127.0.0.1:8000
+python3 -m panbadek --offline  # bez internetu
+python3 -m panbadek --debug    # pokazuje, co „myśli” sieć (intencja + pewność)
 ```
 
-Przykładowa rozmowa:
+Możesz też zainstalować Pana Badka jako polecenie `panbadek`:
 
-```
-Ty: Cześć!
-Pan Badek: Hej! Miło cię widzieć.
-Ty: Mam na imię Ania
-Pan Badek: Miło mi cię poznać, Ania!
-Ty: ile to 12 razy 7
-Pan Badek: 12 * 7 = 84
-Ty: naucz się: ulubiony kolor => Zielony jak trawa!
-Pan Badek: Zapamiętałem! Na 'ulubiony kolor' odpowiem: 'Zielony jak trawa!'.
-Ty: jaki jest twój ulubiony kolor?
-Pan Badek: Zielony jak trawa!
+```bash
+pip install .
+panbadek --web
 ```
 
 ## Co potrafi
 
-- rozumie intencje (powitanie, żart, godzina, data, pytania o siebie…), także z literówkami i bez polskich znaków,
-- liczy (`ile to 2^10`, `sqrt(16) + 3`, `5 razy 4`) — bezpiecznie, bez `eval`,
-- podaje godzinę i datę po polsku,
-- zapamiętuje twoje imię,
-- **uczy się w trakcie rozmowy**: `naucz się: pytanie => odpowiedź` — sieć trenuje się od nowa,
-  a wiedza jest zapisywana w `~/.panbadek/` i przetrwa restart.
+| Umiejętność | Przykład |
+|---|---|
+| Rozmowa (sieć neuronowa) | `cześć`, `kim jesteś`, `opowiedz żart` |
+| Wikipedia 🌐 | `co to jest fotosynteza`, potem `więcej` |
+| Pogoda 🌐 (Open-Meteo) | `pogoda w Krakowie`, `mieszkam w Gdańsku` → `jaka pogoda?` |
+| Kursy walut 🌐 (NBP) | `kurs euro`, `ile kosztuje dolar` |
+| Biblioteki wiedzy 📚 | `stwórz bibliotekę o Koperniku`, `stwórz bibliotekę przepisy` |
+| Wtyczki w Pythonie 🔌 | `stwórz wtyczkę kostka`, `przeładuj wtyczki` |
+| Nauka | `naucz się: pytanie => odpowiedź`, `zapomnij: pytanie` |
+| Kalkulator | `ile to 12*7+3`, `sqrt(16) + 2^3`, `5 razy 4` |
+| Pamięć | `mam na imię Ania`, `jak mam na imię?` |
+| Godzina i data | `która godzina`, `jaki dziś dzień` |
+
+🌐 wymaga internetu. Wszystkie usługi są darmowe i nie potrzebują kluczy API.
+
+### Biblioteki wiedzy 📚
+
+Biblioteka to nazwany zbiór faktów, który Pan Badek przeszukuje jak mała wyszukiwarka
+(cechy słów ważone rzadkością, czyli TF-IDF, i podobieństwo kosinusowe).
+
+- `stwórz bibliotekę o Koperniku`: Pan Badek czyta cały artykuł z Wikipedii, dzieli go
+  na zdania i zapisuje jako bibliotekę. **Potem odpowiada na pytania o ten temat także bez internetu.**
+- `stwórz bibliotekę przepisy`, a potem `dodaj do przepisy: Na naleśniki potrzeba mąki, mleka i jajek.`
+  tworzy twoją własną bazę wiedzy.
+- `pokaż biblioteki`, `usuń bibliotekę przepisy`.
+- Wszystko, czego Pan Badek dowie się z Wikipedii przez `co to jest ...`, trafia do biblioteki
+  „Internet”, więc pamięta to na później.
+
+### Wtyczki 🔌
+
+`stwórz wtyczkę kostka` tworzy plik `~/.panbadek/wtyczki/kostka.py` z gotowym szablonem.
+Wystarczy uzupełnić funkcję:
+
+```python
+import random
+
+def obsluz(tekst, badek):
+    if "rzuć kostką" in tekst.lower():
+        return f"Wypadło {random.randint(1, 6)}!"
+    return None  # ta wiadomość nie dotyczy tej wtyczki
+```
+
+i napisać `przeładuj wtyczki`. Wtyczka ma dostęp do całego Pana Badka (`badek.imie`,
+`badek.biblioteki`, `badek.odpowiedz(...)`). Zepsuta wtyczka nie wywróci programu, tylko
+zgłosi błąd. **Uwaga:** wtyczki to zwykły kod Pythona, więc wrzucaj tam tylko pliki, którym ufasz.
 
 ## Jak to działa
 
-1. **Tekst → wektor** (`panbadek/text.py`): zdanie jest normalizowane (małe litery, bez polskich
-   znaków), a potem zamieniane na zbiór cech: rdzenie słów (pierwsze 5 liter — prosty sposób na
-   polską odmianę) i trigramy znakowe (odporność na literówki).
-2. **Sieć neuronowa** (`panbadek/network.py`): wejście → warstwa ukryta (32 neurony, ReLU) →
-   softmax. Uczona spadkiem gradientu z entropią krzyżową; gradienty liczone ręcznie.
-3. **Mózg** (`panbadek/brain.py`): najpierw sprawdza polecenia specjalne (nauka, imię, kalkulator),
-   potem pyta sieć o intencję. Jeśli pewność jest poniżej 45%, przyznaje, że nie wie,
-   zamiast zgadywać.
+1. **Tekst → wektor** (`text.py`): normalizacja (małe litery, bez polskich znaków) i cechy:
+   rdzenie słów (odporność na odmianę) oraz trigramy znakowe (odporność na literówki).
+2. **Sieć neuronowa** (`network.py`): wejście → 32 neurony ReLU → softmax; uczenie spadkiem
+   gradientu z entropią krzyżową. Gradienty są liczone ręcznie.
+3. **Mózg** (`brain.py`) przepuszcza wiadomość przez kolejne etapy: polecenia pamięci →
+   biblioteki → wtyczki → internet → kalkulator → sieć neuronowa → przeszukanie bibliotek.
+   Sieć odpowiada tylko wtedy, gdy jest pewna (≥ 45%) i rozpoznaje słowa ze zdania,
+   dzięki czemu nie „strzela” na zupełnie obcych pytaniach.
+4. **Internet** (`internet.py`): Wikipedia, Open-Meteo i NBP przez `urllib`, z limitem czasu
+   i ponowieniem przy zerwanym połączeniu.
+
+Cała pamięć (wytrenowany model, nauczone odpowiedzi, biblioteki, wtyczki) leży w `~/.panbadek/`.
 
 ## Rozwijanie
 
-Nowe tematy dodajesz w `panbadek/data/intencje.json` — wystarczy nazwa, kilka przykładowych zdań
-i odpowiedzi. Model przetrenuje się automatycznie przy następnym uruchomieniu.
+Nowe tematy rozmów dodajesz w `panbadek/data/intencje.json`. Model przetrenuje się sam
+przy następnym uruchomieniu.
 
 ```json
 {
-  "nazwa": "pogoda",
-  "przyklady": ["jaka jest pogoda", "czy pada deszcz", "będzie słońce"],
-  "odpowiedzi": ["Nie mam okna, ale mam nadzieję, że świeci słońce!"]
+  "nazwa": "hobby",
+  "przyklady": ["jakie masz hobby", "co lubisz robić", "czym się interesujesz"],
+  "odpowiedzi": ["Uwielbiam czytać Wikipedię i liczyć gradienty!"]
 }
 ```
 
@@ -66,3 +104,5 @@ i odpowiedzi. Model przetrenuje się automatycznie przy następnym uruchomieniu.
 ```bash
 python3 -m unittest discover -s tests -v
 ```
+
+Testy nie łączą się z internetem: odpowiedzi serwerów są symulowane.

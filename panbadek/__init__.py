@@ -1,6 +1,7 @@
 """Pan Badek - mała sztuczna inteligencja napisana od zera w czystym Pythonie."""
 
-from .brain import PanBadek
+__version__ = "0.2.0"
+
+from .brain import PanBadek  # noqa: E402
 
 __all__ = ["PanBadek"]
-__version__ = "0.1.0"
