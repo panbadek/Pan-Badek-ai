@@ -7,6 +7,7 @@ i zamianę jednostek. Wyrażenia czyta bezpiecznie przez ast - nic nie jest wyko
 """
 
 import ast
+import datetime
 import math
 import re
 import statistics
@@ -668,6 +669,30 @@ def _wzor(regex):
         _WZORY.append((re.compile(regex, _I), funkcja))
         return funkcja
     return dekorator
+
+
+_MIESIACE = ["stycz", "lut", "mar", "kwie", "maj", "czerw", "lip", "sierp", "wrze", "pazdz", "listop", "grud"]
+_DNI_TYGODNIA = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"]
+
+
+@_wzor(r"dzie[nń]\w*\s+tygodnia\D*?(\d{1,2})(?:\s*\.\s*|\s+)([a-ząćęłńóśźż]+|\d{1,2})(?:(?:\s*\.\s*|\s+)(\d{1,4}))?")
+def _dzien_tygodnia(m):
+    """ "jaki dzień tygodnia był 1 stycznia 2000" -> sobota."""
+    dzien, miesiac, rok = int(m.group(1)), m.group(2).lower(), m.group(3)
+    if miesiac.isdigit():
+        miesiac = int(miesiac)
+    else:
+        miesiac = next((i + 1 for i, nazwa in enumerate(_MIESIACE)
+                        if miesiac.translate(str.maketrans("ąćęłńóśźż", "acelnoszz")).startswith(nazwa)), None)
+    teraz = datetime.date.today()
+    try:
+        data = datetime.date(int(rok) if rok else teraz.year, miesiac or 0, dzien)
+    except ValueError:
+        return None
+    dzien_tygodnia = _DNI_TYGODNIA[data.weekday()]
+    zenski = dzien_tygodnia in ("środa", "sobota", "niedziela")
+    czas = ("była" if zenski else "był") if data < teraz else "jest" if data == teraz else "będzie"
+    return f"{data.day}.{data.month:02d}.{data.year} {czas} **{dzien_tygodnia}**."
 
 
 @_wzor(rf"^\s*(?:ile\s+to\s+|oblicz\s+|policz\s+)?({_LICZBA})\s*(?:%|procent\w*)\s+(?:z|od)\s+({_LICZBA})\s*\??\s*$")

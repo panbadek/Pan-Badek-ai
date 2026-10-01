@@ -14,13 +14,16 @@ import json
 import os
 import time
 
-from .biblioteki import NIEISTOTNE, IndeksTFIDF
+from .biblioteki import NIEISTOTNE, IndeksTFIDF, _cechy_istotne
 from .text import normalizuj, slowa
 
 # Powyżej tego podobieństwa uznajemy, że to "to samo pytanie" (scalamy zamiast dublować).
 PROG_DUPLIKATU = 0.85
 LIMIT_WPISOW = 5000
 MAKS_ODPOWIEDZ = 1500
+# Mnożnik podobieństwa, gdy pytanie ma słowo obce całej bazie: odpowiedź zostaje
+# tylko przy bardzo dobrym dopasowaniu reszty pytania.
+KARA_OBCEGO_SLOWA = 0.55
 
 
 def istotne_slowa(tekst):
@@ -84,9 +87,30 @@ class BazaWiedzy:
         wyniki = self._indeks.szukaj(pytanie, ile=3)
         if not wyniki:
             return None, 0.0
+        wyniki = [(wynik * (KARA_OBCEGO_SLOWA if self._obce_slowo(pytanie, i) else 1.0), i) for wynik, i in wyniki]
         # Przy podobnej trafności wygrywa lepiej oceniona odpowiedź.
         najlepszy = max(wyniki, key=lambda w: w[0] + 0.02 * self.wpisy[w[1]]["ocena"])
         return self.wpisy[najlepszy[1]], najlepszy[0]
+
+    def _obce_slowo(self, pytanie, numer):
+        """Czy pytanie podmienia ważne słowo? Dopasowanemu pytaniu brakuje jego własnego słowa,
+        a w pytaniu jest słowo, którego baza w ogóle nie zna i które nie jest literówką
+        ("ile lat żyją papugi" to nie "ile lat żyje kot", ale "w którym roku był chrzest
+        Polski" to wciąż "kiedy był chrzest Polski")."""
+        cechy_wpisu = self._indeks.teksty[numer][0]
+        cechy_pytania = _cechy_istotne(pytanie)
+        if all(c in cechy_pytania for c in cechy_wpisu if c.startswith("w:")):
+            return False
+        for slowo in istotne_slowa(pytanie):
+            if len(slowo) < 4:
+                continue
+            cechy_slowa = _cechy_istotne(slowo)
+            if any(c in self._indeks.waga for c in cechy_slowa if c.startswith("w:")):
+                continue
+            trigramy = [c for c in cechy_slowa if c.startswith("t:")]
+            if trigramy and sum(t in cechy_wpisu for t in trigramy) / len(trigramy) < 0.5:
+                return True
+        return False
 
     def wpis(self, id_wpisu):
         return next((w for w in self.wpisy if w["id"] == id_wpisu), None)

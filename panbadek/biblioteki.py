@@ -18,13 +18,27 @@ a aby ale albo bo by byc byl byla bylo byly co czy dla do gdzie i ich ile jak ja
 jakie jest jestem jestes kim kto ktora ktore ktory ma mi mnie na nie o od po powiedz pod
 przez sie ta tak te ten to tu twoj w we z za ze zna znasz opowiedz wiesz czym
 moj moja moje mojego mojej moim twoja twoje twojego twojej twoim
+ktorym ktorej ktorego ktorych ktorzy jako wynosi nazywa dlugo
 """.split())
 
 NAZWA = re.compile(r"^[\w ąćęłńóśźżĄĆĘŁŃÓŚŹŻ-]{1,60}$")
 
 
+# Synonimy: różne słowa, to samo pytanie ("najwyższa góra" = "najwyższy szczyt").
+# Słowa z listy zamieniane są przed wyszukiwaniem na pierwsze słowo grupy.
+_GRUPY_SYNONIMOW = [
+    "szczyt szczytu szczyty gora gory gore gorze gorach gorami",
+    "napisal napisala napisali autor autorem autora autorka autorki",
+    "predkosc predkosci szybko szybkosc szybkosci predko",
+    "temperatura temperaturze temperatury stopniach stopni stopnie stopniu",
+    "panstwo panstwa panstwem kraj kraju kraje krajem",
+    "wynalazl wynalazla wymyslil wymyslila wynalazca wynalazcy",
+]
+SYNONIMY = {slowo: grupa.split()[0] for grupa in _GRUPY_SYNONIMOW for slowo in grupa.split()[1:]}
+
+
 def _cechy_istotne(tekst):
-    return cechy(" ".join(s for s in slowa(tekst) if s not in NIEISTOTNE))
+    return cechy(" ".join(SYNONIMY.get(s, s) for s in slowa(tekst) if s not in NIEISTOTNE))
 
 
 # Rdzeń słowa mówi o znaczeniu więcej niż trigram liter, więc waży więcej.

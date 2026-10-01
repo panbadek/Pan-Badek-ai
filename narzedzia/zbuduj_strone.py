@@ -22,6 +22,12 @@ PLIKI_WEB = ["index.html", "app.js", "badek-worker.js", "llm-worker.js", "sw.js"
 POMIJANE = {"web.py", "skrot.py", "android.py", "__main__.py"}
 
 
+
+def _zaokraglij(wartosc):
+    if isinstance(wartosc, list):
+        return [_zaokraglij(w) for w in wartosc]
+    return round(wartosc, 4)
+
 def zbuduj(cel):
     if os.path.exists(cel):
         shutil.rmtree(cel)
@@ -43,7 +49,13 @@ def zbuduj(cel):
     # Wytrenowana sieć: telefon nie musi jej trenować przy pierwszym uruchomieniu.
     with tempfile.TemporaryDirectory() as tmp:
         PanBadek(katalog_pamieci=tmp, internet=False, ziarno=0)
-        shutil.copy(os.path.join(tmp, "model.json"), os.path.join(cel, "model.json"))
+        with open(os.path.join(tmp, "model.json"), encoding="utf-8") as f:
+            model = json.load(f)
+    # 4 miejsca po przecinku wystarczą (żadna decyzja sieci się nie zmienia),
+    # a plik do pobrania jest 3 razy mniejszy.
+    model["siec"] = {k: _zaokraglij(v) for k, v in model["siec"].items()}
+    with open(os.path.join(cel, "model.json"), "w", encoding="utf-8") as f:
+        json.dump(model, f, ensure_ascii=False, separators=(",", ":"))
 
     for nazwa, rozmiar in {"ikona-192.png": 192, "ikona-512.png": 512,
                            "apple-touch-icon.png": 180, "favicon.png": 64}.items():

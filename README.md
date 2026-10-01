@@ -186,8 +186,40 @@ Pan Badek uczy się z każdej rozmowy:
   Wiedza się łączy, nic nie ginie.
 
 Na start zna 161 odpowiedzi z wiedzy ogólnej (geografia, historia Polski, nauka, przyroda, kosmos, C++).
-Jakość sieci mierzy `python3 narzedzia/ocen_siec.py` na zdaniach, których nie widziała przy
-treningu: obecnie ok. 97%.
+Jakość całego Badka mierzy trener (niżej).
+
+### Trener 🏋️
+
+```bash
+python3 -m panbadek --trener              # strojenie sieci + egzamin (nic nie zapisuje)
+python3 -m panbadek --trener --zapisz     # ... i zapisuje najlepsze ustawienia
+python3 -m panbadek --trener --egzamin    # tylko egzamin (2 s)
+python3 -m panbadek --trener --nauczyciel # Claude pisze nowe przykłady i uczy Badka (pip install anthropic)
+```
+
+- **Walidacja krzyżowa:** przykłady dzielone są na 5 części; sieć uczy się na 4, a sprawdzana jest
+  na piątej, której nie widziała. Trener porównuje tak ustawienia (neurony, tempo, augmentacja)
+  i wybiera **najprostsze** w granicach 1 punktu od najlepszego, bo mniejsze różnice to szum.
+- **Augmentacja:** z każdego przykładu powstają warianty z literówkami i dopiskami
+  („słuchaj, …”, „… proszę”), więc sieć rozumie „dziekuej” i „zmeczny”.
+- **Egzamin całego Badka** (`data/egzamin.json`, 138 pytań): rozmowa, wiedza, matematyka, C++,
+  uczciwość (czy przyznaje się do niewiedzy, zamiast zmyślać) i pułapki. Do tego **egzamin
+  kontrolny** (`data/egzamin_kontrolny.json`) z pytaniami, których nie używano przy poprawkach.
+- **Nauczyciel (Claude):** dopisuje do każdego tematu nowe zdania (bez zdań testowych). Trener
+  zostawia je tylko wtedy, gdy walidacja się nie pogorszy. Na pytania z twoich rozmów, na które
+  Badek nie znał odpowiedzi, Claude odpowiada, a Badek zapamiętuje tylko pewne odpowiedzi.
+
+Wyniki (sieć: średnia z 2 losowań wag; zestawy testowe i egzaminy nie są używane do treningu):
+
+| Miara | Przed treningiem (0.9.0) | Po treningu (0.10.0) |
+|---|---|---|
+| Zestaw testowy (101 zdań) | 97,0% | 98,5% |
+| Trudny zestaw (176 zdań: slang, bez ogonków) | 93,2% | 93,2% |
+| Te same zdania z literówkami | 78,3% | 82,4% |
+| Egzamin całego Badka | 91,3% | 97,8% |
+| Egzamin kontrolny | 79,5% | 82,1% |
+
+Główny egzamin posłużył do znajdowania błędów, więc najuczciwszą miarą postępu jest egzamin kontrolny.
 
 ### Biblioteki wiedzy 📚
 
@@ -243,8 +275,8 @@ zgłosi błąd. **Uwaga:** wtyczki to zwykły kod Pythona, więc wrzucaj tam tyl
 
 1. **Tekst → wektor** (`text.py`): normalizacja (małe litery, bez polskich znaków) i cechy:
    rdzenie słów (odporność na odmianę) oraz trigramy znakowe (odporność na literówki).
-2. **Sieć neuronowa** (`network.py`): wejście → 32 neurony ReLU → softmax; uczenie spadkiem
-   gradientu z entropią krzyżową. Gradienty są liczone ręcznie.
+2. **Sieć neuronowa** (`network.py`): wejście → 64 neurony ReLU → softmax; uczenie spadkiem
+   gradientu z entropią krzyżową. Gradienty są liczone ręcznie. Ustawienia dobiera trener.
 3. **Mózg** (`brain.py`) przepuszcza wiadomość przez kolejne etapy: polecenia pamięci →
    biblioteki → wtyczki → programowanie (C++) → internet → matematyka i kalkulator → wiedza →
    sieć neuronowa → przeszukanie bibliotek.

@@ -1,0 +1,921 @@
+{
+ "opis": "Egzamin całego Pana Badka (offline): rozmowa, wiedza, matematyka, C++, uczciwość (przyznaje się do niewiedzy) i pułapki (sieć nie przejmuje pytań o wiedzę). Uruchom: python3 -m panbadek.trener --egzamin",
+ "pytania": [
+  {
+   "pytanie": "Dzień dobry, Badku!",
+   "kategoria": "rozmowa",
+   "intencja": "powitanie"
+  },
+  {
+   "pytanie": "hejka, co tam?",
+   "kategoria": "rozmowa",
+   "intencja": "powitanie"
+  },
+  {
+   "pytanie": "Siema!",
+   "kategoria": "rozmowa",
+   "intencja": "powitanie"
+  },
+  {
+   "pytanie": "Dobra, lecę, pa!",
+   "kategoria": "rozmowa",
+   "intencja": "pozegnanie"
+  },
+  {
+   "pytanie": "Do zobaczenia później",
+   "kategoria": "rozmowa",
+   "intencja": "pozegnanie"
+  },
+  {
+   "pytanie": "Dobranoc!",
+   "kategoria": "rozmowa",
+   "intencja": "pozegnanie"
+  },
+  {
+   "pytanie": "A ty kim jesteś?",
+   "kategoria": "rozmowa",
+   "intencja": "kim_jestes"
+  },
+  {
+   "pytanie": "Jesteś prawdziwym człowiekiem?",
+   "kategoria": "rozmowa",
+   "intencja": "kim_jestes"
+  },
+  {
+   "pytanie": "Jak się dzisiaj masz?",
+   "kategoria": "rozmowa",
+   "intencja": "samopoczucie"
+  },
+  {
+   "pytanie": "Co tam u ciebie słychać?",
+   "kategoria": "rozmowa",
+   "intencja": "samopoczucie"
+  },
+  {
+   "pytanie": "Dzięki za pomoc!",
+   "kategoria": "rozmowa",
+   "intencja": "podziekowanie"
+  },
+  {
+   "pytanie": "Bardzo ci dziękuję",
+   "kategoria": "rozmowa",
+   "intencja": "podziekowanie"
+  },
+  {
+   "pytanie": "Opowiedz mi jakiś żart",
+   "kategoria": "rozmowa",
+   "intencja": "zart"
+  },
+  {
+   "pytanie": "Rozbaw mnie czymś",
+   "kategoria": "rozmowa",
+   "intencja": "zart"
+  },
+  {
+   "pytanie": "Która jest teraz godzina?",
+   "kategoria": "rozmowa",
+   "intencja": "godzina"
+  },
+  {
+   "pytanie": "Jaki mamy dzisiaj dzień?",
+   "kategoria": "rozmowa",
+   "intencja": "data"
+  },
+  {
+   "pytanie": "Co ty w ogóle potrafisz?",
+   "kategoria": "rozmowa",
+   "intencja": "umiejetnosci"
+  },
+  {
+   "pytanie": "W czym mi możesz pomóc?",
+   "kategoria": "rozmowa",
+   "intencja": "umiejetnosci"
+  },
+  {
+   "pytanie": "Jak ty działasz w środku?",
+   "kategoria": "rozmowa",
+   "intencja": "jak_dzialasz"
+  },
+  {
+   "pytanie": "Jesteś naprawdę świetny",
+   "kategoria": "rozmowa",
+   "intencja": "komplement"
+  },
+  {
+   "pytanie": "Jesteś głupi i nic nie umiesz",
+   "kategoria": "rozmowa",
+   "intencja": "obraza"
+  },
+  {
+   "pytanie": "Ile ty masz lat?",
+   "kategoria": "rozmowa",
+   "intencja": "wiek"
+  },
+  {
+   "pytanie": "Kto cię zrobił?",
+   "kategoria": "rozmowa",
+   "intencja": "tworca"
+  },
+  {
+   "pytanie": "Strasznie mi się nudzi",
+   "kategoria": "rozmowa",
+   "intencja": "nuda"
+  },
+  {
+   "pytanie": "Jest mi dziś bardzo smutno",
+   "kategoria": "rozmowa",
+   "intencja": "smutek"
+  },
+  {
+   "pytanie": "Jestem okropnie zmęczony",
+   "kategoria": "rozmowa",
+   "intencja": "zmeczenie"
+  },
+  {
+   "pytanie": "Zdałem egzamin, jestem szczęśliwy!",
+   "kategoria": "rozmowa",
+   "intencja": "radosc"
+  },
+  {
+   "pytanie": "Przepraszam, to moja wina",
+   "kategoria": "rozmowa",
+   "intencja": "przeprosiny"
+  },
+  {
+   "pytanie": "Powiedz mi jakąś ciekawostkę",
+   "kategoria": "rozmowa",
+   "intencja": "ciekawostka"
+  },
+  {
+   "pytanie": "Zmotywuj mnie do nauki",
+   "kategoria": "rozmowa",
+   "intencja": "motywacja"
+  },
+  {
+   "pytanie": "Co by tu zjeść na obiad?",
+   "kategoria": "rozmowa",
+   "intencja": "jedzenie"
+  },
+  {
+   "pytanie": "Co jest stolicą Polski?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Warszaw"
+   ]
+  },
+  {
+   "pytanie": "jaka rzeka jest najdluzsza w polsce",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Wisł"
+   ]
+  },
+  {
+   "pytanie": "Jak nazywa się najwyższa góra w Polsce?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Rysy"
+   ]
+  },
+  {
+   "pytanie": "Ile Polska ma województw?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "16"
+   ]
+  },
+  {
+   "pytanie": "największe jezioro w polsce",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Śniardwy"
+   ]
+  },
+  {
+   "pytanie": "Jakie miasto w Polsce jest największe?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Warszaw"
+   ]
+  },
+  {
+   "pytanie": "Stolica Niemiec?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Berlin"
+   ]
+  },
+  {
+   "pytanie": "Co jest stolicą Włoch?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Rzym"
+   ]
+  },
+  {
+   "pytanie": "jaka jest stolica japonii",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Tokio"
+   ]
+  },
+  {
+   "pytanie": "Jakie miasto jest stolicą Australii?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Canberr"
+   ]
+  },
+  {
+   "pytanie": "Stolica Kanady to?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Ottaw"
+   ]
+  },
+  {
+   "pytanie": "Która rzeka jest najdłuższa na świecie?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Nil",
+    "Amazonk"
+   ]
+  },
+  {
+   "pytanie": "Jaka góra jest najwyższa na świecie?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Everest"
+   ]
+  },
+  {
+   "pytanie": "Który ocean jest największy?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Spokojn"
+   ]
+  },
+  {
+   "pytanie": "Ile jest kontynentów na Ziemi?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "7",
+    "siedem"
+   ]
+  },
+  {
+   "pytanie": "W którym roku był chrzest Polski?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "966"
+   ]
+  },
+  {
+   "pytanie": "Kto był pierwszym polskim królem?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Chrobr"
+   ]
+  },
+  {
+   "pytanie": "W którym roku była bitwa pod Grunwaldem?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "1410"
+   ]
+  },
+  {
+   "pytanie": "Kiedy Polska odzyskała niepodległość?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "1918"
+   ]
+  },
+  {
+   "pytanie": "W którym roku wybuchła druga wojna światowa?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "1939"
+   ]
+  },
+  {
+   "pytanie": "Kiedy Polska weszła do Unii?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "2004"
+   ]
+  },
+  {
+   "pytanie": "Kto to był Kopernik?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "astronom",
+    "Słońc"
+   ]
+  },
+  {
+   "pytanie": "Kim była Skłodowska?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Nobl"
+   ]
+  },
+  {
+   "pytanie": "Kto napisał Pana Tadeusza?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Mickiewicz"
+   ]
+  },
+  {
+   "pytanie": "Kto jest autorem Lalki?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Prus"
+   ]
+  },
+  {
+   "pytanie": "Jak szybko porusza się światło?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "300",
+    "299"
+   ]
+  },
+  {
+   "pytanie": "W ilu stopniach wrze woda?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "100"
+   ]
+  },
+  {
+   "pytanie": "Jaki jest wzór wody?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "H"
+   ]
+  },
+  {
+   "pytanie": "Czym jest fotosynteza?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "światł"
+   ]
+  },
+  {
+   "pytanie": "Kto wymyślił teorię względności?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Einstein"
+   ]
+  },
+  {
+   "pytanie": "Ile wynosi suma kątów trójkąta?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "180"
+   ]
+  },
+  {
+   "pytanie": "jak policzyć pole koła",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "π",
+    "pi"
+   ]
+  },
+  {
+   "pytanie": "Ile planet jest w Układzie Słonecznym?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "8",
+    "osiem"
+   ]
+  },
+  {
+   "pytanie": "Która planeta jest największa?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Jowisz"
+   ]
+  },
+  {
+   "pytanie": "Kto jako pierwszy był na Księżycu?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Armstrong"
+   ]
+  },
+  {
+   "pytanie": "Kto był pierwszym Polakiem w kosmosie?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Hermaszewski"
+   ]
+  },
+  {
+   "pytanie": "Dlaczego niebo ma niebieski kolor?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "rozpraszan"
+   ]
+  },
+  {
+   "pytanie": "Jakie zwierzę biega najszybciej?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Gepard"
+   ]
+  },
+  {
+   "pytanie": "Jakie zwierzę jest największe na świecie?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Płetwal"
+   ]
+  },
+  {
+   "pytanie": "Ile nóg mają pająki?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "8",
+    "osiem"
+   ]
+  },
+  {
+   "pytanie": "Czy wieloryb jest rybą?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "ssak"
+   ]
+  },
+  {
+   "pytanie": "Ile kości ma dorosły człowiek?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "206"
+   ]
+  },
+  {
+   "pytanie": "ile wody pic dziennie",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "litr"
+   ]
+  },
+  {
+   "pytanie": "Jaka temperatura ciała jest normalna?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "36"
+   ]
+  },
+  {
+   "pytanie": "Jaki jest numer alarmowy w Polsce?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "112"
+   ]
+  },
+  {
+   "pytanie": "Czym jest sztuczna inteligencja?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "program",
+    "maszyn",
+    "komputer"
+   ]
+  },
+  {
+   "pytanie": "Kto wynalazł lampę naftową?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Łukasiewicz"
+   ]
+  },
+  {
+   "pytanie": "Ile dni ma rok przestępny?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "366"
+   ]
+  },
+  {
+   "pytanie": "Ile sekund jest w godzinie?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "3600"
+   ]
+  },
+  {
+   "pytanie": "Kiedy jest Dzień Dziecka?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "1 czerwca"
+   ]
+  },
+  {
+   "pytanie": "Ile metrów to kilometr?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "1000"
+   ]
+  },
+  {
+   "pytanie": "Jakie barwy ma Polska?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "biel",
+    "biał"
+   ]
+  },
+  {
+   "pytanie": "Jaki jest polski hymn?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Mazurek"
+   ]
+  },
+  {
+   "pytanie": "Jak ugotować jajko na twardo?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "minut"
+   ]
+  },
+  {
+   "pytanie": "rozwiąż 3x - 6 = 0",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "x = 2"
+   ]
+  },
+  {
+   "pytanie": "ile to 15% z 80",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "12"
+   ]
+  },
+  {
+   "pytanie": "pochodna x^2 + 3x",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "2x + 3"
+   ]
+  },
+  {
+   "pytanie": "nwd 12 i 18",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "6"
+   ]
+  },
+  {
+   "pytanie": "czy 13 jest liczbą pierwszą",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "jest liczbą pierwszą"
+   ]
+  },
+  {
+   "pytanie": "ile to 7*8",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "56"
+   ]
+  },
+  {
+   "pytanie": "silnia 5",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "120"
+   ]
+  },
+  {
+   "pytanie": "rozwiąż x^2 - 4 = 0",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "2"
+   ]
+  },
+  {
+   "pytanie": "średnia z 2, 4, 6",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "4"
+   ]
+  },
+  {
+   "pytanie": "zamień 10 na binarny",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "1010"
+   ]
+  },
+  {
+   "pytanie": "całka z 2x od 0 do 2",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "4"
+   ]
+  },
+  {
+   "pytanie": "ile to 2^10",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "1024"
+   ]
+  },
+  {
+   "pytanie": "rozłóż 84 na czynniki",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "2^2 · 3 · 7"
+   ]
+  },
+  {
+   "pytanie": "10 km na mile",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "6,2"
+   ]
+  },
+  {
+   "pytanie": "ile to 100/4",
+   "kategoria": "matematyka",
+   "zawiera": [
+    "25"
+   ]
+  },
+  {
+   "pytanie": "napisz w c++ hello world",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "std::cout"
+   ]
+  },
+  {
+   "pytanie": "napisz program w c++ który sortuje tablicę",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "std::sort"
+   ]
+  },
+  {
+   "pytanie": "pokaż klasę w c++",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "class "
+   ]
+  },
+  {
+   "pytanie": "jak w c++ czytać z pliku",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "ifstream"
+   ]
+  },
+  {
+   "pytanie": "napisz w c++ liczby pierwsze do 200",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "n = 200"
+   ]
+  },
+  {
+   "pytanie": "co to jest wskaźnik w c++",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "adres"
+   ]
+  },
+  {
+   "pytanie": "czym się różni c od c++",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "klasy"
+   ]
+  },
+  {
+   "pytanie": "rekurencja w c++",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "silnia"
+   ]
+  },
+  {
+   "pytanie": "jak użyć mapy w c++",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "std::map"
+   ]
+  },
+  {
+   "pytanie": "napisz w cpp grę zgadywanie liczby",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "uniform_int_distribution"
+   ]
+  },
+  {
+   "pytanie": "dziedziczenie w c++",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "override"
+   ]
+  },
+  {
+   "pytanie": "jak skompilować program c++",
+   "kategoria": "programowanie",
+   "zawiera": [
+    "g++"
+   ]
+  },
+  {
+   "pytanie": "jak naprawić przerzutkę w rowerze",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "ile kosztuje bilet do kina w Poznaniu",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "kto wygrał wczorajszy mecz",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jaki jest najlepszy telefon do 2000 zł",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jak wymienić olej w samochodzie",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "ile lat ma Robert Lewandowski",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jaka jest stolica Mongolii",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "kiedy otwierają Biedronkę w niedzielę",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jak długo gotować ryż",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "co to jest kwantowa chromodynamika",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jak zrobić sushi",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "ile waży słoń afrykański",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "kto rządzi w Brazylii",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jak nauczyć psa siadać",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jaka jest populacja Krakowa",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "ile lat żyją papugi",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jaka będzie pogoda w przyszłym tygodniu",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jak działa silnik odrzutowy",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "ile lat ma ziemia",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "jak długo żyje kot",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "kiedy jest dzień matki",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "jaki dzień tygodnia był 1 stycznia 2000",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "dziękuję za uwagę - to tytuł książki?",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "co jedzą pandy",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "o której godzinie wschodzi słońce w lipcu",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "jak się czuje ryba w akwarium",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  }
+ ]
+}

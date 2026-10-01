@@ -1,5 +1,37 @@
 # Historia zmian
 
+## 0.10.0
+
+### Trener (`python3 -m panbadek --trener`)
+- **Walidacja krzyżowa i strojenie:** trener porównuje ustawienia sieci (neurony, tempo, augmentacja),
+  uśrednia po kilku losowaniach wag i wybiera najprostsze w granicach 1 punktu od najlepszego.
+  `--zapisz` zapisuje je w `panbadek/data/ustawienia_sieci.json`, a Badek z nich korzysta.
+- **Augmentacja** (`panbadek/augmentacja.py`): warianty przykładów z literówkami (zamiana, pominięcie,
+  podwojenie litery, sąsiedni klawisz) i dopiskami. Zdania z literówkami: 78,3% → 82,4%.
+- **Egzamin całego Badka** (138 pytań w 6 kategoriach) i **egzamin kontrolny** (39 pytań nieużywanych
+  przy poprawkach), a także nowy trudny zestaw testowy sieci (176 zdań).
+- **Nauczyciel (Claude):** `--nauczyciel` dopisuje nowe przykłady (zostają tylko, jeśli walidacja się
+  nie pogorszy, i nigdy nie są zdaniami testowymi) oraz uczy Badka odpowiedzi na pytania z rozmów,
+  na które nie znał odpowiedzi. Zapamiętuje tylko odpowiedzi, które Claude oznaczy jako pewne.
+  Wymaga `pip install anthropic` i klucza API.
+
+### Trening
+- 170 nowych przykładów treningowych (523 zamiast 353), szczególnie dla klasy „inne”
+  (np. „ile lat ma wieża Eiffla” to nie pytanie o wiek Badka).
+- Sieć ma teraz 64 neurony i trenuje się na danych z augmentacją (ok. 4 s zamiast 2 s).
+
+### Poprawki znalezione przez egzamin
+- **Synonimy w wyszukiwaniu:** „najwyższa góra” = „najwyższy szczyt”, „autor” = „kto napisał”,
+  „jak szybko” = „prędkość”, „kraj” = „państwo” i inne.
+- **Mniej zmyślania:** gdy pytanie podmienia ważne słowo („ile lat żyją papugi” zamiast „ile lat żyje
+  kot”), Badek przyznaje się do niewiedzy, zamiast odpowiadać o kotach. W aplikacji pytanie trafia
+  wtedy do Claude.
+- **Dzień tygodnia dowolnej daty:** „jaki dzień tygodnia był 1 stycznia 2000” → sobota.
+- „napisz w c++ program, który sortuje tablicę” wybiera teraz wzór sortowania.
+
+Wyniki: egzamin 91,3% → 97,8%, egzamin kontrolny 79,5% → 82,1%, zestaw testowy 97,0% → 98,5%,
+zdania z literówkami 78,3% → 82,4%. Trudny zestaw bez zmian (93,2%).
+
 ## 0.9.0
 
 ### Programowanie w C++

@@ -22,15 +22,15 @@ async function start() {
   py.FS.mount(py.FS.filesystems.IDBFS, {}, PAMIEC);
   await new Promise((ok, blad) => py.FS.syncfs(true, (e) => (e ? blad(e) : ok())));
 
-  // Sieć neuronowa wytrenowana przy budowaniu strony - telefon nie musi trenować jej sam.
-  if (!py.FS.analyzePath(PAMIEC + "/model.json").exists) {
-    const model = await fetch("model.json");
-    if (model.ok) py.FS.writeFile(PAMIEC + "/model.json", new Uint8Array(await model.arrayBuffer()));
-  }
+  // Sieć neuronowa wytrenowana przy budowaniu strony - telefon nie musi trenować jej sam,
+  // także po aktualizacji, gdy model zapisany w pamięci jest już nieaktualny.
+  const GOTOWY = "/home/pyodide/gotowy_model.json";
+  const model = await fetch("model.json").catch(() => null);
+  if (model?.ok) py.FS.writeFile(GOTOWY, new Uint8Array(await model.arrayBuffer()));
 
   py.runPython('import sys; sys.path.insert(0, "/home/pyodide/app")');
   most = py.pyimport("panbadek.przegladarka");
-  const stan = JSON.parse(most.start(PAMIEC));
+  const stan = JSON.parse(most.start(PAMIEC, model?.ok ? GOTOWY : null));
   await zapiszPamiec();
   postMessage({ typ: "gotowy", ...stan });
 }

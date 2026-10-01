@@ -1,0 +1,16 @@
+{
+ "neurony": 64,
+ "epoki": 300,
+ "tempo": 0.05,
+ "warianty": 2,
+ "_opis": "Ustawienia dobrane przez trenera (python3 -m panbadek.trener --zapisz).",
+ "_wyniki": {
+  "walidacja": 0.6657,
+  "testowe": 0.9851,
+  "trudne": 0.9318,
+  "literówki": 0.8235,
+  "egzamin": 0.9783,
+  "egzamin_kontrolny": 0.8205
+ },
+ "_data": "2026-10-01"
+}

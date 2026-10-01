@@ -13,9 +13,9 @@ from .obrazy import Obraz
 _badek = None
 
 
-def start(katalog_pamieci):
+def start(katalog_pamieci, gotowy_model=None):
     global _badek
-    _badek = PanBadek(katalog_pamieci=katalog_pamieci)
+    _badek = PanBadek(katalog_pamieci=katalog_pamieci, gotowy_model=gotowy_model)
     _badek.pliki_lokalne = False  # w przeglądarce nie ma dysku do przeglądania
     return json.dumps({"imie": _badek.imie})
 

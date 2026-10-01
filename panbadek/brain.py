@@ -7,7 +7,7 @@ import re
 import time
 from zlib import error as zlib_error
 
-from . import exif, internet, matematyka, obrazy, programowanie, skills, wtyczki
+from . import augmentacja, exif, internet, matematyka, obrazy, programowanie, skills, wtyczki
 from .biblioteki import NIEISTOTNE, Biblioteki
 from .network import SiecNeuronowa
 from .text import Slownik, cechy, normalizuj, rdzen
@@ -19,7 +19,24 @@ DOMYSLNA_PAMIEC = os.path.join(os.path.expanduser("~"), ".panbadek")
 WBUDOWANA_WIEDZA = os.path.join(KATALOG, "data", "wiedza.json")
 TESTY_INTENCJI = os.path.join(KATALOG, "data", "test_intencje.json")
 
-NEURONY_UKRYTE = 48
+USTAWIENIA_SIECI = os.path.join(KATALOG, "data", "ustawienia_sieci.json")
+# Ustawienia treningu sieci. Dobiera je trener (python3 -m panbadek.trener --zapisz),
+# a zapisane w data/ustawienia_sieci.json zastępują te domyślne.
+DOMYSLNE_USTAWIENIA = {"neurony": 48, "epoki": 300, "tempo": 0.05, "warianty": 0}
+
+
+def wczytaj_ustawienia(plik=USTAWIENIA_SIECI):
+    ustawienia = dict(DOMYSLNE_USTAWIENIA)
+    try:
+        with open(plik, encoding="utf-8") as f:
+            zapisane = json.load(f)
+        ustawienia.update({k: zapisane[k] for k in DOMYSLNE_USTAWIENIA if k in zapisane})
+    except (OSError, ValueError):
+        pass
+    return ustawienia
+
+
+USTAWIENIA = wczytaj_ustawienia()
 # Baza wiedzy odpowiada, gdy pytanie jest wystarczająco podobne do zapamiętanego.
 PROG_WIEDZY = 0.45
 PROG_WIEDZY_PEWNY = 0.8
@@ -176,8 +193,11 @@ def kandydaci_miasta(miasto):
 
 class PanBadek:
     def __init__(self, plik_intencji=DOMYSLNE_INTENCJE, katalog_pamieci=DOMYSLNA_PAMIEC,
-                 ziarno=None, internet=True):
+                 ziarno=None, internet=True, gotowy_model=None):
         self.katalog_pamieci = katalog_pamieci
+        # Sieć wytrenowana przy budowaniu strony: gdy zapisana w pamięci jest nieaktualna
+        # (np. po aktualizacji), wczytujemy tę zamiast trenować w telefonie.
+        self.gotowy_model = gotowy_model
         sciezka = (lambda nazwa: os.path.join(katalog_pamieci, nazwa)) if katalog_pamieci else (lambda _: None)
         self.plik_nauki = sciezka("nauczone.json")
         self.plik_modelu = sciezka("model.json")
@@ -279,21 +299,26 @@ class PanBadek:
 
     def _odcisk_danych(self):
         """Pozwala wykryć, że dane treningowe się zmieniły i model trzeba wytrenować od nowa."""
-        return json.dumps(sorted(self.przyklady_treningowe().items()), ensure_ascii=False)
+        return json.dumps([sorted(self.przyklady_treningowe().items()), sorted(USTAWIENIA.items())],
+                          ensure_ascii=False)
 
     def _wczytaj_model(self):
-        if not self.plik_modelu or not os.path.exists(self.plik_modelu):
-            return False
-        try:
-            with open(self.plik_modelu, encoding="utf-8") as f:
-                dane = json.load(f)
-            if dane["odcisk"] != self._odcisk_danych():
-                return False
-            self.slownik = Slownik(dane["cechy"])
-            self.siec = SiecNeuronowa.ze_slownika(dane["siec"])
-            return True
-        except (OSError, ValueError, KeyError):
-            return False
+        for plik in (self.plik_modelu, self.gotowy_model):
+            if not plik or not os.path.exists(plik):
+                continue
+            try:
+                with open(plik, encoding="utf-8") as f:
+                    dane = json.load(f)
+                if dane["odcisk"] != self._odcisk_danych():
+                    continue
+                self.slownik = Slownik(dane["cechy"])
+                self.siec = SiecNeuronowa.ze_slownika(dane["siec"])
+                if plik == self.gotowy_model:
+                    self._zapisz_model()
+                return True
+            except (OSError, ValueError, KeyError):
+                continue
+        return False
 
     def _zapisz_model(self):
         if not self.plik_modelu:
@@ -311,8 +336,11 @@ class PanBadek:
                 for i in self.intencje}
 
     def _dane_treningowe(self):
+        """Pary (zdanie, numer intencji); z augmentacją także warianty z literówkami i dopiskami."""
         przyklady = self.przyklady_treningowe()
-        return [(p, k) for k, i in enumerate(self.intencje) for p in przyklady[i["nazwa"]]]
+        ile = USTAWIENIA["warianty"]
+        return [(w, k) for k, i in enumerate(self.intencje) for p in przyklady[i["nazwa"]]
+                for w in [p] + (augmentacja.warianty(p, ile, self.ziarno or 0) if ile else [])]
 
     def trenuj(self):
         """Trenuje sieć od zera na wszystkich przykładach. Zwraca końcową stratę."""
@@ -325,9 +353,9 @@ class PanBadek:
             return strata
         przyklady = self._dane_treningowe()
         self.slownik = Slownik.zbuduj(p for p, _ in przyklady)
-        self.siec = SiecNeuronowa(len(self.slownik), NEURONY_UKRYTE, len(self.intencje), ziarno=self.ziarno)
+        self.siec = SiecNeuronowa(len(self.slownik), USTAWIENIA["neurony"], len(self.intencje), ziarno=self.ziarno)
         dane = [(self.slownik.wektor(p), k) for p, k in przyklady]
-        strata = self.siec.trenuj(dane, ziarno=self.ziarno)
+        strata = self.siec.trenuj(dane, epoki=USTAWIENIA["epoki"], tempo=USTAWIENIA["tempo"], ziarno=self.ziarno)
         if self.ziarno is not None:
             _GOTOWE_MODELE[klucz] = (self.slownik.lista(), json.dumps(self.siec.do_slownika()), strata)
         self._zapisz_model()

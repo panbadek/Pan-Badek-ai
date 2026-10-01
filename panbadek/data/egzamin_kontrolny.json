@@ -1,0 +1,286 @@
+{
+ "opis": "Egzamin kontrolny: pytania napisane przed poprawkami trenera i nieużywane do ich dobierania. Uczciwa miara, czy poprawki działają ogólnie.",
+ "pytania": [
+  {
+   "pytanie": "Który szczyt jest najwyższy w Tatrach?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Rysy"
+   ]
+  },
+  {
+   "pytanie": "autor Pana Tadeusza",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Mickiewicz"
+   ]
+  },
+  {
+   "pytanie": "Kto stworzył Quo vadis?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Sienkiewicz"
+   ]
+  },
+  {
+   "pytanie": "Przy jakiej temperaturze zamarza woda?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "0"
+   ]
+  },
+  {
+   "pytanie": "ile kontynentow jest",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "7",
+    "siedem"
+   ]
+  },
+  {
+   "pytanie": "jak nazywa sie stolica francji",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Paryż"
+   ]
+  },
+  {
+   "pytanie": "Ile województw jest w Polsce?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "16"
+   ]
+  },
+  {
+   "pytanie": "Jaka jest najgłębsze jezioro w Polsce",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Hańcza"
+   ]
+  },
+  {
+   "pytanie": "kiedy zaczal sie chrzest polski",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "966"
+   ]
+  },
+  {
+   "pytanie": "Kto odkrył grawitację?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Newton"
+   ]
+  },
+  {
+   "pytanie": "ile trwa rok",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "365"
+   ]
+  },
+  {
+   "pytanie": "Ile tygodni liczy rok?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "52"
+   ]
+  },
+  {
+   "pytanie": "jaka planeta jest najblizej slonca",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Merkury"
+   ]
+  },
+  {
+   "pytanie": "Ile zębów ma dorosły?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "32"
+   ]
+  },
+  {
+   "pytanie": "jaki jest najwiekszy organ czlowieka",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "skóra"
+   ]
+  },
+  {
+   "pytanie": "co to jest RAM",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "pamięć"
+   ]
+  },
+  {
+   "pytanie": "ile wynosi przyspieszenie grawitacyjne",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "9,8"
+   ]
+  },
+  {
+   "pytanie": "Jaki jest najwyższy ssak?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Żyraf"
+   ]
+  },
+  {
+   "pytanie": "Kto był pierwszym kosmonautą?",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "Gagarin"
+   ]
+  },
+  {
+   "pytanie": "kiedy jest boze narodzenie",
+   "kategoria": "wiedza",
+   "zawiera": [
+    "25 grudnia"
+   ]
+  },
+  {
+   "pytanie": "ile lat żyją chomiki",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "kto rządzi we Francji",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jak zrobić pizzę neapolitańską",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "ile kosztuje iPhone",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jaka jest stolica Peru",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jak wyleczyć katar",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "kto wygrał Eurowizję",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "ile waży żyrafa",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jakie jest najdłuższe słowo w polskim",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "kto napisał Wiedźmina",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jaki jest najwyższy budynek na świecie",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "ile mieszkańców ma Gdańsk",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jak naprawić kran",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "co to jest kryptowaluta",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "kiedy jest Dzień Ojca",
+   "kategoria": "uczciwosc",
+   "zrodlo": [
+    "nie_wiem",
+    "internet"
+   ]
+  },
+  {
+   "pytanie": "jaki dzień tygodnia będzie 24 grudnia 2030",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "ile lat ma Wawel",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "jak się czuje kot po kastracji",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  },
+  {
+   "pytanie": "dzień dobry po angielsku to",
+   "kategoria": "pulapki",
+   "nie_intencja": true
+  }
+ ]
+}

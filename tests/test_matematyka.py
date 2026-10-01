@@ -93,9 +93,9 @@ class TestStylClaude(unittest.TestCase):
         self.assertIn("Londyn", self.badek.odpowiedz("a Wielkiej Brytanii?"))
 
     def test_mowi_jak_zrozumial_przy_niepewnym_dopasowaniu(self):
-        odp = self.badek.odpowiedz("najwyższa góra w polsce")
+        odp = self.badek.odpowiedz("rzeka polska")
         self.assertIn("Jeśli dobrze rozumiem", odp)
-        self.assertIn("Rysy", odp)
+        self.assertIn("Wisła", odp)
         self.assertNotIn("Jeśli dobrze rozumiem", self.badek.odpowiedz("Jaka jest stolica Polski?"))
 
     def test_kryzys(self):

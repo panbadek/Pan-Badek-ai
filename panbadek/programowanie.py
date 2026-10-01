@@ -225,7 +225,7 @@ int main() {
 """, "Sito Eratostenesa skreśla wielokrotności kolejnych liczb pierwszych. Złożoność O(n log log n), "
          "więc bez problemu działa dla milionów liczb.", liczba=(100, 2, 10000000)),
 
-    _wzor("Sortowanie", ["sort", "posortuj", "babelk", "rosnac", "malejac", "quicksort"], r"""
+    _wzor("Sortowanie", ["sort", "sortuj", "posortuj", "babelk", "rosnac", "malejac", "quicksort"], r"""
 #include <algorithm>
 #include <functional>
 #include <iostream>

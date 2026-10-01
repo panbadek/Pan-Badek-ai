@@ -1,6 +1,7 @@
 """Czat z Panem Badkiem: python -m panbadek (terminal) albo --web (przeglądarka)."""
 
 import argparse
+import sys
 
 from . import __version__
 from .brain import PanBadek
@@ -9,6 +10,10 @@ KONIEC = {"koniec", "wyjdz", "wyjdź", "exit", "quit"}
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "--trener":
+        # python3 -m panbadek --trener [--zapisz --szybko --egzamin --nauczyciel]
+        from . import trener
+        return trener.main(sys.argv[2:])
     parser = argparse.ArgumentParser(prog="panbadek", description="Porozmawiaj z Panem Badkiem.")
     parser.add_argument("--debug", action="store_true",
                         help="pokazuj rozpoznaną intencję i pewność sieci")
@@ -29,6 +34,8 @@ def main():
                         help="zapisz całą wyuczoną pamięć do pliku JSON (np. żeby przenieść ją na telefon)")
     parser.add_argument("--import", dest="import_", metavar="PLIK",
                         help="dołącz pamięć z pliku JSON (z telefonu albo innego komputera)")
+    parser.add_argument("--trener", action="store_true",
+                        help="trenuj i sprawdź Badka (szczegóły: python3 -m panbadek --trener --help)")
     parser.add_argument("--version", action="version", version=f"Pan Badek {__version__}")
     args = parser.parse_args()
 
