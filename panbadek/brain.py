@@ -10,6 +10,7 @@ from zlib import error as zlib_error
 
 from . import augmentacja, exif, internet, matematyka, obrazy, programowanie, skills, szkola, wtyczki, youtube
 from .biblioteki import NIEISTOTNE, Biblioteki
+from .rozumowanie import Rozumowanie
 from .network import SiecNeuronowa
 from .text import Slownik, cechy, normalizuj, rdzen
 from .wiedza import BazaWiedzy, istotne_slowa
@@ -246,6 +247,7 @@ class PanBadek:
         self._kolejna_odpowiedz = 0
         self._zrodlo_szczegol = None
         self.biblioteki = Biblioteki(sciezka("biblioteki"))
+        self.rozumowanie = Rozumowanie(sciezka("rozumowanie.json"))
         self.wtyczki, self.bledy_wtyczek = wtyczki.wczytaj(self.katalog_wtyczek)
 
         if not self._wczytaj_model():
@@ -642,7 +644,7 @@ class PanBadek:
                 return self.ocen(poprzednia, dobra)
         for obsluga in (self._polecenia_materialow, self._polecenia_uczenia, self._polecenia_zdjec, self._polecenia_pamieci,
                         self._polecenia_bibliotek, self._polecenia_wtyczek, self._wtyczki,
-                        self._programowanie, self._internet, self._szkola, self._matematyka, self._kalkulator, self._wiedza_lub_siec):
+                        self._programowanie, self._rozumowanie, self._internet, self._szkola, self._matematyka, self._kalkulator, self._wiedza_lub_siec):
             self._zrodlo_szczegol = None
             wynik = obsluga(tekst)
             if wynik:
@@ -692,6 +694,15 @@ class PanBadek:
         self._temat = kandydat
         return wynik
 
+    def _rozumowanie(self, tekst):
+        wynik = self.rozumowanie.odpowiedz(tekst)
+        if not wynik:
+            return None
+        odpowiedz, pewna = wynik
+        if not pewna:
+            self._zrodlo_szczegol = "nie_wiem"  # w aplikacji pytanie może przejąć mocniejsze AI
+        return odpowiedz
+
     def _szkola(self, tekst):
         return szkola.rozwiaz(tekst)
 
@@ -713,6 +724,8 @@ class PanBadek:
             fakt = " ".join(_NA_TY.get(s.lower(), s) for s in notatka.group(1).split())
             fakt = fakt[0].upper() + fakt[1:]
             self.biblioteki.dodaj(NOTATKI, fakt)
+            if self.rozumowanie.naucz(notatka.group(1)):
+                return f"Zapamiętałem: {fakt}\nPołączę to z tym, co już wiem - np. zapytaj, czy to zwierzę, ssak albo ptak."
             return f"Zapamiętałem: {fakt}"
         if _UCZ_SIE.match(tekst):
             return self.ucz_sie()

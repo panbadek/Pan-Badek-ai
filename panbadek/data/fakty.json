@@ -1,0 +1,1685 @@
+{
+ "_opis": "Fakty, które Pan Badek łączy w rozumowaniu: liczby, daty wydarzeń i osób, systematyka zwierząt i geografia.",
+ "liczby": [
+  {
+   "byt": "Mount Everest",
+   "wzorzec": "everest",
+   "symbol": "h",
+   "wartosc": 8849,
+   "jednostka": "m",
+   "opis": "wysokość Mount Everestu"
+  },
+  {
+   "byt": "Rysy",
+   "wzorzec": "\\brys(y|ow|ach|om|ami)\\b",
+   "symbol": "h",
+   "wartosc": 2499,
+   "jednostka": "m",
+   "opis": "wysokość Rysów"
+  },
+  {
+   "byt": "Śnieżka",
+   "wzorzec": "sniezk",
+   "symbol": "h",
+   "wartosc": 1603,
+   "jednostka": "m",
+   "opis": "wysokość Śnieżki"
+  },
+  {
+   "byt": "Giewont",
+   "wzorzec": "giewont",
+   "symbol": "h",
+   "wartosc": 1894,
+   "jednostka": "m",
+   "opis": "wysokość Giewontu"
+  },
+  {
+   "byt": "Kilimandżaro",
+   "wzorzec": "kilimand",
+   "symbol": "h",
+   "wartosc": 5895,
+   "jednostka": "m",
+   "opis": "wysokość Kilimandżaro"
+  },
+  {
+   "byt": "Wisła",
+   "wzorzec": "\\bwisl",
+   "symbol": "s",
+   "wartosc": 1022,
+   "jednostka": "km",
+   "opis": "długość Wisły"
+  },
+  {
+   "byt": "Warta",
+   "wzorzec": "\\bwart(a|y|e|ą|ę)\\b",
+   "symbol": "s",
+   "wartosc": 808,
+   "jednostka": "km",
+   "opis": "długość Warty"
+  },
+  {
+   "byt": "Nil",
+   "wzorzec": "\\bnil(u|em)?\\b",
+   "symbol": "s",
+   "wartosc": 6650,
+   "jednostka": "km",
+   "opis": "długość Nilu"
+  },
+  {
+   "byt": "światło",
+   "wzorzec": "swiatl",
+   "symbol": "v",
+   "wartosc": 299792,
+   "jednostka": "km/s",
+   "opis": "prędkość światła"
+  },
+  {
+   "byt": "dźwięk",
+   "wzorzec": "dzwiek",
+   "symbol": "v",
+   "wartosc": 343,
+   "jednostka": "m/s",
+   "opis": "prędkość dźwięku w powietrzu"
+  },
+  {
+   "byt": "Księżyc",
+   "wzorzec": "ksiezyc",
+   "symbol": "s",
+   "wartosc": 384400,
+   "jednostka": "km",
+   "opis": "średnia odległość Księżyca od Ziemi"
+  },
+  {
+   "byt": "Słońce",
+   "wzorzec": "\\bslonc",
+   "symbol": "s",
+   "wartosc": 149600000,
+   "jednostka": "km",
+   "opis": "średnia odległość Słońca od Ziemi"
+  },
+  {
+   "byt": "równik",
+   "wzorzec": "rownik|obwod\\w* ziemi",
+   "symbol": "s",
+   "wartosc": 40075,
+   "jednostka": "km",
+   "opis": "długość równika Ziemi"
+  }
+ ],
+ "wydarzenia": [
+  {
+   "nazwa": "chrzest Polski",
+   "wzorzec": "chrzest|chrzt",
+   "data": "966"
+  },
+  {
+   "nazwa": "koronacja Bolesława Chrobrego",
+   "wzorzec": "koronacj",
+   "data": "1025"
+  },
+  {
+   "nazwa": "bitwa pod Grunwaldem",
+   "wzorzec": "grunwald",
+   "data": "1410-07-15"
+  },
+  {
+   "nazwa": "odkrycie Ameryki",
+   "wzorzec": "odkryc\\w* ameryk|kolumb",
+   "data": "1492-10-12"
+  },
+  {
+   "nazwa": "hołd pruski",
+   "wzorzec": "hold\\w* prusk",
+   "data": "1525-04-10"
+  },
+  {
+   "nazwa": "unia lubelska",
+   "wzorzec": "uni\\w* lubelsk",
+   "data": "1569-07-01"
+  },
+  {
+   "nazwa": "odsiecz wiedeńska",
+   "wzorzec": "odsiecz|pod wiedniem",
+   "data": "1683-09-12"
+  },
+  {
+   "nazwa": "uchwalenie Konstytucji 3 Maja",
+   "wzorzec": "konstytucj",
+   "data": "1791-05-03"
+  },
+  {
+   "nazwa": "wybuch I wojny światowej",
+   "wzorzec": "(\\bi\\b|pierwsz\\w*) wojn\\w* swiatow",
+   "data": "1914-07-28"
+  },
+  {
+   "nazwa": "odzyskanie niepodległości",
+   "wzorzec": "niepodleglosc",
+   "data": "1918-11-11"
+  },
+  {
+   "nazwa": "koniec II wojny światowej",
+   "wzorzec": "(koni\\w*|zakonczeni\\w*) (\\bii\\b|drugiej) wojn",
+   "data": "1945-05-08"
+  },
+  {
+   "nazwa": "wybuch II wojny światowej",
+   "wzorzec": "(\\bii\\b|drug\\w*) wojn\\w* swiatow",
+   "data": "1939-09-01"
+  },
+  {
+   "nazwa": "powstanie warszawskie",
+   "wzorzec": "powstani\\w* warszawsk",
+   "data": "1944-08-01"
+  },
+  {
+   "nazwa": "lot Gagarina",
+   "wzorzec": "lot\\w* gagarin|pierwsz\\w* czlowiek\\w* w kosmos",
+   "data": "1961-04-12"
+  },
+  {
+   "nazwa": "lądowanie na Księżycu",
+   "wzorzec": "ladowani\\w* na ksiezyc|armstrong|czlowiek\\w* na ksiezyc",
+   "data": "1969-07-20"
+  },
+  {
+   "nazwa": "lot Hermaszewskiego",
+   "wzorzec": "hermaszewsk|polak\\w* w kosmos",
+   "data": "1978-06-27"
+  },
+  {
+   "nazwa": "wybory czerwcowe",
+   "wzorzec": "wybor\\w* czerwcow|okragl\\w* stol",
+   "data": "1989-06-04"
+  },
+  {
+   "nazwa": "upadek muru berlińskiego",
+   "wzorzec": "mur\\w* berlinsk",
+   "data": "1989-11-09"
+  },
+  {
+   "nazwa": "wejście Polski do NATO",
+   "wzorzec": "\\bnato\\b",
+   "data": "1999-03-12"
+  },
+  {
+   "nazwa": "wejście Polski do Unii Europejskiej",
+   "wzorzec": "uni\\w* europejsk|\\bue\\b",
+   "data": "2004-05-01"
+  }
+ ],
+ "osoby": [
+  {
+   "nazwa": "Mikołaj Kopernik",
+   "wzorzec": "kopernik",
+   "urodzony": "1473-02-19",
+   "zmarly": "1543-05-24"
+  },
+  {
+   "nazwa": "Maria Skłodowska-Curie",
+   "wzorzec": "sklodowsk|curie",
+   "urodzony": "1867-11-07",
+   "zmarly": "1934-07-04"
+  },
+  {
+   "nazwa": "Fryderyk Chopin",
+   "wzorzec": "chopin",
+   "urodzony": "1810-03-01",
+   "zmarly": "1849-10-17"
+  },
+  {
+   "nazwa": "Adam Mickiewicz",
+   "wzorzec": "mickiewicz",
+   "urodzony": "1798-12-24",
+   "zmarly": "1855-11-26"
+  },
+  {
+   "nazwa": "Jan Paweł II",
+   "wzorzec": "jan\\w* paw\\w* ii|wojtyl",
+   "urodzony": "1920-05-18",
+   "zmarly": "2005-04-02"
+  },
+  {
+   "nazwa": "Józef Piłsudski",
+   "wzorzec": "pilsudsk",
+   "urodzony": "1867-12-05",
+   "zmarly": "1935-05-12"
+  },
+  {
+   "nazwa": "Stanisław Lem",
+   "wzorzec": "\\blem(a|em)?\\b",
+   "urodzony": "1921-09-12",
+   "zmarly": "2006-03-27"
+  },
+  {
+   "nazwa": "Albert Einstein",
+   "wzorzec": "einstein",
+   "urodzony": "1879-03-14",
+   "zmarly": "1955-04-18"
+  },
+  {
+   "nazwa": "Isaac Newton",
+   "wzorzec": "newton",
+   "urodzony": "1643-01-04",
+   "zmarly": "1727-03-31"
+  },
+  {
+   "nazwa": "Henryk Sienkiewicz",
+   "wzorzec": "sienkiewicz",
+   "urodzony": "1846-05-05",
+   "zmarly": "1916-11-15"
+  },
+  {
+   "nazwa": "Bolesław Prus",
+   "wzorzec": "\\bprus(a|em)?\\b",
+   "urodzony": "1847-08-20",
+   "zmarly": "1912-05-19"
+  },
+  {
+   "nazwa": "Jurij Gagarin",
+   "wzorzec": "gagarin",
+   "urodzony": "1934-03-09",
+   "zmarly": "1968-03-27"
+  },
+  {
+   "nazwa": "Neil Armstrong",
+   "wzorzec": "armstrong",
+   "urodzony": "1930-08-05",
+   "zmarly": "2012-08-25"
+  },
+  {
+   "nazwa": "Mirosław Hermaszewski",
+   "wzorzec": "hermaszewsk",
+   "urodzony": "1941-09-15",
+   "zmarly": "2022-12-12"
+  }
+ ],
+ "kategorie": {
+  "organizm": {
+   "rodzic": null,
+   "narzednik": "organizmem",
+   "mnoga": "organizmy",
+   "formy": [
+    "organizm",
+    "organizmami",
+    "organizmem",
+    "organizmy",
+    "organizmów"
+   ]
+  },
+  "zwierzę": {
+   "rodzic": "organizm",
+   "narzednik": "zwierzęciem",
+   "mnoga": "zwierzęta",
+   "formy": [
+    "zwierząt",
+    "zwierzę",
+    "zwierzęcia",
+    "zwierzęciem",
+    "zwierzęta",
+    "zwierzętami"
+   ]
+  },
+  "roślina": {
+   "rodzic": "organizm",
+   "narzednik": "rośliną",
+   "mnoga": "rośliny",
+   "formy": [
+    "roślin",
+    "roślina",
+    "roślinami",
+    "rośliny",
+    "rośliną"
+   ]
+  },
+  "grzyb": {
+   "rodzic": "organizm",
+   "narzednik": "grzybem",
+   "mnoga": "grzyby",
+   "formy": [
+    "grzyb",
+    "grzybami",
+    "grzybem",
+    "grzyby",
+    "grzybów"
+   ]
+  },
+  "kręgowiec": {
+   "rodzic": "zwierzę",
+   "narzednik": "kręgowcem",
+   "mnoga": "kręgowce",
+   "formy": [
+    "kręgowcami",
+    "kręgowce",
+    "kręgowcem",
+    "kręgowców",
+    "kręgowiec"
+   ]
+  },
+  "bezkręgowiec": {
+   "rodzic": "zwierzę",
+   "narzednik": "bezkręgowcem",
+   "mnoga": "bezkręgowce",
+   "formy": [
+    "bezkręgowcami",
+    "bezkręgowce",
+    "bezkręgowcem",
+    "bezkręgowców",
+    "bezkręgowiec"
+   ]
+  },
+  "ssak": {
+   "rodzic": "kręgowiec",
+   "narzednik": "ssakiem",
+   "mnoga": "ssaki",
+   "formy": [
+    "ssak",
+    "ssakami",
+    "ssaki",
+    "ssakiem",
+    "ssaków"
+   ]
+  },
+  "ptak": {
+   "rodzic": "kręgowiec",
+   "narzednik": "ptakiem",
+   "mnoga": "ptaki",
+   "formy": [
+    "ptak",
+    "ptakami",
+    "ptaki",
+    "ptakiem",
+    "ptaków"
+   ]
+  },
+  "ryba": {
+   "rodzic": "kręgowiec",
+   "narzednik": "rybą",
+   "mnoga": "ryby",
+   "formy": [
+    "ryb",
+    "ryba",
+    "rybami",
+    "ryby",
+    "rybą"
+   ]
+  },
+  "gad": {
+   "rodzic": "kręgowiec",
+   "narzednik": "gadem",
+   "mnoga": "gady",
+   "formy": [
+    "gad",
+    "gadami",
+    "gadem",
+    "gady",
+    "gadów"
+   ]
+  },
+  "płaz": {
+   "rodzic": "kręgowiec",
+   "narzednik": "płazem",
+   "mnoga": "płazy",
+   "formy": [
+    "płaz",
+    "płazami",
+    "płazem",
+    "płazy",
+    "płazów"
+   ]
+  },
+  "owad": {
+   "rodzic": "bezkręgowiec",
+   "narzednik": "owadem",
+   "mnoga": "owady",
+   "formy": [
+    "owad",
+    "owadami",
+    "owadem",
+    "owady",
+    "owadów"
+   ]
+  },
+  "pajęczak": {
+   "rodzic": "bezkręgowiec",
+   "narzednik": "pajęczakiem",
+   "mnoga": "pajęczaki",
+   "formy": [
+    "pajęczak",
+    "pajęczakami",
+    "pajęczaki",
+    "pajęczakiem",
+    "pajęczaków"
+   ]
+  },
+  "drzewo": {
+   "rodzic": "roślina",
+   "narzednik": "drzewem",
+   "mnoga": "drzewa",
+   "formy": [
+    "drzew",
+    "drzewa",
+    "drzewami",
+    "drzewem",
+    "drzewo"
+   ]
+  },
+  "pies": {
+   "rodzic": "ssak",
+   "narzednik": "psem",
+   "mnoga": "psy",
+   "formy": [
+    "pies",
+    "psa",
+    "psami",
+    "psem",
+    "psy",
+    "psów"
+   ]
+  },
+  "kot": {
+   "rodzic": "ssak",
+   "narzednik": "kotem",
+   "mnoga": "koty",
+   "formy": [
+    "kot",
+    "kota",
+    "kotem",
+    "koty",
+    "kotów"
+   ]
+  },
+  "koń": {
+   "rodzic": "ssak",
+   "narzednik": "koniem",
+   "mnoga": "konie",
+   "formy": [
+    "koni",
+    "konia",
+    "konie",
+    "koniem",
+    "koń"
+   ]
+  },
+  "krowa": {
+   "rodzic": "ssak",
+   "narzednik": "krową",
+   "mnoga": "krowy",
+   "formy": [
+    "krowa",
+    "krowy",
+    "krową",
+    "krów"
+   ]
+  },
+  "świnia": {
+   "rodzic": "ssak",
+   "narzednik": "świnią",
+   "mnoga": "świnie",
+   "formy": [
+    "świnia",
+    "świnie",
+    "świnią",
+    "świń"
+   ]
+  },
+  "owca": {
+   "rodzic": "ssak",
+   "narzednik": "owcą",
+   "mnoga": "owce",
+   "formy": [
+    "owca",
+    "owce",
+    "owcą",
+    "owiec"
+   ]
+  },
+  "koza": {
+   "rodzic": "ssak",
+   "narzednik": "kozą",
+   "mnoga": "kozy",
+   "formy": [
+    "koza",
+    "kozy",
+    "kozą",
+    "kóz"
+   ]
+  },
+  "królik": {
+   "rodzic": "ssak",
+   "narzednik": "królikiem",
+   "mnoga": "króliki",
+   "formy": [
+    "królik",
+    "królika",
+    "króliki",
+    "królikiem"
+   ]
+  },
+  "mysz": {
+   "rodzic": "ssak",
+   "narzednik": "myszą",
+   "mnoga": "myszy",
+   "formy": [
+    "mysz",
+    "myszy",
+    "myszą"
+   ]
+  },
+  "lew": {
+   "rodzic": "ssak",
+   "narzednik": "lwem",
+   "mnoga": "lwy",
+   "formy": [
+    "lew",
+    "lwa",
+    "lwem",
+    "lwy",
+    "lwów"
+   ]
+  },
+  "tygrys": {
+   "rodzic": "ssak",
+   "narzednik": "tygrysem",
+   "mnoga": "tygrysy",
+   "formy": [
+    "tygrys",
+    "tygrysa",
+    "tygrysem",
+    "tygrysy"
+   ]
+  },
+  "słoń": {
+   "rodzic": "ssak",
+   "narzednik": "słoniem",
+   "mnoga": "słonie",
+   "formy": [
+    "słoni",
+    "słonia",
+    "słonie",
+    "słoniem",
+    "słoń"
+   ]
+  },
+  "żyrafa": {
+   "rodzic": "ssak",
+   "narzednik": "żyrafą",
+   "mnoga": "żyrafy",
+   "formy": [
+    "żyrafa",
+    "żyrafy",
+    "żyrafą"
+   ]
+  },
+  "niedźwiedź": {
+   "rodzic": "ssak",
+   "narzednik": "niedźwiedziem",
+   "mnoga": "niedźwiedzie",
+   "formy": [
+    "niedźwiedzia",
+    "niedźwiedzie",
+    "niedźwiedziem",
+    "niedźwiedź"
+   ]
+  },
+  "wilk": {
+   "rodzic": "ssak",
+   "narzednik": "wilkiem",
+   "mnoga": "wilki",
+   "formy": [
+    "wilk",
+    "wilka",
+    "wilki",
+    "wilkiem"
+   ]
+  },
+  "lis": {
+   "rodzic": "ssak",
+   "narzednik": "lisem",
+   "mnoga": "lisy",
+   "formy": [
+    "lis",
+    "lisa",
+    "lisem",
+    "lisy"
+   ]
+  },
+  "wieloryb": {
+   "rodzic": "ssak",
+   "narzednik": "wielorybem",
+   "mnoga": "wieloryby",
+   "formy": [
+    "wieloryb",
+    "wieloryba",
+    "wielorybem",
+    "wieloryby"
+   ]
+  },
+  "delfin": {
+   "rodzic": "ssak",
+   "narzednik": "delfinem",
+   "mnoga": "delfiny",
+   "formy": [
+    "delfin",
+    "delfina",
+    "delfinem",
+    "delfiny"
+   ]
+  },
+  "nietoperz": {
+   "rodzic": "ssak",
+   "narzednik": "nietoperzem",
+   "mnoga": "nietoperze",
+   "formy": [
+    "nietoperz",
+    "nietoperza",
+    "nietoperze",
+    "nietoperzem"
+   ]
+  },
+  "człowiek": {
+   "rodzic": "ssak",
+   "narzednik": "człowiekiem",
+   "mnoga": "ludzie",
+   "formy": [
+    "człowiek",
+    "człowieka",
+    "człowiekiem",
+    "ludzie",
+    "ludźmi"
+   ]
+  },
+  "małpa": {
+   "rodzic": "ssak",
+   "narzednik": "małpą",
+   "mnoga": "małpy",
+   "formy": [
+    "małpa",
+    "małpy",
+    "małpą"
+   ]
+  },
+  "zebra": {
+   "rodzic": "ssak",
+   "narzednik": "zebrą",
+   "mnoga": "zebry",
+   "formy": [
+    "zebra",
+    "zebry",
+    "zebrą"
+   ]
+  },
+  "pingwin": {
+   "rodzic": "ptak",
+   "narzednik": "pingwinem",
+   "mnoga": "pingwiny",
+   "formy": [
+    "pingwin",
+    "pingwina",
+    "pingwinem",
+    "pingwiny"
+   ]
+  },
+  "orzeł": {
+   "rodzic": "ptak",
+   "narzednik": "orłem",
+   "mnoga": "orły",
+   "formy": [
+    "orzeł",
+    "orła",
+    "orłem",
+    "orły"
+   ]
+  },
+  "wróbel": {
+   "rodzic": "ptak",
+   "narzednik": "wróblem",
+   "mnoga": "wróble",
+   "formy": [
+    "wróbel",
+    "wróbla",
+    "wróble",
+    "wróblem"
+   ]
+  },
+  "kura": {
+   "rodzic": "ptak",
+   "narzednik": "kurą",
+   "mnoga": "kury",
+   "formy": [
+    "kura",
+    "kury",
+    "kurą"
+   ]
+  },
+  "gołąb": {
+   "rodzic": "ptak",
+   "narzednik": "gołębiem",
+   "mnoga": "gołębie",
+   "formy": [
+    "gołąb",
+    "gołębia",
+    "gołębie",
+    "gołębiem"
+   ]
+  },
+  "bocian": {
+   "rodzic": "ptak",
+   "narzednik": "bocianem",
+   "mnoga": "bociany",
+   "formy": [
+    "bocian",
+    "bociana",
+    "bocianem",
+    "bociany"
+   ]
+  },
+  "sowa": {
+   "rodzic": "ptak",
+   "narzednik": "sową",
+   "mnoga": "sowy",
+   "formy": [
+    "sowa",
+    "sowy",
+    "sową"
+   ]
+  },
+  "struś": {
+   "rodzic": "ptak",
+   "narzednik": "strusiem",
+   "mnoga": "strusie",
+   "formy": [
+    "strusia",
+    "strusie",
+    "strusiem",
+    "struś"
+   ]
+  },
+  "papuga": {
+   "rodzic": "ptak",
+   "narzednik": "papugą",
+   "mnoga": "papugi",
+   "formy": [
+    "papuga",
+    "papugi",
+    "papugą"
+   ]
+  },
+  "kaczka": {
+   "rodzic": "ptak",
+   "narzednik": "kaczką",
+   "mnoga": "kaczki",
+   "formy": [
+    "kaczka",
+    "kaczki",
+    "kaczką"
+   ]
+  },
+  "łabędź": {
+   "rodzic": "ptak",
+   "narzednik": "łabędziem",
+   "mnoga": "łabędzie",
+   "formy": [
+    "łabędzia",
+    "łabędzie",
+    "łabędziem",
+    "łabędź"
+   ]
+  },
+  "rekin": {
+   "rodzic": "ryba",
+   "narzednik": "rekinem",
+   "mnoga": "rekiny",
+   "formy": [
+    "rekin",
+    "rekina",
+    "rekinem",
+    "rekiny"
+   ]
+  },
+  "karp": {
+   "rodzic": "ryba",
+   "narzednik": "karpiem",
+   "mnoga": "karpie",
+   "formy": [
+    "karp",
+    "karpia",
+    "karpie",
+    "karpiem"
+   ]
+  },
+  "łosoś": {
+   "rodzic": "ryba",
+   "narzednik": "łososiem",
+   "mnoga": "łososie",
+   "formy": [
+    "łososia",
+    "łososie",
+    "łososiem",
+    "łosoś"
+   ]
+  },
+  "szczupak": {
+   "rodzic": "ryba",
+   "narzednik": "szczupakiem",
+   "mnoga": "szczupaki",
+   "formy": [
+    "szczupak",
+    "szczupaka",
+    "szczupaki",
+    "szczupakiem"
+   ]
+  },
+  "pstrąg": {
+   "rodzic": "ryba",
+   "narzednik": "pstrągiem",
+   "mnoga": "pstrągi",
+   "formy": [
+    "pstrąg",
+    "pstrąga",
+    "pstrągi",
+    "pstrągiem"
+   ]
+  },
+  "śledź": {
+   "rodzic": "ryba",
+   "narzednik": "śledziem",
+   "mnoga": "śledzie",
+   "formy": [
+    "śledzia",
+    "śledzie",
+    "śledziem",
+    "śledź"
+   ]
+  },
+  "dorsz": {
+   "rodzic": "ryba",
+   "narzednik": "dorszem",
+   "mnoga": "dorsze",
+   "formy": [
+    "dorsz",
+    "dorsza",
+    "dorsze",
+    "dorszem"
+   ]
+  },
+  "wąż": {
+   "rodzic": "gad",
+   "narzednik": "wężem",
+   "mnoga": "węże",
+   "formy": [
+    "wąż",
+    "węża",
+    "węże",
+    "wężem"
+   ]
+  },
+  "jaszczurka": {
+   "rodzic": "gad",
+   "narzednik": "jaszczurką",
+   "mnoga": "jaszczurki",
+   "formy": [
+    "jaszczurka",
+    "jaszczurki",
+    "jaszczurką"
+   ]
+  },
+  "krokodyl": {
+   "rodzic": "gad",
+   "narzednik": "krokodylem",
+   "mnoga": "krokodyle",
+   "formy": [
+    "krokodyl",
+    "krokodyla",
+    "krokodyle",
+    "krokodylem"
+   ]
+  },
+  "żółw": {
+   "rodzic": "gad",
+   "narzednik": "żółwiem",
+   "mnoga": "żółwie",
+   "formy": [
+    "żółw",
+    "żółwia",
+    "żółwie",
+    "żółwiem"
+   ]
+  },
+  "żaba": {
+   "rodzic": "płaz",
+   "narzednik": "żabą",
+   "mnoga": "żaby",
+   "formy": [
+    "żaba",
+    "żaby",
+    "żabą"
+   ]
+  },
+  "ropucha": {
+   "rodzic": "płaz",
+   "narzednik": "ropuchą",
+   "mnoga": "ropuchy",
+   "formy": [
+    "ropucha",
+    "ropuchy",
+    "ropuchą"
+   ]
+  },
+  "traszka": {
+   "rodzic": "płaz",
+   "narzednik": "traszką",
+   "mnoga": "traszki",
+   "formy": [
+    "traszka",
+    "traszki",
+    "traszką"
+   ]
+  },
+  "salamandra": {
+   "rodzic": "płaz",
+   "narzednik": "salamandrą",
+   "mnoga": "salamandry",
+   "formy": [
+    "salamandra",
+    "salamandry",
+    "salamandrą"
+   ]
+  },
+  "mrówka": {
+   "rodzic": "owad",
+   "narzednik": "mrówką",
+   "mnoga": "mrówki",
+   "formy": [
+    "mrówka",
+    "mrówki",
+    "mrówką"
+   ]
+  },
+  "pszczoła": {
+   "rodzic": "owad",
+   "narzednik": "pszczołą",
+   "mnoga": "pszczoły",
+   "formy": [
+    "pszczoła",
+    "pszczoły",
+    "pszczołą"
+   ]
+  },
+  "motyl": {
+   "rodzic": "owad",
+   "narzednik": "motylem",
+   "mnoga": "motyle",
+   "formy": [
+    "motyl",
+    "motyla",
+    "motyle",
+    "motylem"
+   ]
+  },
+  "mucha": {
+   "rodzic": "owad",
+   "narzednik": "muchą",
+   "mnoga": "muchy",
+   "formy": [
+    "mucha",
+    "muchy",
+    "muchą"
+   ]
+  },
+  "komar": {
+   "rodzic": "owad",
+   "narzednik": "komarem",
+   "mnoga": "komary",
+   "formy": [
+    "komar",
+    "komara",
+    "komarem",
+    "komary"
+   ]
+  },
+  "biedronka": {
+   "rodzic": "owad",
+   "narzednik": "biedronką",
+   "mnoga": "biedronki",
+   "formy": [
+    "biedronka",
+    "biedronki",
+    "biedronką"
+   ]
+  },
+  "pająk": {
+   "rodzic": "pajęczak",
+   "narzednik": "pająkiem",
+   "mnoga": "pająki",
+   "formy": [
+    "pająk",
+    "pająka",
+    "pająki",
+    "pająkiem"
+   ]
+  },
+  "skorpion": {
+   "rodzic": "pajęczak",
+   "narzednik": "skorpionem",
+   "mnoga": "skorpiony",
+   "formy": [
+    "skorpion",
+    "skorpiona",
+    "skorpionem",
+    "skorpiony"
+   ]
+  },
+  "dąb": {
+   "rodzic": "drzewo",
+   "narzednik": "dębem",
+   "mnoga": "dęby",
+   "formy": [
+    "dąb",
+    "dębem",
+    "dębu",
+    "dęby"
+   ]
+  },
+  "sosna": {
+   "rodzic": "drzewo",
+   "narzednik": "sosną",
+   "mnoga": "sosny",
+   "formy": [
+    "sosna",
+    "sosny",
+    "sosną"
+   ]
+  },
+  "brzoza": {
+   "rodzic": "drzewo",
+   "narzednik": "brzozą",
+   "mnoga": "brzozy",
+   "formy": [
+    "brzoza",
+    "brzozy",
+    "brzozą"
+   ]
+  },
+  "świerk": {
+   "rodzic": "drzewo",
+   "narzednik": "świerkiem",
+   "mnoga": "świerki",
+   "formy": [
+    "świerk",
+    "świerki",
+    "świerkiem",
+    "świerku"
+   ]
+  }
+ },
+ "cechy": {
+  "kręgowiec": [
+   "ma kręgosłup"
+  ],
+  "ssak": [
+   "karmi młode mlekiem",
+   "ma sierść lub włosy",
+   "oddycha płucami",
+   "jest stałocieplny"
+  ],
+  "ptak": [
+   "ma pióra",
+   "składa jaja",
+   "ma dziób",
+   "ma skrzydła",
+   "oddycha płucami",
+   "jest stałocieplny"
+  ],
+  "ryba": [
+   "żyje w wodzie",
+   "oddycha skrzelami",
+   "ma płetwy",
+   "jest zmiennocieplna"
+  ],
+  "gad": [
+   "ma łuski",
+   "oddycha płucami",
+   "jest zmiennocieplny"
+  ],
+  "płaz": [
+   "ma wilgotną skórę",
+   "jest zmiennocieplny",
+   "przechodzi przeobrażenie"
+  ],
+  "owad": [
+   "ma sześć nóg",
+   "ma czułki"
+  ],
+  "pajęczak": [
+   "ma osiem nóg"
+  ],
+  "roślina": [
+   "prowadzi fotosyntezę",
+   "wytwarza tlen"
+  ],
+  "drzewo": [
+   "ma pień"
+  ]
+ },
+ "rozlaczne": [
+  [
+   "zwierzę",
+   "roślina",
+   "grzyb"
+  ],
+  [
+   "kręgowiec",
+   "bezkręgowiec"
+  ],
+  [
+   "ssak",
+   "ptak",
+   "ryba",
+   "gad",
+   "płaz"
+  ],
+  [
+   "owad",
+   "pajęczak"
+  ]
+ ],
+ "miejsca": {
+  "Europa": {
+   "w": null,
+   "miejscownik": "Europie",
+   "formy": [
+    "Europa",
+    "Europie",
+    "Europy",
+    "Europą"
+   ]
+  },
+  "Azja": {
+   "w": null,
+   "miejscownik": "Azji",
+   "formy": [
+    "Azja",
+    "Azji",
+    "Azją"
+   ]
+  },
+  "Afryka": {
+   "w": null,
+   "miejscownik": "Afryce",
+   "formy": [
+    "Afryce",
+    "Afryka",
+    "Afryki",
+    "Afryką"
+   ]
+  },
+  "Ameryka Północna": {
+   "w": null,
+   "miejscownik": "Ameryce Północnej",
+   "formy": [
+    "Ameryce Północnej",
+    "Ameryka Północna",
+    "Ameryki Północnej"
+   ]
+  },
+  "Ameryka Południowa": {
+   "w": null,
+   "miejscownik": "Ameryce Południowej",
+   "formy": [
+    "Ameryce Południowej",
+    "Ameryka Południowa",
+    "Ameryki Południowej"
+   ]
+  },
+  "Australia i Oceania": {
+   "w": null,
+   "miejscownik": "Australii i Oceanii",
+   "formy": [
+    "Australia i Oceania",
+    "Australii i Oceanii",
+    "Oceanii"
+   ]
+  },
+  "Antarktyda": {
+   "w": null,
+   "miejscownik": "Antarktydzie",
+   "formy": [
+    "Antarktyda",
+    "Antarktydy",
+    "Antarktydzie"
+   ]
+  },
+  "Polska": {
+   "w": "Europa",
+   "miejscownik": "Polsce",
+   "formy": [
+    "Polsce",
+    "Polska",
+    "Polski",
+    "Polską",
+    "Polskę"
+   ]
+  },
+  "Niemcy": {
+   "w": "Europa",
+   "miejscownik": "Niemczech",
+   "formy": [
+    "Niemcy",
+    "Niemczech",
+    "Niemiec"
+   ]
+  },
+  "Francja": {
+   "w": "Europa",
+   "miejscownik": "Francji",
+   "formy": [
+    "Francja",
+    "Francji",
+    "Francję"
+   ]
+  },
+  "Włochy": {
+   "w": "Europa",
+   "miejscownik": "Włoszech",
+   "formy": [
+    "Włoch",
+    "Włochy",
+    "Włoszech"
+   ]
+  },
+  "Hiszpania": {
+   "w": "Europa",
+   "miejscownik": "Hiszpanii",
+   "formy": [
+    "Hiszpania",
+    "Hiszpanii"
+   ]
+  },
+  "Wielka Brytania": {
+   "w": "Europa",
+   "miejscownik": "Wielkiej Brytanii",
+   "formy": [
+    "Wielka Brytania",
+    "Wielkiej Brytanii"
+   ]
+  },
+  "Czechy": {
+   "w": "Europa",
+   "miejscownik": "Czechach",
+   "formy": [
+    "Czech",
+    "Czechach",
+    "Czechy"
+   ]
+  },
+  "Ukraina": {
+   "w": "Europa",
+   "miejscownik": "Ukrainie",
+   "formy": [
+    "Ukraina",
+    "Ukrainie",
+    "Ukrainy"
+   ]
+  },
+  "Litwa": {
+   "w": "Europa",
+   "miejscownik": "Litwie",
+   "formy": [
+    "Litwa",
+    "Litwie",
+    "Litwy"
+   ]
+  },
+  "Słowacja": {
+   "w": "Europa",
+   "miejscownik": "Słowacji",
+   "formy": [
+    "Słowacja",
+    "Słowacji"
+   ]
+  },
+  "Japonia": {
+   "w": "Azja",
+   "miejscownik": "Japonii",
+   "formy": [
+    "Japonia",
+    "Japonii"
+   ]
+  },
+  "Chiny": {
+   "w": "Azja",
+   "miejscownik": "Chinach",
+   "formy": [
+    "Chin",
+    "Chinach",
+    "Chiny"
+   ]
+  },
+  "Indie": {
+   "w": "Azja",
+   "miejscownik": "Indiach",
+   "formy": [
+    "Indiach",
+    "Indie",
+    "Indii"
+   ]
+  },
+  "Egipt": {
+   "w": "Afryka",
+   "miejscownik": "Egipcie",
+   "formy": [
+    "Egipcie",
+    "Egipt",
+    "Egiptu"
+   ]
+  },
+  "Kenia": {
+   "w": "Afryka",
+   "miejscownik": "Kenii",
+   "formy": [
+    "Kenia",
+    "Kenii"
+   ]
+  },
+  "Stany Zjednoczone": {
+   "w": "Ameryka Północna",
+   "miejscownik": "Stanach Zjednoczonych",
+   "formy": [
+    "Stanach Zjednoczonych",
+    "Stany Zjednoczone",
+    "USA"
+   ]
+  },
+  "Kanada": {
+   "w": "Ameryka Północna",
+   "miejscownik": "Kanadzie",
+   "formy": [
+    "Kanada",
+    "Kanady",
+    "Kanadzie"
+   ]
+  },
+  "Brazylia": {
+   "w": "Ameryka Południowa",
+   "miejscownik": "Brazylii",
+   "formy": [
+    "Brazylia",
+    "Brazylii"
+   ]
+  },
+  "Argentyna": {
+   "w": "Ameryka Południowa",
+   "miejscownik": "Argentynie",
+   "formy": [
+    "Argentyna",
+    "Argentynie",
+    "Argentyny"
+   ]
+  },
+  "Australia": {
+   "w": "Australia i Oceania",
+   "miejscownik": "Australii",
+   "formy": [
+    "Australia",
+    "Australii"
+   ]
+  },
+  "Warszawa": {
+   "w": "Polska",
+   "miejscownik": "Warszawie",
+   "formy": [
+    "Warszawa",
+    "Warszawie",
+    "Warszawy"
+   ]
+  },
+  "Kraków": {
+   "w": "Polska",
+   "miejscownik": "Krakowie",
+   "formy": [
+    "Krakowa",
+    "Krakowie",
+    "Kraków"
+   ]
+  },
+  "Gdańsk": {
+   "w": "Polska",
+   "miejscownik": "Gdańsku",
+   "formy": [
+    "Gdańsk",
+    "Gdańska",
+    "Gdańsku"
+   ]
+  },
+  "Wrocław": {
+   "w": "Polska",
+   "miejscownik": "Wrocławiu",
+   "formy": [
+    "Wrocław",
+    "Wrocławia",
+    "Wrocławiu"
+   ]
+  },
+  "Poznań": {
+   "w": "Polska",
+   "miejscownik": "Poznaniu",
+   "formy": [
+    "Poznania",
+    "Poznaniu",
+    "Poznań"
+   ]
+  },
+  "Łódź": {
+   "w": "Polska",
+   "miejscownik": "Łodzi",
+   "formy": [
+    "Łodzi",
+    "Łódź"
+   ]
+  },
+  "Szczecin": {
+   "w": "Polska",
+   "miejscownik": "Szczecinie",
+   "formy": [
+    "Szczecin",
+    "Szczecina",
+    "Szczecinie"
+   ]
+  },
+  "Lublin": {
+   "w": "Polska",
+   "miejscownik": "Lublinie",
+   "formy": [
+    "Lublin",
+    "Lublina",
+    "Lublinie"
+   ]
+  },
+  "Katowice": {
+   "w": "Polska",
+   "miejscownik": "Katowicach",
+   "formy": [
+    "Katowic",
+    "Katowicach",
+    "Katowice"
+   ]
+  },
+  "Białystok": {
+   "w": "Polska",
+   "miejscownik": "Białymstoku",
+   "formy": [
+    "Białegostoku",
+    "Białymstoku",
+    "Białystok"
+   ]
+  },
+  "Toruń": {
+   "w": "Polska",
+   "miejscownik": "Toruniu",
+   "formy": [
+    "Torunia",
+    "Toruniu",
+    "Toruń"
+   ]
+  },
+  "Zakopane": {
+   "w": "Polska",
+   "miejscownik": "Zakopanem",
+   "formy": [
+    "Zakopane",
+    "Zakopanego",
+    "Zakopanem"
+   ]
+  },
+  "Berlin": {
+   "w": "Niemcy",
+   "miejscownik": "Berlinie",
+   "formy": [
+    "Berlin",
+    "Berlina",
+    "Berlinie"
+   ]
+  },
+  "Paryż": {
+   "w": "Francja",
+   "miejscownik": "Paryżu",
+   "formy": [
+    "Paryż",
+    "Paryża",
+    "Paryżu"
+   ]
+  },
+  "Rzym": {
+   "w": "Włochy",
+   "miejscownik": "Rzymie",
+   "formy": [
+    "Rzym",
+    "Rzymie",
+    "Rzymu"
+   ]
+  },
+  "Madryt": {
+   "w": "Hiszpania",
+   "miejscownik": "Madrycie",
+   "formy": [
+    "Madrycie",
+    "Madryt",
+    "Madrytu"
+   ]
+  },
+  "Londyn": {
+   "w": "Wielka Brytania",
+   "miejscownik": "Londynie",
+   "formy": [
+    "Londyn",
+    "Londynie",
+    "Londynu"
+   ]
+  },
+  "Praga": {
+   "w": "Czechy",
+   "miejscownik": "Pradze",
+   "formy": [
+    "Pradze",
+    "Praga",
+    "Pragi"
+   ]
+  },
+  "Kijów": {
+   "w": "Ukraina",
+   "miejscownik": "Kijowie",
+   "formy": [
+    "Kijowa",
+    "Kijowie",
+    "Kijów"
+   ]
+  },
+  "Wilno": {
+   "w": "Litwa",
+   "miejscownik": "Wilnie",
+   "formy": [
+    "Wilna",
+    "Wilnie",
+    "Wilno"
+   ]
+  },
+  "Tokio": {
+   "w": "Japonia",
+   "miejscownik": "Tokio",
+   "formy": [
+    "Tokio"
+   ]
+  },
+  "Pekin": {
+   "w": "Chiny",
+   "miejscownik": "Pekinie",
+   "formy": [
+    "Pekin",
+    "Pekinie",
+    "Pekinu"
+   ]
+  },
+  "Kair": {
+   "w": "Egipt",
+   "miejscownik": "Kairze",
+   "formy": [
+    "Kair",
+    "Kairu",
+    "Kairze"
+   ]
+  },
+  "Nairobi": {
+   "w": "Kenia",
+   "miejscownik": "Nairobi",
+   "formy": [
+    "Nairobi"
+   ]
+  },
+  "Nowy Jork": {
+   "w": "Stany Zjednoczone",
+   "miejscownik": "Nowym Jorku",
+   "formy": [
+    "Nowego Jorku",
+    "Nowy Jork",
+    "Nowym Jorku"
+   ]
+  },
+  "Waszyngton": {
+   "w": "Stany Zjednoczone",
+   "miejscownik": "Waszyngtonie",
+   "formy": [
+    "Waszyngton",
+    "Waszyngtonie",
+    "Waszyngtonu"
+   ]
+  },
+  "Ottawa": {
+   "w": "Kanada",
+   "miejscownik": "Ottawie",
+   "formy": [
+    "Ottawa",
+    "Ottawie",
+    "Ottawy"
+   ]
+  },
+  "Brasília": {
+   "w": "Brazylia",
+   "miejscownik": "Brasílii",
+   "formy": [
+    "Brasilii",
+    "Brasília",
+    "Brasílii"
+   ]
+  },
+  "Canberra": {
+   "w": "Australia",
+   "miejscownik": "Canberze",
+   "formy": [
+    "Canberra",
+    "Canberry",
+    "Canberze"
+   ]
+  }
+ }
+}

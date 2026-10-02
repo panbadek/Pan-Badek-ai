@@ -1,5 +1,33 @@
 # Historia zmian
 
+## 0.12.0
+
+### Rozumowanie: łączenie faktów i wzorów (`panbadek/rozumowanie.py`, `data/fakty.json`)
+- **Fakty + wzory:** wielkości z bazy faktów trafiają do wzorów fizyki („ile czasu leci światło ze Słońca
+  do Ziemi” → 499 s ≈ 8 min 19 s, „jak długo jechałby samochód 100 km/h na Księżyc” → ≈ 160 dni).
+- **Daty:** wiek z dokładnych dat urodzin i śmierci (Skłodowska-Curie: 66, a nie 67 lat), wiek
+  w chwili wydarzenia, lata między wydarzeniami i „ile lat temu”.
+- **Porównania:** „o ile” i „ile razy” (wysokości gór, długości rzek).
+- **Łańcuchy wzorów:** gdy jeden wzór nie wystarcza, Badek łączy kilka (gęstość → masa → ciężar,
+  przyspieszenie → siła, energia kinetyczna → potencjalna z zasadą zachowania energii).
+- **Logika:** graf faktów (systematyka 74 pojęć z cechami grup, geografia 56 miejsc),
+  wnioskowanie przez wiele kroków z uzasadnieniem, grupy rozłączne, przesłanki podane w pytaniu
+  i fakty nauczone na stałe („zapamiętaj, że Burek jest psem”). Gdy faktów brakuje: „nie wiem”,
+  a w aplikacji pytanie przejmuje Claude.
+
+### Sprawdzanie własnych odpowiedzi
+- Równania: podstawienie rozwiązań do obu stron („lewa strona = 20, prawa strona = 20 ✓”).
+- Fizyka: z wyniku odtwarzana jest jedna z danych innym przekształceniem wzoru.
+- Claude dostał te same nawyki: jawnie łączy fakty i sprawdza obliczenia.
+
+### Trener
+- Raport **umiejętności AI** (uczciwość, łączenie faktów, logika, sprawdzanie, zadania, wiedza, rozmowa, kod).
+- Nowe kategorie egzaminów, kontrolne pytania pisane przed kodem: łączenie faktów 6/6, logika 6/6,
+  sprawdzanie 4/4. Egzamin kontrolny 85,1% → 88,9%, główny 98,2%.
+
+### Drobne
+- Duże liczby z odstępami (149 600 000), czas „po ludzku” (≈ 8 min 19 s, ≈ 160 dni 4 h).
+
 ## 0.11.0
 
 ### Zadania ze szkoły (`panbadek/szkola.py`)

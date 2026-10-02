@@ -25,6 +25,11 @@ def liczba(x, miejsca=2):
     tekst = f"{zaokraglona:.{miejsca}f}".rstrip("0").rstrip(".").replace(".", ",")
     if tekst in ("-0", ""):
         tekst = "0"
+    if abs(zaokraglona) >= 10000:  # 149600000 -> 149 600 000
+        calosc, _, ulamek = tekst.partition(",")
+        znak, calosc = ("-", calosc[1:]) if calosc.startswith("-") else ("", calosc)
+        calosc = f"{int(calosc):,}".replace(",", " ")
+        tekst = znak + calosc + ("," + ulamek if ulamek else "")
     return tekst if abs(zaokraglona - x) < 1e-9 else "≈ " + tekst
 
 
@@ -47,6 +52,7 @@ def _przygotuj(tekst):
 _JEDNOSTKI = [
     (r"km\s*/\s*h|km\s*/\s*godz\w*|km\s+na\s+godzin\w*|kilometr\w*\s+na\s+godzin\w*", "v", 1 / 3.6, "km/h"),
     (r"m\s*/\s*s(?:²|2|\^2)|m\s*/\s*s\s*\^\s*2", "a", 1, "m/s²"),
+    (r"km\s*/\s*s|kilometr\w*\s+na\s+sekund\w*", "v", 1000, "km/s"),
     (r"m\s*/\s*s|metr\w*\s+na\s+sekund\w*", "v", 1, "m/s"),
     (r"g\s*/\s*cm(?:³|3|\^3)", "ρ", 1000, "g/cm³"),
     (r"kg\s*/\s*m(?:³|3|\^3)", "ρ", 1, "kg/m³"),
@@ -142,6 +148,7 @@ _WZORY = [
 # Układy jednostek, w których podajemy wynik - jak w zadaniu, a nie zawsze w SI.
 _UKLAD_KMH = {"s": "km", "t": "h", "v": "km/h"}
 _UKLAD_GCM = {"m": "g", "V": "cm³", "ρ": "g/cm³"}
+_UKLAD_KMS = {"s": "km", "t": "s", "v": "km/s"}
 
 
 def _wielkosci(tekst):
@@ -183,83 +190,177 @@ def _szukana(pytanie, dane):
 
 
 def _uklad(dane_jednostki, wzor_symbole):
-    if set(wzor_symbole) <= {"s", "t", "v"} and set(dane_jednostki) & {"km/h", "km", "h", "min"}:
+    if set(wzor_symbole) <= {"s", "t", "v"} and set(dane_jednostki) & {"km/h", "h", "min"}:
         return _UKLAD_KMH
     if set(wzor_symbole) <= {"m", "V", "ρ"} and set(dane_jednostki) & {"g", "cm³", "g/cm³"}:
         return _UKLAD_GCM
     return {}
 
 
-def fizyka(tekst):
+def _oblicz(wzor, szukana, si):
+    """Wartość szukanej (w SI) ze wzoru, gdy znane są pozostałe wielkości."""
+    _, lewa, stala, prawa, _ = wzor
+    if szukana == lewa:
+        return stala * math.prod(si[s] ** e for s, e in prawa.items())
+    reszta = stala * math.prod(si[s] ** e for s, e in prawa.items() if s != szukana)
+    return (si[lewa] / reszta) ** (1 / prawa[szukana])
+
+
+def _symbole(wzor):
+    return [wzor[1], *wzor[3]]
+
+
+def czas_po_ludzku(sekundy):
+    """499 s -> "8 min 19 s", 13 838 400 s -> "160 dni 4 h"."""
+    sekundy = round(sekundy)
+    if sekundy < 120:
+        return f"{sekundy} s"
+    if sekundy < 7200:
+        return f"{sekundy // 60} min {sekundy % 60} s"
+    if sekundy < 2 * 86400:
+        return f"{sekundy // 3600} h {sekundy % 3600 // 60} min"
+    if sekundy < 3 * 365 * 86400:
+        return f"{sekundy // 86400} dni {sekundy % 86400 // 3600} h"
+    return f"{liczba(sekundy / (365.25 * 86400))} lat"
+
+
+def fizyka(tekst, fakty=()):
+    """Zadanie z fizyki. `fakty` to wielkości spoza treści zadania (np. z bazy faktów):
+    [(symbol, wartość, jednostka, opis)]."""
     tekst = _przygotuj(tekst)
-    znalezione = _wielkosci(tekst)
+    znalezione = [(s, w, j, None) for s, w, j, _ in _wielkosci(tekst)] + list(fakty)
     if not znalezione:
         return None
     dane = {}
-    for symbol, wartosc, jednostka, _ in znalezione:
+    for symbol, wartosc, jednostka, opis in znalezione:
         if symbol in dane:  # dwie wartości tej samej wielkości - to nie nasz prosty wzór
             return None
-        dane[symbol] = (wartosc, jednostka)
+        dane[symbol] = (wartosc, jednostka, opis)
     szukana = _szukana(_pytanie(tekst), dane)
     if not szukana:
         return None
-    if szukana == "F" and "ciezar" not in normalizuj(tekst) and set(dane) == {"m"}:
+    ciezar = "ciezar" in normalizuj(tekst)
+    if szukana == "F" and not ciezar and set(dane) == {"m"}:
         return None
-    kandydaci = []
-    for nazwa, lewa, stala, prawa, postaci in _WZORY:
-        symbole = {lewa, *prawa}
-        if szukana not in postaci or not (symbole - {szukana}) <= set(dane):
-            continue
-        if nazwa == "ciężar" and "ciezar" not in normalizuj(tekst):
-            continue
-        kandydaci.append((len(symbole), nazwa, lewa, stala, prawa, postaci))
-    if not kandydaci:
-        return None
-    _, nazwa, lewa, stala, prawa, postaci = max(kandydaci, key=lambda k: k[0])
-    symbole = [lewa, *prawa]
-    uklad = _uklad({j for _, j in dane.values()}, symbole)
+    wzory = [w for w in _WZORY if w[0] != "ciężar" or ciezar]
+    wprost = [w for w in wzory if szukana in w[4] and set(_symbole(w)) - {szukana} <= set(dane)]
+    if wprost:
+        return _wprost(max(wprost, key=lambda w: len(_symbole(w))), szukana, dane)
+    return _lancuch(wzory, szukana, dane)
+
+
+def _dane_i_zamiany(symbole, dane, w_ukladzie):
+    linie_danych, zamiany, wartosci = [], [], {}
+    for symbol in symbole:
+        wartosc, jednostka, opis = dane[symbol]
+        cel = w_ukladzie(symbol)
+        linie_danych.append(f"{symbol} = {liczba(wartosc)} {jednostka}" + (f" ({opis})" if opis else ""))
+        przeliczona = wartosc * MNOZNIK[jednostka] / MNOZNIK[cel]
+        if jednostka != cel:
+            zamiany.append(f"{symbol} = {liczba(wartosc)} {jednostka} = {liczba(przeliczona, 4)} {cel}")
+        wartosci[symbol] = przeliczona
+    return linie_danych, zamiany, wartosci
+
+
+def _z_jednostka(wartosc, jednostka):
+    """Wynik z jednostką; czas dodatkowo po ludzku, gdy to coś wnosi (499 s ≈ 8 min 19 s)."""
+    tekst = f"{liczba(wartosc)} {jednostka}"
+    if jednostka in ("s", "min", "h"):
+        sekundy = wartosc * MNOZNIK[jednostka]
+        po_ludzku = re.sub(r" 0 (min|s|h)$", "", czas_po_ludzku(sekundy))
+        if re.findall(r"\b(dni|lat|h|min|s)\b", po_ludzku) != [jednostka]:
+            tekst += f" (≈ {po_ludzku})"
+    return tekst
+
+
+def _wprost(wzor, szukana, dane):
+    nazwa, lewa, _, _, postaci = wzor
+    symbole = _symbole(wzor)
+    jednostki = {d[1] for d in dane.values()}
+    uklad = _UKLAD_KMS if "km/s" in jednostki and set(symbole) <= {"s", "t", "v"} else _uklad(jednostki, symbole)
 
     def w_ukladzie(symbol):
         return uklad.get(symbol, JEDNOSTKA_SI[symbol])
 
-    # Dane i zamiana jednostek.
-    linie_danych, zamiany, wartosci = [], [], {}
-    for symbol in symbole:
-        if symbol == szukana:
-            continue
-        wartosc, jednostka = dane[symbol]
-        cel = w_ukladzie(symbol)
-        linie_danych.append(f"{_symbol(symbol)} = {liczba(wartosc)} {jednostka}")
-        przeliczona = wartosc * MNOZNIK[jednostka] / MNOZNIK[cel]
-        if jednostka != cel:
-            zamiany.append(f"{_symbol(symbol)} = {liczba(wartosc)} {jednostka} = {liczba(przeliczona, 4)} {cel}")
-        wartosci[symbol] = przeliczona
-
-    # Obliczenie w jednostkach SI (wzory są w SI), wynik w jednostce układu.
+    linie_danych, zamiany, wartosci = _dane_i_zamiany([s for s in symbole if s != szukana], dane, w_ukladzie)
     si = {s: wartosci[s] * MNOZNIK[w_ukladzie(s)] for s in wartosci}
-    if szukana == lewa:
-        wynik_si = stala * math.prod(si[s] ** e for s, e in prawa.items())
-    else:
-        reszta = stala * math.prod(si[s] ** e for s, e in prawa.items() if s != szukana)
-        if reszta == 0:
-            return None
-        wynik_si = (si[lewa] / reszta) ** (1 / prawa[szukana])
-    jednostka_wyniku = w_ukladzie(szukana)
-    wynik = wynik_si / MNOZNIK[jednostka_wyniku]
-
+    try:
+        wynik_si = _oblicz(wzor, szukana, si)
+    except (ZeroDivisionError, ValueError):
+        return None
+    jednostka = w_ukladzie(szukana)
+    wynik = wynik_si / MNOZNIK[jednostka]
     postac = postaci[szukana]
-    podstawienie = _podstaw(postac, wartosci, w_ukladzie)
-    tekst_wyniku = f"{liczba(wynik)} {jednostka_wyniku}"
-    if jednostka_wyniku == "h" and 0 < wynik < 10 and not float(wynik).is_integer():
-        tekst_wyniku += f" = {liczba(wynik * 60)} min"
+    tekst_wyniku = _z_jednostka(wynik, jednostka)
     linie = [f"#### Zadanie: {nazwa}",
              "**Dane:** " + ", ".join(linie_danych) + (", g ≈ 10 m/s²" if "g" in postac.split("=")[1] else ""),
-             f"**Szukane:** {_symbol(szukana)} = ?"]
+             f"**Szukane:** {szukana} = ?"]
     if zamiany:
         linie.append("**Zamiana jednostek:** " + ", ".join(zamiany))
     linie += [f"**Wzór:** {postac}",
-              f"**Rozwiązanie:** {podstawienie} = **{tekst_wyniku}**",
-              f"**Odpowiedź:** {(nazwa if szukana == 'E' else NAZWY[szukana]).capitalize()} wynosi {tekst_wyniku}."]
+              f"**Rozwiązanie:** {_podstaw(postac, wartosci, w_ukladzie)} = **{tekst_wyniku}**"]
+    # Sprawdzenie: z wyniku i pozostałych danych odtwarzamy jedną z danych innym przekształceniem wzoru.
+    kontrolna = next((s for s in symbole if s != szukana and s in postaci), None)
+    if kontrolna:
+        si_z_wynikiem = {**si, szukana: wynik_si}
+        si_z_wynikiem.pop(kontrolna)
+        try:
+            odtworzona = _oblicz(wzor, kontrolna, si_z_wynikiem) / MNOZNIK[w_ukladzie(kontrolna)]
+            zgodne = math.isclose(odtworzona, wartosci[kontrolna], rel_tol=1e-6)
+            linie.append(f"**Sprawdzenie:** {_podstaw(postaci[kontrolna], {**wartosci, szukana: wynik}, w_ukladzie)}"
+                         f" = {liczba(odtworzona)} {w_ukladzie(kontrolna)} " + ("✓" if zgodne else "✗"))
+        except (ZeroDivisionError, ValueError):
+            pass
+    co = nazwa if szukana == "E" or nazwa == "ciężar" else NAZWY[szukana]
+    linie.append(f"**Odpowiedź:** {co.capitalize()} wynosi {tekst_wyniku}.")
+    return "\n".join(linie)
+
+
+def _lancuch(wzory, szukana, dane, kroki_maks=3):
+    """Gdy żaden wzór nie wystarcza, łączy kilka: z danych liczy wielkości pośrednie,
+    aż dojdzie do szukanej (np. gęstość i objętość -> masa -> ciężar)."""
+    def si_jednostka(symbol):
+        return JEDNOSTKA_SI[symbol]
+    linie_danych, zamiany, znane = _dane_i_zamiany(list(dane), dane, si_jednostka)
+    kroki = []
+    for _ in range(kroki_maks):
+        for wzor in wzory:
+            brakujace = [s for s in _symbole(wzor) if s not in znane]
+            if len(brakujace) == 1 and brakujace[0] in wzor[4]:
+                try:
+                    znane[brakujace[0]] = _oblicz(wzor, brakujace[0], znane)
+                except (ZeroDivisionError, ValueError):
+                    continue
+                kroki.append((wzor, brakujace[0]))
+        if szukana in znane:
+            break
+    if szukana not in znane:
+        return None
+    # Zostawiamy tylko kroki potrzebne do wyniku.
+    potrzebne, uzyte = {szukana}, []
+    for wzor, wynik in reversed(kroki):
+        if wynik in potrzebne:
+            uzyte.append((wzor, wynik))
+            potrzebne |= set(_symbole(wzor)) - {wynik}
+    uzyte.reverse()
+    if len(uzyte) < 2:
+        return None
+    linie = ["#### Zadanie: łączę wzory (" + " → ".join(w[0] for w, _ in uzyte) + ")",
+             "**Dane:** " + ", ".join(l for l in linie_danych if l.split(" = ")[0] in potrzebne),
+             f"**Szukane:** {szukana} = ?"]
+    zamiany = [z for z in zamiany if z.split(" = ")[0] in potrzebne]
+    if zamiany:
+        linie.append("**Zamiana jednostek:** " + ", ".join(zamiany))
+    for i, (wzor, wynik) in enumerate(uzyte, 1):
+        postac = wzor[4][wynik]
+        linie.append(f"**Krok {i} ({wzor[0]}):** {_podstaw(postac, znane, si_jednostka)} = "
+                     f"**{_z_jednostka(znane[wynik], JEDNOSTKA_SI[wynik])}**")
+    nazwy = [w[0] for w, _ in uzyte]
+    if "energia kinetyczna" in nazwy and "energia potencjalna" in nazwy:
+        linie.insert(-len(uzyte), "Energia się zachowuje: Ek = Ep (pomijam opór powietrza).")
+    tekst_wyniku = _z_jednostka(znane[szukana], JEDNOSTKA_SI[szukana])
+    co = "ciężar" if nazwy[-1] == "ciężar" else NAZWY[szukana]
+    linie.append(f"**Odpowiedź:** {co.capitalize()} wynosi {tekst_wyniku}.")
     return "\n".join(linie)
 
 
@@ -276,7 +377,7 @@ def _podstaw(postac, wartosci, jednostka):
         if symbol == "g":
             wartosc = "10 m/s²"
         elif symbol in wartosci:
-            wartosc = f"{liczba(wartosci[symbol], 4)} {jednostka(symbol)}"
+            wartosc = f"{liczba(wartosci[symbol], 4).lstrip('≈ ')} {jednostka(symbol)}"
         else:
             return m.group(0)
         return f"({wartosc}){m.group(2)}" if m.group(2) else wartosc  # (3 m/s)², a nie 3 m/s²

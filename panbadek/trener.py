@@ -43,7 +43,8 @@ EGZAMIN_KONTROLNY = os.path.join(DANE, "egzamin_kontrolny.json")
 ZESTAWY_TESTOWE = {"testowe": os.path.join(DANE, "test_intencje.json"),
                    "trudne": os.path.join(DANE, "test_trudne.json")}
 NAZWY_KATEGORII = {"rozmowa": "rozmowa", "wiedza": "wiedza", "matematyka": "matematyka",
-                   "programowanie": "C++", "szkola": "szkoła", "uczciwosc": "uczciwość", "pulapki": "pułapki"}
+                   "programowanie": "C++", "szkola": "szkoła", "laczenie": "łączenie faktów",
+                   "logika": "logika", "sprawdzanie": "sprawdzanie", "uczciwosc": "uczciwość", "pulapki": "pułapki"}
 
 TOLERANCJA = 0.01
 KANDYDACI = [
@@ -180,8 +181,11 @@ def strojenie(intencje, kandydaci, k=5, ziarna=(0, 1), wypisz=print):
 def _sprawdz(pytanie, odp, badek):
     if "intencja" in pytanie:
         return badek.zrodlo == "siec_neuronowa" and badek._intencja_odpowiedzi == pytanie["intencja"]
+    if "zaczyna" in pytanie:  # "Tak"/"Nie" na początku, a nie gdzieś w środku ("także")
+        return any(normalizuj(odp).lstrip("*# ").startswith(normalizuj(z)) for z in pytanie["zaczyna"])
     if "zawiera" in pytanie:
-        return any(normalizuj(z) in normalizuj(odp) for z in pytanie["zawiera"])
+        trafione = [normalizuj(z) in normalizuj(odp) for z in pytanie["zawiera"]]
+        return all(trafione) if pytanie.get("wszystkie") else any(trafione)
     if "zrodlo" in pytanie:
         return badek.zrodlo in pytanie["zrodlo"]
     if pytanie.get("nie_intencja"):
@@ -218,6 +222,29 @@ def wypisz_egzamin(wyniki, wypisz=print, bledy=True):
                 wypisz(f"      ✗ „{pytanie}” [{zrodlo}] {odp}")
     wypisz(f"  {'RAZEM':14} {razem[0]}/{razem[1]} ({razem[0] / razem[1]:.1%})")
     return razem[0] / razem[1]
+
+
+# Umiejętności, które moim zdaniem powinna mieć każda AI, i kategorie egzaminu, które je sprawdzają.
+UMIEJETNOSCI = [
+    ("Uczciwość: mówi „nie wiem” zamiast zmyślać", ["uczciwosc", "pulapki"]),
+    ("Łączenie faktów i wzorów (rozumowanie wieloetapowe)", ["laczenie"]),
+    ("Wnioskowanie logiczne z wyjaśnieniem", ["logika"]),
+    ("Sprawdzanie własnych odpowiedzi", ["sprawdzanie"]),
+    ("Rozwiązywanie zadań krok po kroku", ["matematyka", "szkola"]),
+    ("Wiedza o świecie", ["wiedza"]),
+    ("Rozmowa i rozumienie intencji", ["rozmowa"]),
+    ("Pisanie kodu", ["programowanie"]),
+]
+
+
+def wypisz_umiejetnosci(*wyniki_egzaminow, wypisz=print):
+    """Wyniki egzaminów zebrane według umiejętności AI."""
+    for nazwa, kategorie in UMIEJETNOSCI:
+        zdane = sum(w[k][0] for w in wyniki_egzaminow for k in kategorie if k in w)
+        wszystkie = sum(w[k][1] for w in wyniki_egzaminow for k in kategorie if k in w)
+        if wszystkie:
+            ocena = "✅" if zdane / wszystkie >= 0.95 else "🟡" if zdane / wszystkie >= 0.8 else "🔴"
+            wypisz(f"  {ocena} {nazwa}: {zdane}/{wszystkie} ({zdane / wszystkie:.0%})")
 
 
 def zapisz_ustawienia(wynik, plik=brain.USTAWIENIA_SIECI):
@@ -373,9 +400,13 @@ def main(argv=None, wypisz=print):
 
     if args.egzamin:
         wypisz("📝 Egzamin Pana Badka (offline, bez twojej pamięci):")
-        wypisz_egzamin(egzamin(), wypisz)
+        glowny = egzamin()
+        wypisz_egzamin(glowny, wypisz)
         wypisz("\n📝 Egzamin kontrolny:")
-        wypisz_egzamin(egzamin(plik=EGZAMIN_KONTROLNY), wypisz)
+        kontrolny = egzamin(plik=EGZAMIN_KONTROLNY)
+        wypisz_egzamin(kontrolny, wypisz)
+        wypisz("\n🎯 Umiejętności AI (oba egzaminy razem):")
+        wypisz_umiejetnosci(glowny, kontrolny, wypisz=wypisz)
         return 0
 
     intencje = wczytaj_json(brain.DOMYSLNE_INTENCJE)["intencje"]

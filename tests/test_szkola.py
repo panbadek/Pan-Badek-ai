@@ -37,7 +37,7 @@ class TestFizyka(unittest.TestCase):
         odp = rozwiaz("Samochód o masie 1000 kg jedzie z prędkością 72 km/h. Oblicz jego energię kinetyczną.")
         self.assertIn("v = 72 km/h = 20 m/s", odp)
         self.assertIn("(20 m/s)²", odp)
-        self.assertIn("**200000 J**", odp)
+        self.assertIn("**200 000 J**", odp)
 
 
 class TestGeometria(unittest.TestCase):
@@ -50,7 +50,7 @@ class TestGeometria(unittest.TestCase):
             "Oblicz pole trapezu o podstawach 6 cm i 4 cm i wysokości 3 cm.": "**15 cm²**",
             "Oblicz objętość prostopadłościanu o wymiarach 2 dm, 3 dm i 4 dm.": "**24 dm³**",
             "Jaka jest przekątna kwadratu o boku 4 cm?": "4√2 cm",
-            "Oblicz pole prostokąta o bokach 2 m i 50 cm.": "**10000 cm²**",
+            "Oblicz pole prostokąta o bokach 2 m i 50 cm.": "**10 000 cm²**",
         }
         for zadanie, wynik in przypadki.items():
             self.assertIn(wynik, rozwiaz(zadanie), zadanie)

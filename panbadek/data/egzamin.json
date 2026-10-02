@@ -972,6 +972,143 @@
    "zawiera": [
     "10 cm"
    ]
+  },
+  {
+   "pytanie": "O ile metrów Everest jest wyższy od Rysów?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "6350"
+   ]
+  },
+  {
+   "pytanie": "Ile lat minęło od bitwy pod Grunwaldem do odzyskania niepodległości?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "508"
+   ]
+  },
+  {
+   "pytanie": "Ile lat żył Mikołaj Kopernik?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "70"
+   ]
+  },
+  {
+   "pytanie": "Ile lat żył Chopin?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "39"
+   ]
+  },
+  {
+   "pytanie": "Ile czasu leci światło ze Słońca do Ziemi?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "8 min"
+   ]
+  },
+  {
+   "pytanie": "Jak długo jechałby samochód z prędkością 100 km/h na Księżyc?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "3844 h"
+   ]
+  },
+  {
+   "pytanie": "Ile lat minęło między chrztem Polski a bitwą pod Grunwaldem?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "444"
+   ]
+  },
+  {
+   "pytanie": "Wszystkie koty są ssakami. Filemon jest kotem. Czy Filemon jest ssakiem?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Tak"
+   ]
+  },
+  {
+   "pytanie": "Czy pingwin jest ptakiem?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Tak"
+   ]
+  },
+  {
+   "pytanie": "Czy wieloryb jest rybą?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Nie"
+   ]
+  },
+  {
+   "pytanie": "Czy pingwin składa jaja?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Tak"
+   ]
+  },
+  {
+   "pytanie": "Czy Kraków leży w Europie?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Tak"
+   ]
+  },
+  {
+   "pytanie": "Czy rekin jest ssakiem?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Nie"
+   ]
+  },
+  {
+   "pytanie": "Każdy ptak ma pióra. Kiwi jest ptakiem. Czy kiwi ma pióra?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Tak"
+   ]
+  },
+  {
+   "pytanie": "Czy Burek jest ssakiem?",
+   "kategoria": "logika",
+   "zawiera": [
+    "nie wiem"
+   ]
+  },
+  {
+   "pytanie": "rozwiąż 3x + 5 = 20",
+   "kategoria": "sprawdzanie",
+   "zawiera": [
+    "Sprawdzenie",
+    "✓"
+   ],
+   "wszystkie": true
+  },
+  {
+   "pytanie": "rozwiąż x^2 - 5x + 6 = 0",
+   "kategoria": "sprawdzanie",
+   "zawiera": [
+    "Sprawdzenie",
+    "✓"
+   ],
+   "wszystkie": true
+  },
+  {
+   "pytanie": "Ciało ma gęstość 2 g/cm³ i objętość 500 cm³. Oblicz jego ciężar.",
+   "kategoria": "sprawdzanie",
+   "zawiera": [
+    "10 N"
+   ]
+  },
+  {
+   "pytanie": "Samochód o masie 1000 kg rozpędza się od 0 do 15 m/s w 5 s. Jaka siła na niego działa?",
+   "kategoria": "sprawdzanie",
+   "zawiera": [
+    "3000 N"
+   ]
   }
  ]
 }

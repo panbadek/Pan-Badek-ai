@@ -337,6 +337,122 @@
    "zawiera": [
     "25π"
    ]
+  },
+  {
+   "pytanie": "Ile lat minęło od uchwalenia Konstytucji 3 Maja do odzyskania niepodległości?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "127"
+   ]
+  },
+  {
+   "pytanie": "Ile lat żyła Maria Skłodowska-Curie?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "66"
+   ]
+  },
+  {
+   "pytanie": "Ile lat minęło między lotem Gagarina a lotem Hermaszewskiego?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "17"
+   ]
+  },
+  {
+   "pytanie": "Ile czasu potrzebuje światło, żeby dolecieć z Ziemi na Księżyc?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "1,28"
+   ]
+  },
+  {
+   "pytanie": "Ile razy Everest jest wyższy od Rysów?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "3,5"
+   ]
+  },
+  {
+   "pytanie": "Ile lat minęło od wejścia Polski do NATO do wejścia do Unii Europejskiej?",
+   "kategoria": "laczenie",
+   "zawiera": [
+    "5"
+   ]
+  },
+  {
+   "pytanie": "Wszystkie róże są kwiatami. Wszystkie kwiaty są roślinami. Czy róże są roślinami?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Tak"
+   ]
+  },
+  {
+   "pytanie": "Żaden ptak nie jest ssakiem. Wróbel jest ptakiem. Czy wróbel jest ssakiem?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Nie"
+   ]
+  },
+  {
+   "pytanie": "Czy delfin jest rybą?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Nie"
+   ]
+  },
+  {
+   "pytanie": "Czy orzeł ma pióra?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Tak"
+   ]
+  },
+  {
+   "pytanie": "Czy Gdańsk leży w Europie?",
+   "kategoria": "logika",
+   "zaczyna": [
+    "Tak"
+   ]
+  },
+  {
+   "pytanie": "Czy Zenek jest ptakiem?",
+   "kategoria": "logika",
+   "zawiera": [
+    "nie wiem"
+   ]
+  },
+  {
+   "pytanie": "rozwiąż 5x - 4 = 11",
+   "kategoria": "sprawdzanie",
+   "zawiera": [
+    "Sprawdzenie",
+    "✓"
+   ],
+   "wszystkie": true
+  },
+  {
+   "pytanie": "rozwiąż 2x^2 - 8 = 0",
+   "kategoria": "sprawdzanie",
+   "zawiera": [
+    "Sprawdzenie",
+    "✓"
+   ],
+   "wszystkie": true
+  },
+  {
+   "pytanie": "Samochód o masie 1200 kg rozpędza się od 0 do 20 m/s w 8 s. Jaka siła na niego działa?",
+   "kategoria": "sprawdzanie",
+   "zawiera": [
+    "3000 N"
+   ]
+  },
+  {
+   "pytanie": "Ciało ma objętość 2 dm³ i gęstość 3 g/cm³. Oblicz jego ciężar.",
+   "kategoria": "sprawdzanie",
+   "zawiera": [
+    "60 N"
+   ]
   }
  ]
 }

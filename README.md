@@ -140,6 +140,50 @@ Trudne problemy, takie jak dowody, kod, analiza czy planowanie, Badek rozpoznaje
 mocniejszemu AI w **trybie głębokiego myślenia** (Claude z wysokim wysiłkiem i widocznym tokiem
 rozumowania albo model w telefonie z włączonym myśleniem).
 
+### Rozumowanie: łączenie faktów i wzorów 🔗
+
+Badek nie tylko wyszukuje gotowe odpowiedzi, ale też łączy to, co wie, i pokazuje, jak doszedł do wyniku.
+
+| Pytanie | Co Badek łączy |
+|---|---|
+| `Ile czasu leci światło ze Słońca do Ziemi?` | odległość Słońca + prędkość światła + t = s / v → 499 s ≈ 8 min 19 s |
+| `Ile lat żyła Maria Skłodowska-Curie?` | dokładne daty urodzin i śmierci → 66 lat (a nie 67, bo urodziny wypadały w listopadzie) |
+| `Ile lat miał Piłsudski, gdy Polska odzyskała niepodległość?` | data urodzin + data wydarzenia → 50 lat |
+| `O ile metrów Everest jest wyższy od Rysów?` | dwie wysokości → 6350 m |
+| `Ciało ma gęstość 2 g/cm³ i objętość 500 cm³. Oblicz jego ciężar.` | łańcuch wzorów: m = ρ · V, potem F = m · g → 10 N |
+| `Czy pingwin składa jaja?` | pingwin → ptak, ptaki składają jaja → Tak |
+| `Wszystkie koty są ssakami. Filemon jest kotem. Czy Filemon jest ssakiem?` | przesłanki z pytania → Tak, z uzasadnieniem |
+| `Czy Kraków leży w Azji?` | Kraków → Polska → Europa → Nie |
+
+- **Baza faktów** (`panbadek/data/fakty.json`): wysokości, długości, odległości, prędkości, daty
+  wydarzeń i osób, systematyka zwierząt z cechami grup oraz geografia.
+- **Logika:** wnioskowanie przez wiele kroków, cechy dziedziczone po grupie, grupy rozłączne
+  (ssaki i ryby), przesłanki podane w pytaniu i fakty nauczone na stałe
+  (`zapamiętaj, że Burek jest psem` → „Czy Burek jest ssakiem?” → „Tak. Burek jest psem, a pies jest ssakiem.”).
+- **Uczciwość:** gdy faktów brakuje, Badek mówi, czego nie wie, a w aplikacji pytanie przejmuje wtedy Claude.
+- **Sprawdzanie:** równania z podstawieniem rozwiązania („dla x = 5: lewa strona = 20, prawa strona = 20 ✓”)
+  i zadania z fizyki odtwarzające dane z wyniku.
+
+### Umiejętności AI 🎯
+
+Moim zdaniem każda AI powinna przede wszystkim: przyznawać się do niewiedzy, łączyć fakty,
+wnioskować i tłumaczyć dlaczego, sprawdzać własne wyniki i rozwiązywać zadania krok po kroku.
+Trener sprawdza je osobno (`python3 -m panbadek --trener --egzamin`, oba egzaminy razem, 0.12.0):
+
+| Umiejętność | Wynik |
+|---|---|
+| Uczciwość: mówi „nie wiem” zamiast zmyślać | 42/45 (93%) |
+| Łączenie faktów i wzorów | 13/13 (100%) |
+| Wnioskowanie logiczne z wyjaśnieniem | 14/14 (100%) |
+| Sprawdzanie własnych odpowiedzi | 8/8 (100%) |
+| Rozwiązywanie zadań krok po kroku | 31/31 (100%) |
+| Wiedza o świecie | 67/74 (91%) |
+| Rozmowa i rozumienie intencji | 31/31 (100%) |
+| Pisanie kodu | 12/12 (100%) |
+
+Najsłabsze miejsca: synonimy, których Badek nie zna („organ” = „narząd”), i pojedyncze pytania,
+które sieć bierze za pogawędkę („kiedy jest Dzień Ojca”).
+
 ### Zadania ze szkoły 📚
 
 Badek rozwiązuje zadania tekstowe offline, jak w zeszycie: **Dane, Szukane, Wzór, Rozwiązanie, Odpowiedź**.
@@ -261,8 +305,8 @@ Wyniki (sieć: średnia z 2 losowań wag; zestawy testowe i egzaminy nie są uż
 | Zestaw testowy (101 zdań) | 97,0% | 98,5% |
 | Trudny zestaw (176 zdań: slang, bez ogonków) | 93,2% | 93,2% |
 | Te same zdania z literówkami | 78,3% | 82,4% |
-| Egzamin całego Badka | 91,3% | 97,8% (0.11.0: 97,9% ze 146 pytań) |
-| Egzamin kontrolny | 79,5% | 82,1% (0.11.0: 85,1% z 47 pytań) |
+| Egzamin całego Badka | 91,3% | 97,8% (0.11.0: 97,9% ze 146 pytań; 0.12.0: 98,2% ze 165) |
+| Egzamin kontrolny | 79,5% | 82,1% (0.11.0: 85,1% z 47 pytań; 0.12.0: 88,9% z 63) |
 
 Główny egzamin posłużył do znajdowania błędów, więc najuczciwszą miarą postępu jest egzamin kontrolny.
 

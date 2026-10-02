@@ -399,6 +399,21 @@ def _pierwiastki_numeryczne(f, od=-1000, do=1000, krokow=20000):
     return [round(r, 10) for r in unikalne]
 
 
+def _sprawdzenie(L, P, x, rozwiazania):
+    """Podstawia rozwiązania do obu stron równania - jak sprawdzenie w zeszycie."""
+    linie = []
+    for v in rozwiazania[:3]:
+        try:
+            lewa, prawa = L.licz({x: float(v)}), P.licz({x: float(v)})
+        except (ValueError, ZeroDivisionError, OverflowError):
+            continue
+        zgodne = abs(lewa - prawa) <= 1e-6 * max(1.0, abs(lewa), abs(prawa))
+        f = lambda w: formatuj(round(w, 6))  # noqa: E731
+        linie.append(f"dla {x} = {formatuj(v)}: lewa strona = {f(lewa)}, prawa strona = {f(prawa)} "
+                     + ("✓" if zgodne else "✗"))
+    return ["**Sprawdzenie:** " + "; ".join(linie)] if linie else []
+
+
 def rozwiaz_rownanie(tekst):
     lewa, prawa = tekst.split("=", 1)
     L, P = wczytaj(lewa), wczytaj(prawa)
@@ -424,7 +439,7 @@ def rozwiaz_rownanie(tekst):
             else:
                 kroki.append(f"To równanie liniowe: {formatuj(a)}{x} = {formatuj(-b)}")
                 kroki.append(f"Dzielę obie strony przez {formatuj(a)}: {wynik}")
-            return "\n".join(kroki)
+            return "\n".join(kroki + _sprawdzenie(L, P, x, [-b / a]))
         if stopien == 2:
             a, b, c = p[2], p.get(1, Fraction(0)), p.get(0, Fraction(0))
             delta = b * b - 4 * a * c
@@ -441,11 +456,14 @@ def rozwiaz_rownanie(tekst):
                     x1d, x2d = (-b - s) / (2 * a), (-b + s) / (2 * a)
                     kroki.append(f"√Δ = {formatuj(s)}")
                     kroki.append(f"{x}₁ = (-b - √Δ) / 2a = **{formatuj(x1d)}**, {x}₂ = (-b + √Δ) / 2a = **{formatuj(x2d)}**")
+                    kroki += _sprawdzenie(L, P, x, [x1d, x2d])
                 else:
                     kroki.append(f"√Δ ≈ {formatuj(pd)}")
                     kroki.append(f"{x}₁ = (-b - √Δ) / 2a ≈ **{formatuj(x1)}**, {x}₂ = (-b + √Δ) / 2a ≈ **{formatuj(x2)}**")
+                    kroki += _sprawdzenie(L, P, x, [x1, x2])
             elif delta == 0:
                 kroki.append(f"Δ = 0, więc jest jedno rozwiązanie: {x} = -b / 2a = **{formatuj(-b / (2 * a))}**")
+                kroki += _sprawdzenie(L, P, x, [-b / (2 * a)])
             else:
                 re_ = -float(b) / (2 * float(a))
                 im = math.sqrt(-delta) / (2 * abs(float(a)))
@@ -464,6 +482,7 @@ def rozwiaz_rownanie(tekst):
         return "\n".join(kroki)
     kroki.append("Rozwiązania: " + ", ".join(f"**{x} ≈ {formatuj(r)}**" for r in pierwiastki[:8])
                  + (" …" if len(pierwiastki) > 8 else ""))
+    kroki += _sprawdzenie(L, P, x, pierwiastki[:2])
     if len(pierwiastki) > 8 or any(f in str(roznica) for f in ("sin", "cos", "tg")):
         kroki.append("Funkcje trygonometryczne są okresowe, więc rozwiązań jest nieskończenie wiele "
                      "- powyżej te najbliżej zera.")
